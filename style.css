@@ -1,0 +1,15 @@
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Add this to center horizontally */
+    gap: 12px;
+    text-decoration: none;
+    width: 100%; /* Ensure it takes full width for proper centering */
+}
+
+.logo-image {
+    width: 26%;
+    height: auto; /* Changed from 10% to maintain aspect ratio */
+    max-width: 150px; /* Optional: set maximum width */
+    display: block; /* Ensure proper centering */
+}
