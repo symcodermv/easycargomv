@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EasyCargoMV</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -1944,6 +1943,149 @@
                 flex-direction: column;
             }
         }
+
+        /* NEW STYLES FOR ENHANCED FEATURES */
+
+        /* Enhanced Revenue Dashboard */
+        .revenue-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-group label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .filter-select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+            color: #333;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: #4cc9f0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            align-self: flex-end;
+        }
+
+        .filter-btn:hover {
+            background: #3ab0d6;
+        }
+
+        .revenue-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4cc9f0;
+        }
+
+        .summary-card h4 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .summary-card .value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a2a6c;
+        }
+
+        /* Enhanced Price Management */
+        .price-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .price-tab {
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .price-tab.active {
+            background: #4cc9f0;
+            color: white;
+        }
+
+        .price-content {
+            display: none;
+        }
+
+        .price-content.active {
+            display: block;
+        }
+
+        /* Enhanced User Management */
+        .user-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .user-table th, .user-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .user-table th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #1a2a6c;
+        }
+
+        .user-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .user-table tr:hover {
+            background: #f9f9f9;
+        }
     </style>
 </head>
 <body>
@@ -1974,10 +2116,7 @@
             
             <!-- Login Form -->
             <div class="login-form" id="loginFormSection">
-                 <div class="logo">
-            <img src="ChatGPT Image Oct 9, 2025, 08_19_04 PM.png" alt="" class="logo-image">
-        
-        </div>
+                <h2>Sign In</h2>
                 <p>Sign in to track and manage shipments</p>
                 
                 <form id="loginForm">
@@ -2449,12 +2588,50 @@
                 <h2 class="section-title">Revenue Dashboard</h2>
                 
                 <div class="revenue-dashboard">
-                    <h3 class="form-title"><i class="fas fa-chart-line"></i> Daily Revenue Overview</h3>
+                    <h3 class="form-title"><i class="fas fa-chart-line"></i> Revenue Overview</h3>
                     
+                    <!-- Revenue Filters -->
+                    <div class="revenue-filters">
+                        <div class="filter-group">
+                            <label for="revenueType">Revenue Type</label>
+                            <select id="revenueType" class="filter-select">
+                                <option value="all">All Revenue</option>
+                                <option value="cargo">Cargo Only</option>
+                                <option value="boat">Boat Only</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="dateRange">Date Range</label>
+                            <select id="dateRange" class="filter-select">
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                        <div class="filter-group" id="customDateRange" style="display: none;">
+                            <label for="startDate">Start Date</label>
+                            <input type="date" id="startDate" class="filter-select">
+                        </div>
+                        <div class="filter-group" id="customDateRangeEnd" style="display: none;">
+                            <label for="endDate">End Date</label>
+                            <input type="date" id="endDate" class="filter-select">
+                        </div>
+                        <button class="filter-btn" id="applyRevenueFilter">Apply Filter</button>
+                    </div>
+                    
+                    <!-- Revenue Summary -->
+                    <div class="revenue-summary" id="revenueSummary">
+                        <!-- Revenue summary will be populated here -->
+                    </div>
+                    
+                    <!-- Revenue Stats -->
                     <div class="revenue-stats" id="revenueStats">
                         <!-- Revenue stats will be populated here -->
                     </div>
                     
+                    <!-- Revenue Chart -->
                     <div class="revenue-chart">
                         <h3>Revenue Trend</h3>
                         <canvas id="revenueChart" width="400" height="200"></canvas>
@@ -2469,28 +2646,64 @@
                 <div class="price-management">
                     <h3 class="form-title"><i class="fas fa-money-bill-wave"></i> Set Delivery Prices by Weight Range</h3>
                     
-                    <div class="price-form">
-                        <div class="price-input-group">
-                            <div class="form-field price-input">
-                                <label for="minWeight">Minimum Weight (kg)</label>
-                                <input type="number" id="minWeight" placeholder="Min weight" min="0">
-                            </div>
-                            <div class="form-field price-input">
-                                <label for="maxWeight">Maximum Weight (kg)</label>
-                                <input type="number" id="maxWeight" placeholder="Max weight" min="0">
-                            </div>
-                            <div class="form-field price-input">
-                                <label for="priceValue">Price (MVR)</label>
-                                <input type="number" id="priceValue" placeholder="Price in MVR" min="0">
-                            </div>
-                        </div>
-                        <button class="add-price-btn" id="addPriceBtn">
-                            <i class="fas fa-plus"></i> Add Price
-                        </button>
+                    <!-- Price Tabs -->
+                    <div class="price-tabs">
+                        <button class="price-tab active" data-price-type="cargo">Cargo Delivery Prices</button>
+                        <button class="price-tab" data-price-type="boat">Boat Delivery Prices</button>
                     </div>
                     
-                    <div class="price-list" id="priceList">
-                        <!-- Price list will be populated here -->
+                    <!-- Cargo Price Management -->
+                    <div class="price-content active" id="cargo-price-content">
+                        <div class="price-form">
+                            <div class="price-input-group">
+                                <div class="form-field price-input">
+                                    <label for="cargoMinWeight">Minimum Weight (kg)</label>
+                                    <input type="number" id="cargoMinWeight" placeholder="Min weight" min="0">
+                                </div>
+                                <div class="form-field price-input">
+                                    <label for="cargoMaxWeight">Maximum Weight (kg)</label>
+                                    <input type="number" id="cargoMaxWeight" placeholder="Max weight" min="0">
+                                </div>
+                                <div class="form-field price-input">
+                                    <label for="cargoPriceValue">Price (MVR)</label>
+                                    <input type="number" id="cargoPriceValue" placeholder="Price in MVR" min="0">
+                                </div>
+                            </div>
+                            <button class="add-price-btn" id="addCargoPriceBtn">
+                                <i class="fas fa-plus"></i> Add Cargo Price
+                            </button>
+                        </div>
+                        
+                        <div class="price-list" id="cargoPriceList">
+                            <!-- Cargo price list will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Boat Price Management -->
+                    <div class="price-content" id="boat-price-content">
+                        <div class="price-form">
+                            <div class="price-input-group">
+                                <div class="form-field price-input">
+                                    <label for="boatMinWeight">Minimum Weight (kg)</label>
+                                    <input type="number" id="boatMinWeight" placeholder="Min weight" min="0">
+                                </div>
+                                <div class="form-field price-input">
+                                    <label for="boatMaxWeight">Maximum Weight (kg)</label>
+                                    <input type="number" id="boatMaxWeight" placeholder="Max weight" min="0">
+                                </div>
+                                <div class="form-field price-input">
+                                    <label for="boatPriceValue">Price (MVR)</label>
+                                    <input type="number" id="boatPriceValue" placeholder="Price in MVR" min="0">
+                                </div>
+                            </div>
+                            <button class="add-price-btn" id="addBoatPriceBtn">
+                                <i class="fas fa-plus"></i> Add Boat Price
+                            </button>
+                        </div>
+                        
+                        <div class="price-list" id="boatPriceList">
+                            <!-- Boat price list will be populated here -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2500,38 +2713,42 @@
                 <h2 class="section-title">User Management</h2>
                 
                 <div class="user-management">
-                    <h3 class="form-title"><i class="fas fa-users"></i> Add New User</h3>
+                    <h3 class="form-title"><i class="fas fa-users"></i> All Users</h3>
                     
-                    <div class="user-form">
-                        <div class="user-input-group">
-                            <div class="form-field user-input">
-                                <label for="newUsername">Username</label>
-                                <input type="text" id="newUsername" placeholder="Enter username">
-                            </div>
-                            <div class="form-field user-input">
-                                <label for="newUserEmail">Email</label>
-                                <input type="email" id="newUserEmail" placeholder="Enter email">
-                            </div>
+                    <!-- User Filters -->
+                    <div class="user-filters">
+                        <div class="filter-group">
+                            <label for="userRoleFilter">Filter by Role</label>
+                            <select id="userRoleFilter" class="filter-select">
+                                <option value="all">All Users</option>
+                                <option value="admin">Admin</option>
+                                <option value="staff">Staff</option>
+                            </select>
                         </div>
-                        
-                        <div class="user-input-group">
-                            <div class="form-field user-input">
-                                <label for="newUserContact">Contact</label>
-                                <input type="tel" id="newUserContact" placeholder="Enter contact number">
-                            </div>
-                            <div class="form-field user-input">
-                                <label for="newUserPassword">Password</label>
-                                <input type="password" id="newUserPassword" placeholder="Enter password">
-                            </div>
+                        <div class="filter-group">
+                            <label for="userSearch">Search</label>
+                            <input type="text" id="userSearch" class="filter-select" placeholder="Search by name or email">
                         </div>
-                        
-                        <button class="add-user-btn" id="addUserBtn">
-                            <i class="fas fa-plus"></i> Add User
-                        </button>
+                        <button class="filter-btn" id="applyUserFilter">Apply Filter</button>
                     </div>
                     
-                    <div class="user-list" id="userList">
-                        <!-- User list will be populated here -->
+                    <!-- User Table -->
+                    <div class="data-container">
+                        <table class="user-table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Contact</th>
+                                    <th>Role</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody">
+                                <!-- User data will be populated here -->
+                            </tbody>
+                        </table>
+                        <div class="empty-message" id="userEmptyMessage">No users found</div>
                     </div>
                 </div>
             </div>
@@ -2660,11 +2877,17 @@
         let currentDelivery = null;
         let currentDeliveryType = null;
         let currentDeliveryId = null;
-        let priceRanges = [
+        let cargoPriceRanges = [
             { min: 0, max: 1, price: 50 },
             { min: 2, max: 3, price: 75 },
             { min: 4, max: 6, price: 100 },
             { min: 7, max: 10, price: 150 }
+        ];
+        let boatPriceRanges = [
+            { min: 0, max: 1, price: 60 },
+            { min: 2, max: 3, price: 85 },
+            { min: 4, max: 6, price: 110 },
+            { min: 7, max: 10, price: 160 }
         ];
         
         // User management
@@ -2727,15 +2950,11 @@
         const boatWeightOptions = document.getElementById('boatWeightOptions');
         const deliveryPrice = document.getElementById('deliveryPrice');
         const boatDeliveryPrice = document.getElementById('boatDeliveryPrice');
-        const addPriceBtn = document.getElementById('addPriceBtn');
-        const priceList = document.getElementById('priceList');
         const copyAccountBtn = document.getElementById('copyAccountBtn');
         const accountNumber = document.getElementById('accountNumber');
         const slipModal = document.getElementById('slipModal');
         const slipImage = document.getElementById('slipImage');
         const closeSlip = document.getElementById('closeSlip');
-        const addUserBtn = document.getElementById('addUserBtn');
-        const userList = document.getElementById('userList');
         const recordsTabs = document.querySelectorAll('.records-tab');
         const recordsContents = document.querySelectorAll('.records-content');
         const notificationsPanel = document.getElementById('notificationsPanel');
@@ -2751,10 +2970,37 @@
         const postOfficeMessage = document.getElementById('postOfficeMessage');
         const deliveryLocation = document.getElementById('deliveryLocation');
 
+        // NEW DOM Elements for Enhanced Features
+        // Revenue Dashboard
+        const revenueType = document.getElementById('revenueType');
+        const dateRange = document.getElementById('dateRange');
+        const customDateRange = document.getElementById('customDateRange');
+        const customDateRangeEnd = document.getElementById('customDateRangeEnd');
+        const startDate = document.getElementById('startDate');
+        const endDate = document.getElementById('endDate');
+        const applyRevenueFilter = document.getElementById('applyRevenueFilter');
+        const revenueSummary = document.getElementById('revenueSummary');
+        
+        // Price Management
+        const priceTabs = document.querySelectorAll('.price-tab');
+        const priceContents = document.querySelectorAll('.price-content');
+        const addCargoPriceBtn = document.getElementById('addCargoPriceBtn');
+        const cargoPriceList = document.getElementById('cargoPriceList');
+        const addBoatPriceBtn = document.getElementById('addBoatPriceBtn');
+        const boatPriceList = document.getElementById('boatPriceList');
+        
+        // User Management
+        const userRoleFilter = document.getElementById('userRoleFilter');
+        const userSearch = document.getElementById('userSearch');
+        const applyUserFilter = document.getElementById('applyUserFilter');
+        const userTableBody = document.getElementById('userTableBody');
+        const userEmptyMessage = document.getElementById('userEmptyMessage');
+
         // Firebase Database References
         const cargoRef = database.ref('cargoDeliveries');
         const boatRef = database.ref('boatDeliveries');
-        const priceRangesRef = database.ref('priceRanges');
+        const cargoPriceRangesRef = database.ref('cargoPriceRanges');
+        const boatPriceRangesRef = database.ref('boatPriceRanges');
         const usersRef = database.ref('users');
         const notificationsRef = database.ref('notifications');
 
@@ -2933,7 +3179,7 @@
             
             // Load any existing data
             loadWeightOptions();
-            loadPriceList();
+            loadPriceLists();
             loadUsers();
             loadNotifications();
             
@@ -3071,6 +3317,11 @@
                             // Load user references when cargo or boat delivery section is accessed
                             if (targetSection === 'cargo-delivery' || targetSection === 'boat-delivery') {
                                 loadUserReferences();
+                            }
+                            
+                            // Load user management when User Management is accessed
+                            if (targetSection === 'user-management') {
+                                loadUserManagement();
                             }
                         }
                     });
@@ -3351,128 +3602,462 @@
             }
         }
 
+        // NEW: Enhanced Revenue Dashboard
+        // Show/hide custom date range fields
+        dateRange.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customDateRange.style.display = 'flex';
+                customDateRangeEnd.style.display = 'flex';
+            } else {
+                customDateRange.style.display = 'none';
+                customDateRangeEnd.style.display = 'none';
+            }
+        });
+
+        // Apply revenue filter
+        applyRevenueFilter.addEventListener('click', function() {
+            loadRevenueData();
+        });
+
         // Load revenue data for admin
         function loadRevenueData() {
-            revenueStats.innerHTML = '';
+            // Get filter values
+            const revenueTypeValue = revenueType.value;
+            const dateRangeValue = dateRange.value;
+            let startDateValue, endDateValue;
             
-            // Calculate today's revenue
-            const today = new Date().toISOString().split('T')[0];
-            const todayRevenue = calculateRevenueForDate(today);
+            // Set date range based on selection
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
             
-            // Calculate yesterday's revenue
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
-            const yesterdayFormatted = yesterday.toISOString().split('T')[0];
-            const yesterdayRevenue = calculateRevenueForDate(yesterdayFormatted);
+            switch(dateRangeValue) {
+                case 'today':
+                    startDateValue = new Date(today);
+                    endDateValue = new Date(today);
+                    endDateValue.setHours(23, 59, 59, 999);
+                    break;
+                case 'yesterday':
+                    startDateValue = new Date(today);
+                    startDateValue.setDate(today.getDate() - 1);
+                    endDateValue = new Date(today);
+                    endDateValue.setDate(today.getDate() - 1);
+                    endDateValue.setHours(23, 59, 59, 999);
+                    break;
+                case 'week':
+                    startDateValue = new Date(today);
+                    startDateValue.setDate(today.getDate() - today.getDay());
+                    endDateValue = new Date(today);
+                    endDateValue.setDate(today.getDate() + (6 - today.getDay()));
+                    endDateValue.setHours(23, 59, 59, 999);
+                    break;
+                case 'month':
+                    startDateValue = new Date(today.getFullYear(), today.getMonth(), 1);
+                    endDateValue = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                    endDateValue.setHours(23, 59, 59, 999);
+                    break;
+                case 'custom':
+                    startDateValue = new Date(startDate.value);
+                    endDateValue = new Date(endDate.value);
+                    endDateValue.setHours(23, 59, 59, 999);
+                    break;
+            }
             
-            // Calculate this week's revenue
-            const weekStart = new Date();
-            weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-            const weekRevenue = calculateRevenueForPeriod(weekStart, new Date());
+            // Calculate revenue based on filters
+            let totalRevenue = 0;
+            let cargoRevenue = 0;
+            let boatRevenue = 0;
+            let totalDeliveries = 0;
+            let completedDeliveries = 0;
             
-            // Calculate this month's revenue
-            const monthStart = new Date();
-            monthStart.setDate(1);
-            const monthRevenue = calculateRevenueForPeriod(monthStart, new Date());
+            // Filter deliveries based on type and date
+            let filteredCargoDeliveries = cargoDeliveries.filter(d => {
+                if (d.paymentStatus !== 'paid') return false;
+                if (revenueTypeValue === 'boat') return false;
+                const paidDate = new Date(d.paidAt);
+                return paidDate >= startDateValue && paidDate <= endDateValue;
+            });
             
-            // Create revenue cards
-            revenueStats.innerHTML = `
-                <div class="revenue-card">
-                    <h3>Today's Revenue</h3>
-                    <div class="amount">${todayRevenue} MVR</div>
-                    <div class="period">${formatDate(today)}</div>
+            let filteredBoatDeliveries = boatDeliveries.filter(d => {
+                if (d.paymentStatus !== 'paid') return false;
+                if (revenueTypeValue === 'cargo') return false;
+                const paidDate = new Date(d.paidAt);
+                return paidDate >= startDateValue && paidDate <= endDateValue;
+            });
+            
+            // Calculate totals
+            filteredCargoDeliveries.forEach(d => {
+                cargoRevenue += d.deliveryPrice;
+                totalRevenue += d.deliveryPrice;
+                totalDeliveries++;
+                if (d.status === 'Delivered') completedDeliveries++;
+            });
+            
+            filteredBoatDeliveries.forEach(d => {
+                boatRevenue += d.deliveryPrice;
+                totalRevenue += d.deliveryPrice;
+                totalDeliveries++;
+                if (d.status === 'Delivered') completedDeliveries++;
+            });
+            
+            // Update revenue summary
+            revenueSummary.innerHTML = `
+                <div class="summary-card">
+                    <h4>Total Revenue</h4>
+                    <div class="value">${totalRevenue} MVR</div>
                 </div>
-                <div class="revenue-card">
-                    <h3>Yesterday's Revenue</h3>
-                    <div class="amount">${yesterdayRevenue} MVR</div>
-                    <div class="period">${formatDate(yesterdayFormatted)}</div>
+                <div class="summary-card">
+                    <h4>Cargo Revenue</h4>
+                    <div class="value">${cargoRevenue} MVR</div>
                 </div>
-                <div class="revenue-card">
-                    <h3>This Week</h3>
-                    <div class="amount">${weekRevenue} MVR</div>
-                    <div class="period">This Week</div>
+                <div class="summary-card">
+                    <h4>Boat Revenue</h4>
+                    <div class="value">${boatRevenue} MVR</div>
                 </div>
-                <div class="revenue-card">
-                    <h3>This Month</h3>
-                    <div class="amount">${monthRevenue} MVR</div>
-                    <div class="period">This Month</div>
+                <div class="summary-card">
+                    <h4>Total Deliveries</h4>
+                    <div class="value">${totalDeliveries}</div>
+                </div>
+                <div class="summary-card">
+                    <h4>Completed Deliveries</h4>
+                    <div class="value">${completedDeliveries}</div>
                 </div>
             `;
+            
+            // Update revenue stats
+            revenueStats.innerHTML = `
+                <div class="revenue-card">
+                    <h3>Total Revenue</h3>
+                    <div class="amount">${totalRevenue} MVR</div>
+                    <div class="period">${formatDateRange(startDateValue, endDateValue)}</div>
+                </div>
+                <div class="revenue-card">
+                    <h3>Cargo Revenue</h3>
+                    <div class="amount">${cargoRevenue} MVR</div>
+                    <div class="period">${formatDateRange(startDateValue, endDateValue)}</div>
+                </div>
+                <div class="revenue-card">
+                    <h3>Boat Revenue</h3>
+                    <div class="amount">${boatRevenue} MVR</div>
+                    <div class="period">${formatDateRange(startDateValue, endDateValue)}</div>
+                </div>
+                <div class="revenue-card">
+                    <h3>Average Revenue</h3>
+                    <div class="amount">${totalDeliveries > 0 ? Math.round(totalRevenue / totalDeliveries) : 0} MVR</div>
+                    <div class="period">Per Delivery</div>
+                </div>
+            `;
+            
+            // Update chart (simplified for this example)
+            updateRevenueChart(filteredCargoDeliveries, filteredBoatDeliveries);
         }
 
-        // Calculate revenue for a specific date
-        function calculateRevenueForDate(date) {
-            let total = 0;
-            
-            // Add revenue from cargo deliveries
-            cargoDeliveries.forEach(delivery => {
-                if (delivery.paidAt && delivery.paidAt.startsWith(date) && delivery.paymentStatus === 'paid') {
-                    total += delivery.deliveryPrice;
-                }
-            });
-            
-            // Add revenue from boat deliveries
-            boatDeliveries.forEach(delivery => {
-                if (delivery.paidAt && delivery.paidAt.startsWith(date) && delivery.paymentStatus === 'paid') {
-                    total += delivery.deliveryPrice;
-                }
-            });
-            
-            return total;
+        // Format date range for display
+        function formatDateRange(startDate, endDate) {
+            if (dateRange.value === 'today') {
+                return 'Today';
+            } else if (dateRange.value === 'yesterday') {
+                return 'Yesterday';
+            } else if (dateRange.value === 'week') {
+                return 'This Week';
+            } else if (dateRange.value === 'month') {
+                return 'This Month';
+            } else {
+                return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+            }
         }
 
-        // Calculate revenue for a period
-        function calculateRevenueForPeriod(startDate, endDate) {
-            let total = 0;
+        // Update revenue chart (simplified implementation)
+        function updateRevenueChart(cargoData, boatData) {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
             
-            // Add revenue from cargo deliveries
-            cargoDeliveries.forEach(delivery => {
-                if (delivery.paidAt && delivery.paymentStatus === 'paid') {
-                    const paidDate = new Date(delivery.paidAt);
-                    if (paidDate >= startDate && paidDate <= endDate) {
-                        total += delivery.deliveryPrice;
-                    }
-                }
-            });
-            
-            // Add revenue from boat deliveries
-            boatDeliveries.forEach(delivery => {
-                if (delivery.paidAt && delivery.paymentStatus === 'paid') {
-                    const paidDate = new Date(delivery.paidAt);
-                    if (paidDate >= startDate && paidDate <= endDate) {
-                        total += delivery.deliveryPrice;
-                    }
-                }
-            });
-            
-            return total;
+            // In a real implementation, you would use a charting library like Chart.js
+            // For this example, we'll just display a message
+            ctx.clearRect(0, 0, 400, 200);
+            ctx.font = '16px Arial';
+            ctx.fillStyle = '#666';
+            ctx.textAlign = 'center';
+            ctx.fillText('Revenue Chart Visualization', 200, 100);
+            ctx.fillText(`Cargo: ${cargoData.length} deliveries`, 200, 130);
+            ctx.fillText(`Boat: ${boatData.length} deliveries`, 200, 150);
         }
 
-        // Records management tabs
-        recordsTabs.forEach(tab => {
+        // NEW: Enhanced Price Management
+        // Price tabs functionality
+        priceTabs.forEach(tab => {
             tab.addEventListener('click', function() {
-                const targetTab = this.getAttribute('data-tab');
+                const priceType = this.getAttribute('data-price-type');
                 
                 // Update active tab
-                recordsTabs.forEach(t => t.classList.remove('active'));
+                priceTabs.forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
                 
                 // Show target content
-                recordsContents.forEach(content => {
+                priceContents.forEach(content => {
                     content.classList.remove('active');
-                    if (content.id === targetTab) {
+                    if (content.id === `${priceType}-price-content`) {
                         content.classList.add('active');
                     }
                 });
             });
         });
 
+        // Add cargo price
+        addCargoPriceBtn.addEventListener('click', function() {
+            addPriceRange('cargo');
+        });
+
+        // Add boat price
+        addBoatPriceBtn.addEventListener('click', function() {
+            addPriceRange('boat');
+        });
+
+        // Add price range
+        function addPriceRange(type) {
+            const minWeight = parseInt(document.getElementById(`${type}MinWeight`).value);
+            const maxWeight = parseInt(document.getElementById(`${type}MaxWeight`).value);
+            const price = parseInt(document.getElementById(`${type}PriceValue`).value);
+            
+            if (isNaN(minWeight) || isNaN(maxWeight) || isNaN(price)) {
+                showNotification('Please enter valid values for all fields');
+                return;
+            }
+            
+            if (minWeight >= maxWeight) {
+                showNotification('Minimum weight must be less than maximum weight');
+                return;
+            }
+            
+            // Get the appropriate price ranges array
+            const priceRanges = type === 'cargo' ? cargoPriceRanges : boatPriceRanges;
+            
+            // Check for overlapping ranges
+            for (let range of priceRanges) {
+                if ((minWeight >= range.min && minWeight <= range.max) || 
+                    (maxWeight >= range.min && maxWeight <= range.max) ||
+                    (minWeight <= range.min && maxWeight >= range.max)) {
+                    showNotification('Weight range overlaps with existing range');
+                    return;
+                }
+            }
+            
+            // Add new price range
+            priceRanges.push({ min: minWeight, max: maxWeight, price: price });
+            
+            // Save and update UI
+            if (type === 'cargo') {
+                saveCargoPriceRanges();
+                loadCargoPriceList();
+            } else {
+                saveBoatPriceRanges();
+                loadBoatPriceList();
+            }
+            
+            // Reset form
+            document.getElementById(`${type}MinWeight`).value = '';
+            document.getElementById(`${type}MaxWeight`).value = '';
+            document.getElementById(`${type}PriceValue`).value = '';
+            
+            showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} price range added successfully`);
+        }
+
+        // Load price lists
+        function loadPriceLists() {
+            loadCargoPriceList();
+            loadBoatPriceList();
+        }
+
+        // Load cargo price list
+        function loadCargoPriceList() {
+            cargoPriceList.innerHTML = '';
+            
+            if (cargoPriceRanges.length === 0) {
+                cargoPriceList.innerHTML = '<div class="empty-message">No cargo price ranges defined</div>';
+                return;
+            }
+            
+            // Sort price ranges by min weight
+            cargoPriceRanges.sort((a, b) => a.min - b.min);
+            
+            cargoPriceRanges.forEach((range, index) => {
+                const item = document.createElement('div');
+                item.className = 'price-item';
+                item.innerHTML = `
+                    <div class="price-range">${range.min}-${range.max} kg</div>
+                    <div class="price-amount">${range.price} MVR</div>
+                    <div class="price-actions">
+                        <button class="edit-price-btn" onclick="editPriceRange('cargo', ${index})">Edit</button>
+                        <button class="remove-price-btn" onclick="removePriceRange('cargo', ${index})">Remove</button>
+                    </div>
+                `;
+                cargoPriceList.appendChild(item);
+            });
+        }
+
+        // Load boat price list
+        function loadBoatPriceList() {
+            boatPriceList.innerHTML = '';
+            
+            if (boatPriceRanges.length === 0) {
+                boatPriceList.innerHTML = '<div class="empty-message">No boat price ranges defined</div>';
+                return;
+            }
+            
+            // Sort price ranges by min weight
+            boatPriceRanges.sort((a, b) => a.min - b.min);
+            
+            boatPriceRanges.forEach((range, index) => {
+                const item = document.createElement('div');
+                item.className = 'price-item';
+                item.innerHTML = `
+                    <div class="price-range">${range.min}-${range.max} kg</div>
+                    <div class="price-amount">${range.price} MVR</div>
+                    <div class="price-actions">
+                        <button class="edit-price-btn" onclick="editPriceRange('boat', ${index})">Edit</button>
+                        <button class="remove-price-btn" onclick="removePriceRange('boat', ${index})">Remove</button>
+                    </div>
+                `;
+                boatPriceList.appendChild(item);
+            });
+        }
+
+        // Edit price range
+        function editPriceRange(type, index) {
+            const priceRanges = type === 'cargo' ? cargoPriceRanges : boatPriceRanges;
+            const range = priceRanges[index];
+            
+            document.getElementById(`${type}MinWeight`).value = range.min;
+            document.getElementById(`${type}MaxWeight`).value = range.max;
+            document.getElementById(`${type}PriceValue`).value = range.price;
+            
+            // Remove the range being edited
+            priceRanges.splice(index, 1);
+            
+            // Save and update UI
+            if (type === 'cargo') {
+                saveCargoPriceRanges();
+                loadCargoPriceList();
+            } else {
+                saveBoatPriceRanges();
+                loadBoatPriceList();
+            }
+        }
+
+        // Remove price range
+        function removePriceRange(type, index) {
+            if (confirm('Are you sure you want to remove this price range?')) {
+                const priceRanges = type === 'cargo' ? cargoPriceRanges : boatPriceRanges;
+                
+                priceRanges.splice(index, 1);
+                
+                // Save and update UI
+                if (type === 'cargo') {
+                    saveCargoPriceRanges();
+                    loadCargoPriceList();
+                } else {
+                    saveBoatPriceRanges();
+                    loadBoatPriceList();
+                }
+                
+                showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} price range removed successfully`);
+            }
+        }
+
+        // NEW: Enhanced User Management
+        // Apply user filter
+        applyUserFilter.addEventListener('click', function() {
+            loadUserManagement();
+        });
+
+        // Load user management
+        function loadUserManagement() {
+            userTableBody.innerHTML = '';
+            
+            // Get filter values
+            const roleFilter = userRoleFilter.value;
+            const searchTerm = userSearch.value.toLowerCase();
+            
+            // Filter users
+            let filteredUsers = users.filter(user => {
+                // Filter by role
+                if (roleFilter !== 'all' && user.role !== roleFilter) {
+                    return false;
+                }
+                
+                // Filter by search term
+                if (searchTerm && !user.username.toLowerCase().includes(searchTerm) && 
+                    !user.email.toLowerCase().includes(searchTerm)) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            if (filteredUsers.length === 0) {
+                userEmptyMessage.style.display = 'block';
+                return;
+            }
+            
+            userEmptyMessage.style.display = 'none';
+            
+            // Display users in table
+            filteredUsers.forEach((user, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>${user.contact}</td>
+                    <td>
+                        <span class="user-role ${user.role}">${user.role}</span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn update-btn" onclick="editUser(${index})">Edit</button>
+                            ${user.role !== 'admin' ? `<button class="action-btn delete-btn" onclick="removeUser(${index})">Remove</button>` : ''}
+                        </div>
+                    </td>
+                `;
+                userTableBody.appendChild(row);
+            });
+        }
+
+        // Edit user
+        function editUser(index) {
+            const user = users[index];
+            
+            // In a real implementation, you would show a modal or form to edit the user
+            // For this example, we'll just show a notification
+            showNotification(`Editing user: ${user.username}`);
+            
+            // You could implement a full edit functionality here
+        }
+
+        // Remove user
+        function removeUser(index) {
+            if (confirm('Are you sure you want to remove this user?')) {
+                const user = users[index];
+                
+                // Don't allow removing the last admin
+                if (user.role === 'admin') {
+                    const adminCount = users.filter(u => u.role === 'admin').length;
+                    if (adminCount <= 1) {
+                        showNotification('Cannot remove the last admin user');
+                        return;
+                    }
+                }
+                
+                users.splice(index, 1);
+                saveUsers();
+                loadUserManagement();
+                showNotification('User removed successfully');
+            }
+        }
+
         // Load weight options
         function loadWeightOptions() {
             weightOptions.innerHTML = '';
             boatWeightOptions.innerHTML = '';
             
-            priceRanges.forEach(range => {
+            cargoPriceRanges.forEach(range => {
                 const option = document.createElement('div');
                 option.className = 'weight-option';
                 option.innerHTML = `
@@ -3481,9 +4066,17 @@
                     </button>
                 `;
                 weightOptions.appendChild(option);
-                
-                const boatOption = option.cloneNode(true);
-                boatWeightOptions.appendChild(boatOption);
+            });
+            
+            boatPriceRanges.forEach(range => {
+                const option = document.createElement('div');
+                option.className = 'weight-option';
+                option.innerHTML = `
+                    <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
+                        ${range.min}-${range.max} kg
+                    </button>
+                `;
+                boatWeightOptions.appendChild(option);
             });
             
             // Add event listeners to weight buttons
@@ -4335,191 +4928,9 @@
             }
         }
 
-        // Price management
-        addPriceBtn.addEventListener('click', function() {
-            const minWeight = parseInt(document.getElementById('minWeight').value);
-            const maxWeight = parseInt(document.getElementById('maxWeight').value);
-            const price = parseInt(document.getElementById('priceValue').value);
-            
-            if (isNaN(minWeight) || isNaN(maxWeight) || isNaN(price)) {
-                showNotification('Please enter valid values for all fields');
-                return;
-            }
-            
-            if (minWeight >= maxWeight) {
-                showNotification('Minimum weight must be less than maximum weight');
-                return;
-            }
-            
-            // Check for overlapping ranges
-            for (let range of priceRanges) {
-                if ((minWeight >= range.min && minWeight <= range.max) || 
-                    (maxWeight >= range.min && maxWeight <= range.max) ||
-                    (minWeight <= range.min && maxWeight >= range.max)) {
-                    showNotification('Weight range overlaps with existing range');
-                    return;
-                }
-            }
-            
-            // Add new price range
-            priceRanges.push({ min: minWeight, max: maxWeight, price: price });
-            savePriceRanges();
-            loadPriceList();
-            loadWeightOptions();
-            
-            // Reset form
-            document.getElementById('minWeight').value = '';
-            document.getElementById('maxWeight').value = '';
-            document.getElementById('priceValue').value = '';
-            
-            showNotification('Price range added successfully');
-        });
-
-        // Load price list
-        function loadPriceList() {
-            priceList.innerHTML = '';
-            
-            if (priceRanges.length === 0) {
-                priceList.innerHTML = '<div class="empty-message">No price ranges defined</div>';
-                return;
-            }
-            
-            // Sort price ranges by min weight
-            priceRanges.sort((a, b) => a.min - b.min);
-            
-            priceRanges.forEach((range, index) => {
-                const item = document.createElement('div');
-                item.className = 'price-item';
-                item.innerHTML = `
-                    <div class="price-range">${range.min}-${range.max} kg</div>
-                    <div class="price-amount">${range.price} MVR</div>
-                    <div class="price-actions">
-                        <button class="edit-price-btn" onclick="editPriceRange(${index})">Edit</button>
-                        <button class="remove-price-btn" onclick="removePriceRange(${index})">Remove</button>
-                    </div>
-                `;
-                priceList.appendChild(item);
-            });
-        }
-
-        // Edit price range
-        function editPriceRange(index) {
-            const range = priceRanges[index];
-            document.getElementById('minWeight').value = range.min;
-            document.getElementById('maxWeight').value = range.max;
-            document.getElementById('priceValue').value = range.price;
-            
-            // Remove the range being edited
-            priceRanges.splice(index, 1);
-            savePriceRanges();
-            loadPriceList();
-            loadWeightOptions();
-        }
-
-        // Remove price range
-        function removePriceRange(index) {
-            if (confirm('Are you sure you want to remove this price range?')) {
-                priceRanges.splice(index, 1);
-                savePriceRanges();
-                loadPriceList();
-                loadWeightOptions();
-                showNotification('Price range removed successfully');
-            }
-        }
-
-        // User management
-        addUserBtn.addEventListener('click', function() {
-            const username = document.getElementById('newUsername').value;
-            const email = document.getElementById('newUserEmail').value;
-            const contact = document.getElementById('newUserContact').value;
-            const password = document.getElementById('newUserPassword').value;
-            
-            if (!username || !email || !contact || !password) {
-                showNotification('Please fill all fields');
-                return;
-            }
-            
-            // Check if user already exists
-            if (users.find(user => user.email === email)) {
-                showNotification('User with this email already exists');
-                return;
-            }
-            
-            // Add new user with staff role
-            users.push({
-                username: username,
-                email: email,
-                contact: contact,
-                password: password,
-                role: 'staff'
-            });
-            
-            saveUsers();
-            loadUsers();
-            
-            // Reset form
-            document.getElementById('newUsername').value = '';
-            document.getElementById('newUserEmail').value = '';
-            document.getElementById('newUserContact').value = '';
-            document.getElementById('newUserPassword').value = '';
-            
-            showNotification('User added successfully');
-        });
-
         // Load users
         function loadUsers() {
-            userList.innerHTML = '';
-            
-            if (users.length === 0) {
-                userList.innerHTML = '<div class="empty-message">No users found</div>';
-                return;
-            }
-            
-            users.forEach((user, index) => {
-                // Don't show current user in the list
-                if (user.email === currentUser.email) return;
-                
-                const item = document.createElement('div');
-                item.className = 'user-item';
-                item.innerHTML = `
-                    <div class="user-details">
-                        <div class="user-name">${user.username}</div>
-                        <div class="user-email">${user.email} • ${user.contact}</div>
-                    </div>
-                    <div>
-                        <span class="user-role ${user.role}">${user.role}</span>
-                    </div>
-                    <div class="user-actions">
-                        <button class="edit-user-btn" onclick="editUser(${index})">Edit</button>
-                        <button class="remove-user-btn" onclick="removeUser(${index})">Remove</button>
-                    </div>
-                `;
-                userList.appendChild(item);
-            });
-        }
-
-        // Edit user
-        function editUser(index) {
-            const user = users[index];
-            document.getElementById('newUsername').value = user.username;
-            document.getElementById('newUserEmail').value = user.email;
-            document.getElementById('newUserContact').value = user.contact;
-            document.getElementById('newUserPassword').value = user.password;
-            
-            // Remove the user being edited
-            users.splice(index, 1);
-            saveUsers();
-            loadUsers();
-        }
-
-        // Remove user
-        function removeUser(index) {
-            if (confirm('Are you sure you want to remove this user?')) {
-                users.splice(index, 1);
-                saveUsers();
-                loadUsers();
-                showNotification('User removed successfully');
-            }
+            // This function is now handled by loadUserManagement()
         }
 
         // Firebase Data Management Functions
@@ -4535,10 +4946,16 @@
                 .catch(error => console.error('Error saving boat data:', error));
         }
 
-        function savePriceRanges() {
-            priceRangesRef.set(priceRanges)
-                .then(() => console.log('Price ranges saved to Firebase'))
-                .catch(error => console.error('Error saving price ranges:', error));
+        function saveCargoPriceRanges() {
+            cargoPriceRangesRef.set(cargoPriceRanges)
+                .then(() => console.log('Cargo price ranges saved to Firebase'))
+                .catch(error => console.error('Error saving cargo price ranges:', error));
+        }
+
+        function saveBoatPriceRanges() {
+            boatPriceRangesRef.set(boatPriceRanges)
+                .then(() => console.log('Boat price ranges saved to Firebase'))
+                .catch(error => console.error('Error saving boat price ranges:', error));
         }
         
         function saveUsers() {
@@ -4573,13 +4990,23 @@
                 }
             });
             
-            // Load price ranges
-            priceRangesRef.on('value', (snapshot) => {
+            // Load cargo price ranges
+            cargoPriceRangesRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    priceRanges = data;
+                    cargoPriceRanges = data;
+                    loadCargoPriceList();
                     loadWeightOptions();
-                    loadPriceList();
+                }
+            });
+            
+            // Load boat price ranges
+            boatPriceRangesRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    boatPriceRanges = data;
+                    loadBoatPriceList();
+                    loadWeightOptions();
                 }
             });
             
@@ -4665,6 +5092,15 @@
             // Check if user is already logged in
             checkLoginStatus();
             loadStoredData();
+            
+            // Set current date as default for date inputs
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('deliveryDate').value = today;
+            document.getElementById('boatDeliveryDate').value = today;
+            
+            // Set default dates for revenue filters
+            startDate.value = today;
+            endDate.value = today;
         }
 
         // Run initialization when page loads
