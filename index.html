@@ -1719,11 +1719,6 @@
             transition: all 0.3s;
         }
 
-        .notifications-toggle:hover {
-            background: #3ab0d6;
-            transform: scale(1.05);
-        }
-
         .notifications-toggle.has-unread::after {
             content: '';
             position: absolute;
@@ -2201,6 +2196,231 @@
         .location-specific.active {
             display: block;
         }
+
+        /* Greater Male City Styles */
+        .item-size-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .item-size-option {
+            flex: 1;
+        }
+
+        .item-size-btn {
+            width: 100%;
+            padding: 12px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .item-size-btn:hover {
+            background: #e9e9e9;
+        }
+
+        .item-size-btn.active {
+            background: #4cc9f0;
+            color: white;
+            border-color: #4cc9f0;
+        }
+
+        .item-size-icon {
+            font-size: 20px;
+        }
+
+        .vehicle-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .vehicle-option {
+            flex: 1;
+        }
+
+        .vehicle-btn {
+            width: 100%;
+            padding: 12px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .vehicle-btn:hover {
+            background: #e9e9e9;
+        }
+
+        .vehicle-btn.active {
+            background: #4cc9f0;
+            color: white;
+            border-color: #4cc9f0;
+        }
+
+        .vehicle-btn.disabled {
+            background: #f0f0f0;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        .vehicle-icon {
+            font-size: 24px;
+        }
+
+        .quantity-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .quantity-btn:hover {
+            background: #e9e9e9;
+        }
+
+        .quantity-input input {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .destination-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .destination-option {
+            flex: 1;
+        }
+
+        .destination-btn {
+            width: 100%;
+            padding: 12px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .destination-btn:hover {
+            background: #e9e9e9;
+        }
+
+        .destination-btn.active {
+            background: #4cc9f0;
+            color: white;
+            border-color: #4cc9f0;
+        }
+
+        .price-breakdown {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .price-item-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .price-item-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .price-total {
+            font-weight: 700;
+            font-size: 18px;
+            color: #1a2a6c;
+        }
+
+        /* NEW STYLES FOR GREATER MALE CITY FORM */
+        .greater-male-pickup-location-specific {
+            display: none;
+        }
+
+        .greater-male-pickup-location-specific.active {
+            display: block;
+        }
+
+        .greater-male-destination-specific {
+            display: none;
+        }
+
+        .greater-male-destination-specific.active {
+            display: block;
+        }
+
+        .item-size-image {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+        }
+
+        .item-size-image img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .vehicle-image {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+        }
+
+        .vehicle-image img {
+            max-width: 100%;
+            max-height: 100%;
+        }
     </style>
 </head>
 <body>
@@ -2230,7 +2450,7 @@
             </div>
             <!-- Login Form -->
             <div class="login-form" id="loginFormSection">
-                 <div class="logo">
+                <div class="logo">
             <img src="ChatGPT Image Oct 9, 2025, 08_19_04 PM.png" alt="" class="logo-image">
         
         </div>
@@ -2580,6 +2800,174 @@
                 </div>
             </div>
             
+            <!-- Greater Male City Delivery Section -->
+            <div class="dashboard-section" id="greater-male-delivery">
+                <h2 class="section-title">Greater Male City Delivery</h2>
+                
+                <div class="form-container">
+                    <h3 class="form-title"><i class="fas fa-city"></i> Greater Male City Delivery Form</h3>
+                    <form id="greaterMaleForm">
+                        <div class="form-group">
+                            <label for="greaterMaleCustomerName">Customer Name</label>
+                            <input type="text" id="greaterMaleCustomerName" placeholder="Enter customer name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="greaterMaleCustomerContact">Contact Number</label>
+                            <input type="tel" id="greaterMaleCustomerContact" placeholder="Enter contact number" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="greaterMalePickupLocation">Pickup Location</label>
+                            <select id="greaterMalePickupLocation" required>
+                                <option value="">Select Pickup Location</option>
+                                <option value="Post Office">Post Office</option>
+                                <option value="Pickpost">Pickpost</option>
+                                <option value="Redbox">Redbox</option>
+                                <option value="Male">Male</option>
+                                <option value="Hulhumale">Hulhumale</option>
+                                <option value="Phase2">Phase 2</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Package Details Field (for Post Office, Pickpost, Redbox) -->
+                        <div class="greater-male-pickup-location-specific" id="greaterMalePackageDetailsField">
+                            <div class="form-group">
+                                <label for="greaterMalePackageDetails">Package Details</label>
+                                <textarea id="greaterMalePackageDetails" placeholder="Enter package details" rows="3"></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Address Field (for Male, Hulhumale, Phase2) -->
+                        <div class="greater-male-pickup-location-specific" id="greaterMaleAddressField">
+                            <div class="form-group">
+                                <label for="greaterMaleAddressName">Address Name</label>
+                                <input type="text" id="greaterMaleAddressName" placeholder="Enter full address">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="greaterMaleDeliveryLocation">Delivery Location</label>
+                            <select id="greaterMaleDeliveryLocation" required>
+                                <option value="">Select Delivery Location</option>
+                                <option value="Male to Hulhumale">Male to Hulhumale</option>
+                                <option value="Hulhumale to Male">Hulhumale to Male</option>
+                                <option value="Male to Phase 2">Male to Phase 2</option>
+                                <option value="Male">Male</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Address Field for Male destination -->
+                        <div class="greater-male-destination-specific" id="greaterMaleDeliveryAddressField">
+                            <div class="form-group">
+                                <label for="greaterMaleDeliveryAddressName">Delivery Address Name</label>
+                                <input type="text" id="greaterMaleDeliveryAddressName" placeholder="Enter delivery address">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Select Delivery Item Size</label>
+                            <div class="item-size-options" id="itemSizeOptions">
+                                <div class="item-size-option">
+                                    <button type="button" class="item-size-btn" data-size="small-package" data-price="25">
+                                        <div class="item-size-image">
+                                            <i class="fas fa-box"></i>
+                                        </div>
+                                        <span>Small Package</span>
+                                    </button>
+                                </div>
+                                <div class="item-size-option">
+                                    <button type="button" class="item-size-btn" data-size="large-package" data-price="40">
+                                        <div class="item-size-image">
+                                            <i class="fas fa-box-open"></i>
+                                        </div>
+                                        <span>Large Package</span>
+                                    </button>
+                                </div>
+                                <div class="item-size-option">
+                                    <button type="button" class="item-size-btn" data-size="small-box" data-price="30">
+                                        <div class="item-size-image">
+                                            <i class="fas fa-cube"></i>
+                                        </div>
+                                        <span>Small Box</span>
+                                    </button>
+                                </div>
+                                <div class="item-size-option">
+                                    <button type="button" class="item-size-btn" data-size="large-box" data-price="50">
+                                        <div class="item-size-image">
+                                            <i class="fas fa-cubes"></i>
+                                        </div>
+                                        <span>Large Box</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="itemQuantity">Quantity</label>
+                            <div class="quantity-input">
+                                <button type="button" class="quantity-btn" id="decreaseQuantity">-</button>
+                                <input type="number" id="itemQuantity" value="1" min="1" max="10">
+                                <button type="button" class="quantity-btn" id="increaseQuantity">+</button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Select Vehicle</label>
+                            <div class="vehicle-options" id="vehicleOptions">
+                                <div class="vehicle-option">
+                                    <button type="button" class="vehicle-btn" data-vehicle="motorcycle" data-price="0">
+                                        <div class="vehicle-image">
+                                            <i class="fas fa-motorcycle"></i>
+                                        </div>
+                                        <span>Motorcycle</span>
+                                    </button>
+                                </div>
+                                <div class="vehicle-option">
+                                    <button type="button" class="vehicle-btn" data-vehicle="pickup" data-price="20">
+                                        <div class="vehicle-image">
+                                            <i class="fas fa-truck-pickup"></i>
+                                        </div>
+                                        <span>Pickup</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="price-breakdown" id="greaterMalePriceBreakdown">
+                            <div class="price-item-row">
+                                <span>Item Price:</span>
+                                <span id="itemPriceValue">0 MVR</span>
+                            </div>
+                            <div class="price-item-row">
+                                <span>Vehicle Fee:</span>
+                                <span id="vehiclePriceValue">0 MVR</span>
+                            </div>
+                            <div class="price-item-row">
+                                <span>Destination Fee:</span>
+                                <span id="destinationPriceValue">0 MVR</span>
+                            </div>
+                            <div class="price-item-row price-total">
+                                <span>Total:</span>
+                                <span id="greaterMaleTotalPrice">0 MVR</span>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-save"></i> Save Greater Male Delivery
+                        </button>
+                    </form>
+                </div>
+
+                <!-- User's Greater Male City Reference Numbers -->
+                <div class="data-container">
+                    <h3 class="form-title"><i class="fas fa-list"></i> My Greater Male City Delivery Reference Numbers</h3>
+                    <div id="userGreaterMaleReferences">
+                        <!-- User's Greater Male City reference numbers will be populated here -->
+                    </div>
+                </div>
+            </div>
+            
             <!-- Records Management Section -->
             <div class="dashboard-section" id="records-management">
                 <h2 class="section-title">Records Management</h2>
@@ -2587,6 +2975,7 @@
                 <div class="records-tabs">
                     <button class="records-tab active" data-tab="cargo-records">Cargo Records</button>
                     <button class="records-tab" data-tab="boat-records">Boat Records</button>
+                    <button class="records-tab" data-tab="greater-male-records">Greater Male Records</button>
                 </div>
                 
                 <!-- Cargo Records -->
@@ -2648,6 +3037,37 @@
                                 </tbody>
                             </table>
                             <div class="empty-message" id="boatEmptyMessage">No boat delivery records found</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Greater Male Records -->
+                <div class="records-content" id="greater-male-records">
+                    <div class="data-container">
+                        <h3 class="form-title"><i class="fas fa-list"></i> Greater Male City Delivery Records</h3>
+                        <div id="greaterMaleData">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>Customer</th>
+                                        <th>Contact</th>
+                                        <th>Pickup</th>
+                                        <th>Item Size</th>
+                                        <th>Quantity</th>
+                                        <th>Vehicle</th>
+                                        <th>Destination</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Payment</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="greaterMaleTableBody">
+                                    <!-- Greater Male data will be populated here -->
+                                </tbody>
+                            </table>
+                            <div class="empty-message" id="greaterMaleEmptyMessage">No Greater Male City delivery records found</div>
                         </div>
                     </div>
                 </div>
@@ -2759,6 +3179,7 @@
                 <div class="price-tabs">
                     <button class="price-tab active" data-tab="cargo-prices">Cargo Prices</button>
                     <button class="price-tab" data-tab="boat-prices">Boat Prices</button>
+                    <button class="price-tab" data-tab="greater-male-prices">Greater Male Prices</button>
                 </div>
                 
                 <!-- Cargo Price Management -->
@@ -2831,6 +3252,68 @@
                         
                         <div class="price-list" id="boatPriceList">
                             <!-- Boat price list will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Greater Male Price Management -->
+                <div class="price-content" id="greater-male-prices">
+                    <div class="price-management">
+                        <h3 class="form-title"><i class="fas fa-money-bill-wave"></i> Set Greater Male City Delivery Prices</h3>
+                        
+                        <div class="price-form">
+                            <div class="price-input-group">
+                                <div class="form-field price-input">
+                                    <label for="itemType">Item Type</label>
+                                    <select id="itemType">
+                                        <option value="small-package">Small Package</option>
+                                        <option value="large-package">Large Package</option>
+                                        <option value="small-box">Small Box</option>
+                                        <option value="large-box">Large Box</option>
+                                    </select>
+                                </div>
+                                <div class="form-field price-input">
+                                    <label for="itemPrice">Price (MVR)</label>
+                                    <input type="number" id="itemPrice" placeholder="Price in MVR" min="0" step="0.01">
+                                </div>
+                            </div>
+                            
+                            <button class="add-price-btn" id="addItemPriceBtn">
+                                <i class="fas fa-plus"></i> Add Item Price
+                            </button>
+                        </div>
+                        
+                        <div class="price-list" id="itemPriceList">
+                            <!-- Item price list will be populated here -->
+                        </div>
+                        
+                        <div class="price-form" style="margin-top: 30px;">
+                            <h3 class="form-title"><i class="fas fa-route"></i> Set Destination Prices</h3>
+                            <div class="price-input-group">
+                                <div class="form-field price-input">
+                                    <label for="destinationType">Destination</label>
+                                    <select id="destinationType">
+                                        <option value="male-to-hulhumale">Male to Hulhumale</option>
+                                        <option value="hulhumale-to-male">Hulhumale to Male</option>
+                                        <option value="male-to-phase2">Male to Phase 2</option>
+                                        <option value="hulhumale-to-phase2">Hulhumale to Phase 2</option>
+                                        <option value="male-to-boat">Male to Boat</option>
+                                        <option value="hulhumale-to-boat">Hulhumale to Boat</option>
+                                    </select>
+                                </div>
+                                <div class="form-field price-input">
+                                    <label for="destinationPrice">Price (MVR)</label>
+                                    <input type="number" id="destinationPrice" placeholder="Price in MVR" min="0" step="0.01">
+                                </div>
+                            </div>
+                            
+                            <button class="add-price-btn" id="addDestinationPriceBtn">
+                                <i class="fas fa-plus"></i> Add Destination Price
+                            </button>
+                        </div>
+                        
+                        <div class="price-list" id="destinationPriceList">
+                            <!-- Destination price list will be populated here -->
                         </div>
                     </div>
                 </div>
@@ -3010,7 +3493,7 @@
             </div>
             <div class="form-field">
                 <label for="editUserRole">Role</label>
-                <select id="editUserRole">
+                                <select id="editUserRole">
                     <option value="staff">Staff</option>
                     <option value="admin">Admin</option>
                 </select>
@@ -3042,6 +3525,7 @@
         // Data storage
         let cargoDeliveries = [];
         let boatDeliveries = [];
+        let greaterMaleDeliveries = [];
         let currentDelivery = null;
         let currentDeliveryType = null;
         let currentDeliveryId = null;
@@ -3060,6 +3544,28 @@
             { min: 4, max: 6, price: 90 },
             { min: 7, max: 10, price: 130 }
         ];
+        
+        // Greater Male City pricing
+        let greaterMaleItemPrices = {
+            'small-package': 25,
+            'large-package': 40,
+            'small-box': 30,
+            'large-box': 50
+        };
+        
+        let greaterMaleDestinationPrices = {
+            'male-to-hulhumale': 30,
+            'hulhumale-to-male': 30,
+            'male-to-phase2': 25,
+            'hulhumale-to-phase2': 20,
+            'male-to-boat': 15,
+            'hulhumale-to-boat': 15
+        };
+        
+        let greaterMaleVehiclePrices = {
+            'motorcycle': 0,
+            'pickup': 20
+        };
         
         // User management
         let users = [
@@ -3083,6 +3589,7 @@
         const showLoginForm = document.getElementById('showLoginForm');
         const cargoForm = document.getElementById('cargoForm');
         const boatForm = document.getElementById('boatForm');
+        const greaterMaleForm = document.getElementById('greaterMaleForm');
         const successMessage = document.getElementById('successMessage');
         const successTitle = document.getElementById('successTitle');
         const successText = document.getElementById('successText');
@@ -3098,8 +3605,10 @@
         const dashboardSections = document.querySelectorAll('.dashboard-section');
         const cargoTableBody = document.getElementById('cargoTableBody');
         const boatTableBody = document.getElementById('boatTableBody');
+        const greaterMaleTableBody = document.getElementById('greaterMaleTableBody');
         const cargoEmptyMessage = document.getElementById('cargoEmptyMessage');
         const boatEmptyMessage = document.getElementById('boatEmptyMessage');
+        const greaterMaleEmptyMessage = document.getElementById('greaterMaleEmptyMessage');
         const searchBtn = document.getElementById('searchBtn');
         const customerDetails = document.getElementById('customerDetails');
         const customerInfo = document.getElementById('customerInfo');
@@ -3144,6 +3653,7 @@
         const revenueStats = document.getElementById('revenueStats');
         const userCargoReferences = document.getElementById('userCargoReferences');
         const userBoatReferences = document.getElementById('userBoatReferences');
+        const userGreaterMaleReferences = document.getElementById('userGreaterMaleReferences');
         const notificationSound = document.getElementById('notificationSound');
         const pickupLocation = document.getElementById('pickupLocation');
         const packageDetailsField = document.getElementById('packageDetailsField');
@@ -3175,12 +3685,38 @@
         const applyFilter = document.getElementById('applyFilter');
         const resetFilter = document.getElementById('resetFilter');
         const revenueChart = document.getElementById('revenueChart');
+        
+        // Greater Male City elements
+        const itemSizeOptions = document.querySelectorAll('.item-size-btn');
+        const vehicleOptions = document.querySelectorAll('.vehicle-btn');
+        const destinationOptions = document.querySelectorAll('.destination-btn');
+        const decreaseQuantity = document.getElementById('decreaseQuantity');
+        const increaseQuantity = document.getElementById('increaseQuantity');
+        const itemQuantity = document.getElementById('itemQuantity');
+        const itemPriceValue = document.getElementById('itemPriceValue');
+        const vehiclePriceValue = document.getElementById('vehiclePriceValue');
+        const destinationPriceValue = document.getElementById('destinationPriceValue');
+        const greaterMaleTotalPrice = document.getElementById('greaterMaleTotalPrice');
+        const addItemPriceBtn = document.getElementById('addItemPriceBtn');
+        const addDestinationPriceBtn = document.getElementById('addDestinationPriceBtn');
+        const itemPriceList = document.getElementById('itemPriceList');
+        const destinationPriceList = document.getElementById('destinationPriceList');
+
+        // NEW ELEMENTS FOR GREATER MALE CITY FORM
+        const greaterMalePickupLocation = document.getElementById('greaterMalePickupLocation');
+        const greaterMalePackageDetailsField = document.getElementById('greaterMalePackageDetailsField');
+        const greaterMaleAddressField = document.getElementById('greaterMaleAddressField');
+        const greaterMaleDeliveryLocation = document.getElementById('greaterMaleDeliveryLocation');
+        const greaterMaleDeliveryAddressField = document.getElementById('greaterMaleDeliveryAddressField');
 
         // Firebase Database References
         const cargoRef = database.ref('cargoDeliveries');
         const boatRef = database.ref('boatDeliveries');
+        const greaterMaleRef = database.ref('greaterMaleDeliveries');
         const cargoPriceRangesRef = database.ref('cargoPriceRanges');
         const boatPriceRangesRef = database.ref('boatPriceRanges');
+        const greaterMaleItemPricesRef = database.ref('greaterMaleItemPrices');
+        const greaterMaleDestinationPricesRef = database.ref('greaterMaleDestinationPrices');
         const usersRef = database.ref('users');
         const notificationsRef = database.ref('notifications');
 
@@ -3389,6 +3925,10 @@
                 // Fill boat delivery form
                 document.getElementById('boatCustomerName').value = currentUser.username;
                 document.getElementById('boatCustomerContact').value = currentUser.contact;
+                
+                // Fill Greater Male City delivery form
+                document.getElementById('greaterMaleCustomerName').value = currentUser.username;
+                document.getElementById('greaterMaleCustomerContact').value = currentUser.contact;
             }
         }
 
@@ -3439,6 +3979,7 @@
                 // Hide cargo and boat delivery forms for admin
                 document.getElementById('cargo-delivery').style.display = 'none';
                 document.getElementById('boat-delivery').style.display = 'none';
+                document.getElementById('greater-male-delivery').style.display = 'none';
             } else {
                 sidebarNav.innerHTML = `
                     <div class="nav-item">
@@ -3451,6 +3992,12 @@
                         <a href="#" class="nav-link" data-section="boat-delivery">
                             <i class="fas fa-ship"></i>
                             <span>Boat Delivery</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link" data-section="greater-male-delivery">
+                            <i class="fas fa-city"></i>
+                            <span>Greater Male City</span>
                         </a>
                     </div>
                     <div class="nav-item">
@@ -3488,6 +4035,7 @@
                             if (targetSection === 'records-management') {
                                 loadCargoData();
                                 loadBoatData();
+                                loadGreaterMaleData();
                             }
                             
                             // Load revenue data when Revenue Dashboard is accessed
@@ -3496,7 +4044,7 @@
                             }
                             
                             // Load user references when cargo or boat delivery section is accessed
-                            if (targetSection === 'cargo-delivery' || targetSection === 'boat-delivery') {
+                            if (targetSection === 'cargo-delivery' || targetSection === 'boat-delivery' || targetSection === 'greater-male-delivery') {
                                 loadUserReferences();
                             }
                             
@@ -3537,6 +4085,9 @@
             
             // Initialize price tabs
             initializePriceTabs();
+            
+            // Initialize Greater Male City form
+            initializeGreaterMaleForm();
         }
 
         // Initialize price tabs functionality
@@ -3558,6 +4109,219 @@
                     });
                 });
             });
+        }
+
+        // Initialize Greater Male City form
+        function initializeGreaterMaleForm() {
+            // Show/hide location-specific fields based on pickup location selection
+            greaterMalePickupLocation.addEventListener('change', function() {
+                const selectedLocation = this.value;
+                
+                // Hide all location-specific fields
+                greaterMalePackageDetailsField.classList.remove('active');
+                greaterMaleAddressField.classList.remove('active');
+                
+                // Show appropriate field based on selection
+                if (selectedLocation === 'Post Office' || selectedLocation === 'Pickpost' || selectedLocation === 'Redbox') {
+                    greaterMalePackageDetailsField.classList.add('active');
+                } else if (selectedLocation === 'Male' || selectedLocation === 'Hulhumale' || selectedLocation === 'Phase2') {
+                    greaterMaleAddressField.classList.add('active');
+                }
+            });
+
+            // Show/hide delivery address field based on destination selection
+            greaterMaleDeliveryLocation.addEventListener('change', function() {
+                const selectedDestination = this.value;
+                
+                // Hide delivery address field
+                greaterMaleDeliveryAddressField.classList.remove('active');
+                
+                // Show delivery address field only for Male destination
+                if (selectedDestination === 'Male') {
+                    greaterMaleDeliveryAddressField.classList.add('active');
+                }
+            });
+
+            // Item size selection
+            itemSizeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    itemSizeOptions.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Update vehicle options based on selected item size and quantity
+                    updateVehicleOptions(this.getAttribute('data-size'), parseInt(itemQuantity.value));
+                    
+                    // Update price breakdown
+                    updateGreaterMalePrice();
+                });
+            });
+            
+            // Vehicle selection
+            vehicleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    if (this.classList.contains('disabled')) return;
+                    
+                    // Remove active class from all buttons
+                    vehicleOptions.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Update price breakdown
+                    updateGreaterMalePrice();
+                });
+            });
+            
+            // Quantity controls
+            decreaseQuantity.addEventListener('click', function() {
+                let currentValue = parseInt(itemQuantity.value);
+                if (currentValue > 1) {
+                    itemQuantity.value = currentValue - 1;
+                    // Update vehicle options based on selected item size and new quantity
+                    const selectedItemSize = document.querySelector('.item-size-btn.active');
+                    if (selectedItemSize) {
+                        updateVehicleOptions(selectedItemSize.getAttribute('data-size'), currentValue - 1);
+                    }
+                    updateGreaterMalePrice();
+                }
+            });
+            
+            increaseQuantity.addEventListener('click', function() {
+                let currentValue = parseInt(itemQuantity.value);
+                if (currentValue < 10) {
+                    itemQuantity.value = currentValue + 1;
+                    // Update vehicle options based on selected item size and new quantity
+                    const selectedItemSize = document.querySelector('.item-size-btn.active');
+                    if (selectedItemSize) {
+                        updateVehicleOptions(selectedItemSize.getAttribute('data-size'), currentValue + 1);
+                    }
+                    updateGreaterMalePrice();
+                }
+            });
+            
+            itemQuantity.addEventListener('change', function() {
+                let value = parseInt(this.value);
+                if (isNaN(value) || value < 1) {
+                    this.value = 1;
+                } else if (value > 10) {
+                    this.value = 10;
+                }
+                // Update vehicle options based on selected item size and new quantity
+                const selectedItemSize = document.querySelector('.item-size-btn.active');
+                if (selectedItemSize) {
+                    updateVehicleOptions(selectedItemSize.getAttribute('data-size'), value);
+                }
+                updateGreaterMalePrice();
+            });
+            
+            // Form submission
+            greaterMaleForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const selectedItemSize = document.querySelector('.item-size-btn.active');
+                const selectedVehicle = document.querySelector('.vehicle-btn.active');
+                
+                if (!selectedItemSize || !selectedVehicle) {
+                    showNotification('Please select item size and vehicle');
+                    return;
+                }
+                
+                const referenceNumber = generateReferenceNumber('GMC');
+                
+                const greaterMaleData = {
+                    customerName: document.getElementById('greaterMaleCustomerName').value,
+                    customerContact: document.getElementById('greaterMaleCustomerContact').value,
+                    pickupLocation: document.getElementById('greaterMalePickupLocation').value,
+                    packageDetails: document.getElementById('greaterMalePackageDetails').value,
+                    addressName: document.getElementById('greaterMaleAddressName').value,
+                    deliveryLocation: document.getElementById('greaterMaleDeliveryLocation').value,
+                    deliveryAddressName: document.getElementById('greaterMaleDeliveryAddressName').value,
+                    itemSize: selectedItemSize.getAttribute('data-size'),
+                    itemSizeDisplay: selectedItemSize.querySelector('span').textContent,
+                    quantity: parseInt(itemQuantity.value),
+                    vehicle: selectedVehicle.getAttribute('data-vehicle'),
+                    vehicleDisplay: selectedVehicle.querySelector('span').textContent,
+                    totalPrice: calculateGreaterMaleTotalPrice(),
+                    status: 'Order Placed',
+                    progress: 1,
+                    id: Date.now(),
+                    referenceNumber: referenceNumber,
+                    type: 'greater-male',
+                    createdAt: new Date().toISOString(),
+                    paymentStatus: 'under_review',
+                    createdBy: currentUser.email
+                };
+                
+                // Show payment modal
+                showPaymentModal(greaterMaleData);
+            });
+        }
+
+        // Update vehicle options based on selected item size and quantity
+        function updateVehicleOptions(selectedSize, quantity) {
+            const motorcycleBtn = document.querySelector('.vehicle-btn[data-vehicle="motorcycle"]');
+            const pickupBtn = document.querySelector('.vehicle-btn[data-vehicle="pickup"]');
+            
+            // Reset all buttons
+            vehicleOptions.forEach(btn => {
+                btn.classList.remove('active', 'disabled');
+            });
+            
+            // Enable/disable buttons based on item size and quantity
+            if ((selectedSize === 'small-package' && quantity <= 4) || 
+                (selectedSize === 'small-box' && quantity <= 2)) {
+                // Only motorcycle allowed for small items with limited quantity
+                motorcycleBtn.classList.remove('disabled');
+                pickupBtn.classList.add('disabled');
+                motorcycleBtn.classList.add('active');
+            } else {
+                // Both vehicles allowed for other cases
+                motorcycleBtn.classList.remove('disabled');
+                pickupBtn.classList.remove('disabled');
+                // Default to motorcycle
+                motorcycleBtn.classList.add('active');
+            }
+        }
+
+        // Calculate Greater Male City total price
+        function calculateGreaterMaleTotalPrice() {
+            const selectedItemSize = document.querySelector('.item-size-btn.active');
+            const selectedVehicle = document.querySelector('.vehicle-btn.active');
+            const quantity = parseInt(itemQuantity.value);
+            
+            if (!selectedItemSize || !selectedVehicle) return 0;
+            
+            const itemPrice = greaterMaleItemPrices[selectedItemSize.getAttribute('data-size')];
+            const vehiclePrice = greaterMaleVehiclePrices[selectedVehicle.getAttribute('data-vehicle')];
+            
+            return (itemPrice + vehiclePrice) * quantity;
+        }
+
+        // Update Greater Male City price breakdown
+        function updateGreaterMalePrice() {
+            const selectedItemSize = document.querySelector('.item-size-btn.active');
+            const selectedVehicle = document.querySelector('.vehicle-btn.active');
+            const quantity = parseInt(itemQuantity.value);
+            
+            if (!selectedItemSize || !selectedVehicle) {
+                itemPriceValue.textContent = '0 MVR';
+                vehiclePriceValue.textContent = '0 MVR';
+                destinationPriceValue.textContent = '0 MVR';
+                greaterMaleTotalPrice.textContent = '0 MVR';
+                return;
+            }
+            
+            const itemPrice = greaterMaleItemPrices[selectedItemSize.getAttribute('data-size')];
+            const vehiclePrice = greaterMaleVehiclePrices[selectedVehicle.getAttribute('data-vehicle')];
+            const totalPrice = (itemPrice + vehiclePrice) * quantity;
+            
+            itemPriceValue.textContent = `${itemPrice * quantity} MVR`;
+            vehiclePriceValue.textContent = `${vehiclePrice * quantity} MVR`;
+            destinationPriceValue.textContent = '0 MVR'; // No destination fee in this version
+            greaterMaleTotalPrice.textContent = `${totalPrice} MVR`;
         }
 
         // Sidebar functionality
@@ -3589,8 +4353,8 @@
         function loadAllReferences() {
             referencesContent.innerHTML = '';
             
-            // Combine cargo and boat deliveries
-            const allDeliveries = [...cargoDeliveries, ...boatDeliveries];
+            // Combine all deliveries
+            const allDeliveries = [...cargoDeliveries, ...boatDeliveries, ...greaterMaleDeliveries];
             
             // Filter based on user role
             let displayDeliveries = allDeliveries;
@@ -3617,10 +4381,15 @@
                     referenceItem.classList.add('pending');
                 }
                 
+                let typeText = '';
+                if (delivery.type === 'cargo') typeText = 'Cargo';
+                else if (delivery.type === 'boat') typeText = 'Boat';
+                else if (delivery.type === 'greater-male') typeText = 'Greater Male';
+                
                 referenceItem.innerHTML = `
                     <div class="reference-header">
                         <div class="reference-number">${delivery.referenceNumber}</div>
-                        <div class="reference-type">${delivery.type === 'cargo' ? 'Cargo' : 'Boat'}</div>
+                        <div class="reference-type">${typeText}</div>
                     </div>
                     <div class="reference-details">
                         <div><strong>Customer:</strong> ${delivery.customerName}</div>
@@ -3645,10 +4414,12 @@
             // Clear existing reference lists
             userCargoReferences.innerHTML = '';
             userBoatReferences.innerHTML = '';
+            userGreaterMaleReferences.innerHTML = '';
             
             // Get all deliveries for the current user
             const userCargoDeliveries = cargoDeliveries.filter(d => d.createdBy === currentUser.email);
             const userBoatDeliveries = boatDeliveries.filter(d => d.createdBy === currentUser.email);
+            const userGreaterMaleDeliveries = greaterMaleDeliveries.filter(d => d.createdBy === currentUser.email);
             
             // Load cargo references
             if (userCargoDeliveries.length === 0) {
@@ -3735,6 +4506,49 @@
                 
                 userBoatReferences.appendChild(boatReferenceList);
             }
+            
+            // Load Greater Male City references
+            if (userGreaterMaleDeliveries.length === 0) {
+                userGreaterMaleReferences.innerHTML = '<div class="empty-message">No Greater Male City delivery reference numbers found</div>';
+            } else {
+                // Sort Greater Male City deliveries by creation date (newest first)
+                userGreaterMaleDeliveries.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                
+                // Create Greater Male City reference list
+                const greaterMaleReferenceList = document.createElement('div');
+                greaterMaleReferenceList.style.display = 'flex';
+                greaterMaleReferenceList.style.flexWrap = 'wrap';
+                greaterMaleReferenceList.style.gap = '10px';
+                greaterMaleReferenceList.style.marginTop = '15px';
+                
+                userGreaterMaleDeliveries.forEach(delivery => {
+                    const referenceItem = document.createElement('div');
+                    referenceItem.className = 'reference-link';
+                    
+                    // Apply color based on delivery status
+                    if (delivery.status === 'Delivered') {
+                        referenceItem.classList.add('reference-completed');
+                    } else {
+                        referenceItem.classList.add('reference-pending');
+                    }
+                    
+                    referenceItem.textContent = delivery.referenceNumber;
+                    referenceItem.style.cursor = 'pointer';
+                    referenceItem.style.padding = '8px 12px';
+                    referenceItem.style.borderRadius = '6px';
+                    referenceItem.style.backgroundColor = delivery.status === 'Delivered' ? '#e8f5e9' : '#ffebee';
+                    referenceItem.style.border = delivery.status === 'Delivered' ? '1px solid #4caf50' : '1px solid #f44336';
+                    
+                    // Add click event to track delivery
+                    referenceItem.addEventListener('click', function() {
+                        trackDeliveryByReference(delivery.referenceNumber);
+                    });
+                    
+                    greaterMaleReferenceList.appendChild(referenceItem);
+                });
+                
+                userGreaterMaleReferences.appendChild(greaterMaleReferenceList);
+            }
         }
 
         // Notifications functionality
@@ -3777,7 +4591,7 @@
                 notificationItem.innerHTML = `
                     <div class="notification-header">
                         <div class="notification-title">${notification.title}</div>
-                        <div class="notification-time">${formatDateTime(notification.timestamp)}</div>
+                        <div class="notification-time">${formatTimeAgo(notification.timestamp)}</div>
                     </div>
                     <div class="notification-message">${notification.message}</div>
                     <div class="notification-actions" style="margin-top: 10px; text-align: right;">
@@ -3789,6 +4603,28 @@
                 
                 notificationsContent.appendChild(notificationItem);
             });
+        }
+
+        // Format time ago (1hr ago, 2hr ago, etc.)
+        function formatTimeAgo(timestamp) {
+            const now = new Date();
+            const notificationTime = new Date(timestamp);
+            const diffInMs = now - notificationTime;
+            const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+            const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+            const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+            
+            if (diffInMinutes < 1) {
+                return 'Just now';
+            } else if (diffInMinutes < 60) {
+                return `${diffInMinutes} min ago`;
+            } else if (diffInHours < 24) {
+                return `${diffInHours} hr ago`;
+            } else if (diffInDays < 7) {
+                return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+            } else {
+                return formatDate(timestamp);
+            }
         }
 
         // Add notification
@@ -3933,14 +4769,21 @@
             // Add revenue from cargo deliveries
             cargoDeliveries.forEach(delivery => {
                 if (delivery.paidAt && delivery.paidAt.startsWith(date) && delivery.paymentStatus === 'paid') {
-                    total += delivery.deliveryPrice;
+                    total += delivery.deliveryPrice || delivery.totalPrice || 0;
                 }
             });
             
             // Add revenue from boat deliveries
             boatDeliveries.forEach(delivery => {
                 if (delivery.paidAt && delivery.paidAt.startsWith(date) && delivery.paymentStatus === 'paid') {
-                    total += delivery.deliveryPrice;
+                    total += delivery.deliveryPrice || delivery.totalPrice || 0;
+                }
+            });
+            
+            // Add revenue from Greater Male City deliveries
+            greaterMaleDeliveries.forEach(delivery => {
+                if (delivery.paidAt && delivery.paidAt.startsWith(date) && delivery.paymentStatus === 'paid') {
+                    total += delivery.deliveryPrice || delivery.totalPrice || 0;
                 }
             });
             
@@ -3956,7 +4799,7 @@
                 if (delivery.paidAt && delivery.paymentStatus === 'paid') {
                     const paidDate = new Date(delivery.paidAt);
                     if (paidDate >= startDate && paidDate <= endDate) {
-                        total += delivery.deliveryPrice;
+                        total += delivery.deliveryPrice || delivery.totalPrice || 0;
                     }
                 }
             });
@@ -3966,7 +4809,17 @@
                 if (delivery.paidAt && delivery.paymentStatus === 'paid') {
                     const paidDate = new Date(delivery.paidAt);
                     if (paidDate >= startDate && paidDate <= endDate) {
-                        total += delivery.deliveryPrice;
+                        total += delivery.deliveryPrice || delivery.totalPrice || 0;
+                    }
+                }
+            });
+            
+            // Add revenue from Greater Male City deliveries
+            greaterMaleDeliveries.forEach(delivery => {
+                if (delivery.paidAt && delivery.paymentStatus === 'paid') {
+                    const paidDate = new Date(delivery.paidAt);
+                    if (paidDate >= startDate && paidDate <= endDate) {
+                        total += delivery.deliveryPrice || delivery.totalPrice || 0;
                     }
                 }
             });
@@ -4143,7 +4996,7 @@
 
         // Show payment modal
         function showPaymentModal(deliveryData) {
-            paymentAmount.textContent = deliveryData.deliveryPrice;
+            paymentAmount.textContent = deliveryData.deliveryPrice || deliveryData.totalPrice;
             paymentModal.classList.add('active');
             
             // Store delivery data temporarily
@@ -4188,8 +5041,10 @@
                 // Save delivery based on type
                 if (deliveryData.type === 'cargo') {
                     saveCargoDelivery(deliveryData);
-                } else {
+                } else if (deliveryData.type === 'boat') {
                     saveBoatDelivery(deliveryData);
+                } else if (deliveryData.type === 'greater-male') {
+                    saveGreaterMaleDelivery(deliveryData);
                 }
                 
                 // Reset and close modal
@@ -4244,6 +5099,49 @@
             
             // Show success notification
             showNotification('Boat delivery saved successfully! Payment is under review.');
+        }
+
+        // Save Greater Male City delivery
+        function saveGreaterMaleDelivery(greaterMaleData) {
+            greaterMaleDeliveries.push(greaterMaleData);
+            saveGreaterMaleData();
+            loadGreaterMaleData();
+            loadUserReferences();
+            greaterMaleForm.reset();
+            resetGreaterMaleForm();
+            
+            // Auto-fill user info again after form reset
+            autoFillUserInfo();
+            
+            // Add notification
+            addNotification(
+                'New Greater Male City Delivery Created',
+                `Greater Male City delivery for ${greaterMaleData.customerName} has been created and is awaiting payment approval. Reference: ${greaterMaleData.referenceNumber}`,
+                currentUser.email
+            );
+            
+            // Show success notification
+            showNotification('Greater Male City delivery saved successfully! Payment is under review.');
+        }
+
+        // Reset Greater Male City form
+        function resetGreaterMaleForm() {
+            // Reset all selections
+            itemSizeOptions.forEach(btn => btn.classList.remove('active'));
+            vehicleOptions.forEach(btn => btn.classList.remove('active'));
+            
+            // Reset quantity
+            itemQuantity.value = 1;
+            
+            // Reset price breakdown
+            updateGreaterMalePrice();
+            
+            // Reset pickup location specific fields
+            greaterMalePackageDetailsField.classList.remove('active');
+            greaterMaleAddressField.classList.remove('active');
+            
+            // Reset delivery location specific fields
+            greaterMaleDeliveryAddressField.classList.remove('active');
         }
 
         // Reset weight selection
@@ -4413,6 +5311,63 @@
             });
         }
 
+        // Load Greater Male City data into table
+        function loadGreaterMaleData() {
+            greaterMaleTableBody.innerHTML = '';
+            
+            // Filter data based on user role
+            let displayGreaterMaleDeliveries = greaterMaleDeliveries;
+            if (currentUser.role !== 'admin') {
+                displayGreaterMaleDeliveries = greaterMaleDeliveries.filter(d => d.createdBy === currentUser.email);
+            }
+            
+            if (displayGreaterMaleDeliveries.length === 0) {
+                greaterMaleEmptyMessage.style.display = 'block';
+                return;
+            }
+            
+            greaterMaleEmptyMessage.style.display = 'none';
+            
+            displayGreaterMaleDeliveries.forEach(delivery => {
+                const statusClass = getStatusClass(delivery.status);
+                const paymentClass = getPaymentStatusClass(delivery.paymentStatus);
+                const paymentText = getPaymentStatusText(delivery.paymentStatus);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <a class="reference-link ${delivery.status === 'Delivered' ? 'reference-completed' : 'reference-pending'}" onclick="trackDeliveryByReference('${delivery.referenceNumber}')">
+                            ${delivery.referenceNumber}
+                        </a>
+                    </td>
+                    <td>${delivery.customerName}</td>
+                    <td>${delivery.customerContact}</td>
+                    <td>${delivery.pickupLocation}${delivery.packageDetails ? ` (${delivery.packageDetails})` : delivery.addressName ? ` (${delivery.addressName})` : ''}</td>
+                    <td>${delivery.itemSizeDisplay}</td>
+                    <td>${delivery.quantity}</td>
+                    <td>${delivery.vehicleDisplay}</td>
+                    <td>${delivery.deliveryLocation}${delivery.deliveryAddressName ? ` (${delivery.deliveryAddressName})` : ''}</td>
+                    <td>${delivery.totalPrice} MVR</td>
+                    <td>
+                        <span class="status-badge ${statusClass}">${delivery.status}</span>
+                    </td>
+                    <td>
+                        <span class="status-badge ${paymentClass}">${paymentText}</span>
+                        ${delivery.paymentSlip ? `<br><button class="action-btn view-btn" onclick="viewPaymentSlip('${delivery.paymentSlip}')">View Slip</button>` : ''}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn update-btn" onclick="openStatusModal('greater-male', ${delivery.id})">Update</button>
+                            ${currentUser.role === 'admin' && delivery.paymentStatus === 'under_review' ? 
+                                `<button class="action-btn review-btn" onclick="approvePayment('greater-male', ${delivery.id})">Approve</button>` : ''}
+                            <button class="action-btn delete-btn" onclick="deleteDelivery('greater-male', ${delivery.id})">Delete</button>
+                        </div>
+                    </td>
+                `;
+                greaterMaleTableBody.appendChild(row);
+            });
+        }
+
         // Start countdown timer for a delivery
         function startCountdownTimer(id, deliveryDate) {
             function updateCountdown() {
@@ -4454,6 +5409,11 @@
                 delivery = boatDeliveries.find(d => d.referenceNumber === referenceNumber);
             }
             
+            // If not found in boat, search in Greater Male City deliveries
+            if (!delivery) {
+                delivery = greaterMaleDeliveries.find(d => d.referenceNumber === referenceNumber);
+            }
+            
             if (delivery) {
                 // Switch to track delivery section
                 document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -4480,8 +5440,10 @@
                 let delivery;
                 if (type === 'cargo') {
                     delivery = cargoDeliveries.find(d => d.id === id);
-                } else {
+                } else if (type === 'boat') {
                     delivery = boatDeliveries.find(d => d.id === id);
+                } else if (type === 'greater-male') {
+                    delivery = greaterMaleDeliveries.find(d => d.id === id);
                 }
                 
                 if (delivery) {
@@ -4551,8 +5513,10 @@
             let delivery;
             if (type === 'cargo') {
                 delivery = cargoDeliveries.find(d => d.id === id);
-            } else {
+            } else if (type === 'boat') {
                 delivery = boatDeliveries.find(d => d.id === id);
+            } else if (type === 'greater-male') {
+                delivery = greaterMaleDeliveries.find(d => d.id === id);
             }
             
             if (!delivery) return;
@@ -4600,8 +5564,10 @@
             let delivery;
             if (currentDeliveryType === 'cargo') {
                 delivery = cargoDeliveries.find(d => d.id === currentDeliveryId);
-            } else {
+            } else if (currentDeliveryType === 'boat') {
                 delivery = boatDeliveries.find(d => d.id === currentDeliveryId);
+            } else if (currentDeliveryType === 'greater-male') {
+                delivery = greaterMaleDeliveries.find(d => d.id === currentDeliveryId);
             }
             
             if (!delivery) return;
@@ -4706,6 +5672,11 @@
                 delivery = boatDeliveries.find(d => d.customerContact === contact);
             }
             
+            // If not found in boat, search in Greater Male City deliveries
+            if (!delivery) {
+                delivery = greaterMaleDeliveries.find(d => d.customerContact === contact);
+            }
+            
             if (delivery) {
                 currentDelivery = delivery;
                 displayCustomerDetails(delivery);
@@ -4764,7 +5735,7 @@
                         <div class="info-value"><span class="status-badge ${getPaymentStatusClass(delivery.paymentStatus)}">${getPaymentStatusText(delivery.paymentStatus)}</span></div>
                     </div>
                 `;
-            } else {
+            } else if (delivery.type === 'boat') {
                 detailsHTML = `
                     <div class="info-item">
                         <div class="info-label">Reference Number</div>
@@ -4805,6 +5776,53 @@
                     <div class="info-item">
                         <div class="info-label">Expected Delivery</div>
                         <div class="info-value">${formatDate(delivery.deliveryDate)}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Current Status</div>
+                        <div class="info-value"><span class="status-badge ${getStatusClass(delivery.status)}">${delivery.status}</span></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Payment Status</div>
+                        <div class="info-value"><span class="status-badge ${getPaymentStatusClass(delivery.paymentStatus)}">${getPaymentStatusText(delivery.paymentStatus)}</span></div>
+                    </div>
+                `;
+            } else if (delivery.type === 'greater-male') {
+                detailsHTML = `
+                    <div class="info-item">
+                        <div class="info-label">Reference Number</div>
+                        <div class="info-value">${delivery.referenceNumber}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Customer Name</div>
+                        <div class="info-value">${delivery.customerName}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Contact</div>
+                        <div class="info-value">${delivery.customerContact}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Pickup Location</div>
+                        <div class="info-value">${delivery.pickupLocation}${delivery.packageDetails ? ` (${delivery.packageDetails})` : delivery.addressName ? ` (${delivery.addressName})` : ''}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Item Size</div>
+                        <div class="info-value">${delivery.itemSizeDisplay}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Quantity</div>
+                        <div class="info-value">${delivery.quantity}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Vehicle</div>
+                        <div class="info-value">${delivery.vehicleDisplay}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Destination</div>
+                        <div class="info-value">${delivery.deliveryLocation}${delivery.deliveryAddressName ? ` (${delivery.deliveryAddressName})` : ''}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Price</div>
+                        <div class="info-value">${delivery.totalPrice} MVR</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Current Status</div>
@@ -4856,9 +5874,12 @@
             if (type === 'cargo') {
                 saveCargoData();
                 loadCargoData();
-            } else {
+            } else if (type === 'boat') {
                 saveBoatData();
                 loadBoatData();
+            } else if (type === 'greater-male') {
+                saveGreaterMaleData();
+                loadGreaterMaleData();
             }
         }
 
@@ -4879,10 +5900,15 @@
                     saveCargoData();
                     loadCargoData();
                     loadUserReferences();
-                } else {
+                } else if (type === 'boat') {
                     boatDeliveries = boatDeliveries.filter(d => d.id !== id);
                     saveBoatData();
                     loadBoatData();
+                    loadUserReferences();
+                } else if (type === 'greater-male') {
+                    greaterMaleDeliveries = greaterMaleDeliveries.filter(d => d.id !== id);
+                    saveGreaterMaleData();
+                    loadGreaterMaleData();
                     loadUserReferences();
                 }
                 showNotification('Delivery deleted successfully');
@@ -4968,6 +5994,47 @@
             showNotification('Boat price range added successfully');
         });
 
+        // Greater Male City price management
+        addItemPriceBtn.addEventListener('click', function() {
+            const itemType = document.getElementById('itemType').value;
+            const price = parseFloat(document.getElementById('itemPrice').value);
+            
+            if (isNaN(price)) {
+                showNotification('Please enter a valid price');
+                return;
+            }
+            
+            // Update item price
+            greaterMaleItemPrices[itemType] = price;
+            saveGreaterMaleItemPrices();
+            loadItemPriceList();
+            
+            // Reset form
+            document.getElementById('itemPrice').value = '';
+            
+            showNotification('Item price updated successfully');
+        });
+
+        addDestinationPriceBtn.addEventListener('click', function() {
+            const destinationType = document.getElementById('destinationType').value;
+            const price = parseFloat(document.getElementById('destinationPrice').value);
+            
+            if (isNaN(price)) {
+                showNotification('Please enter a valid price');
+                return;
+            }
+            
+            // Update destination price
+            greaterMaleDestinationPrices[destinationType] = price;
+            saveGreaterMaleDestinationPrices();
+            loadDestinationPriceList();
+            
+            // Reset form
+            document.getElementById('destinationPrice').value = '';
+            
+            showNotification('Destination price updated successfully');
+        });
+
         // Load price lists
         function loadCargoPriceList() {
             cargoPriceList.innerHTML = '';
@@ -5019,6 +6086,72 @@
                 `;
                 boatPriceList.appendChild(item);
             });
+        }
+
+        function loadItemPriceList() {
+            itemPriceList.innerHTML = '';
+            
+            if (Object.keys(greaterMaleItemPrices).length === 0) {
+                itemPriceList.innerHTML = '<div class="empty-message">No item prices defined</div>';
+                return;
+            }
+            
+            Object.entries(greaterMaleItemPrices).forEach(([itemType, price]) => {
+                const item = document.createElement('div');
+                item.className = 'price-item';
+                
+                let itemTypeDisplay = '';
+                switch(itemType) {
+                    case 'small-package': itemTypeDisplay = 'Small Package'; break;
+                    case 'large-package': itemTypeDisplay = 'Large Package'; break;
+                    case 'small-box': itemTypeDisplay = 'Small Box'; break;
+                    case 'large-box': itemTypeDisplay = 'Large Box'; break;
+                }
+                
+                item.innerHTML = `
+                    <div class="price-range">${itemTypeDisplay}</div>
+                    <div class="price-amount">${price} MVR</div>
+                `;
+                itemPriceList.appendChild(item);
+            });
+        }
+
+        function loadDestinationPriceList() {
+            destinationPriceList.innerHTML = '';
+            
+            if (Object.keys(greaterMaleDestinationPrices).length === 0) {
+                destinationPriceList.innerHTML = '<div class="empty-message">No destination prices defined</div>';
+                return;
+            }
+            
+            Object.entries(greaterMaleDestinationPrices).forEach(([destinationType, price]) => {
+                const item = document.createElement('div');
+                item.className = 'price-item';
+                
+                let destinationTypeDisplay = '';
+                switch(destinationType) {
+                    case 'male-to-hulhumale': destinationTypeDisplay = 'Male to Hulhumale'; break;
+                    case 'hulhumale-to-male': destinationTypeDisplay = 'Hulhumale to Male'; break;
+                    case 'male-to-phase2': destinationTypeDisplay = 'Male to Phase 2'; break;
+                    case 'hulhumale-to-phase2': destinationTypeDisplay = 'Hulhumale to Phase 2'; break;
+                    case 'male-to-boat': destinationTypeDisplay = 'Male to Boat'; break;
+                    case 'hulhumale-to-boat': destinationTypeDisplay = 'Hulhumale to Boat'; break;
+                }
+                
+                item.innerHTML = `
+                    <div class="price-range">${destinationTypeDisplay}</div>
+                    <div class="price-amount">${price} MVR</div>
+                `;
+                destinationPriceList.appendChild(item);
+            });
+        }
+
+        // Load all price lists
+        function loadPriceLists() {
+            loadCargoPriceList();
+            loadBoatPriceList();
+            loadItemPriceList();
+            loadDestinationPriceList();
         }
 
         // Edit price range
@@ -5160,651 +6293,489 @@
             editingUserId = null;
         });
 
-      // Confirm user edit
-confirmUserEdit.addEventListener('click', function() {
-    if (editingUserId === null) return;
-    
-    const user = users[editingUserId];
-    if (!user) {
-        showNotification('User not found');
-        return;
-    }
-    
-    user.username = editUsername.value;
-    user.email = editUserEmail.value;
-    user.contact = editUserContact.value;
-    user.role = editUserRole.value;
-    
-    // Update password if provided
-    if (editUserPassword.value) {
-        user.password = editUserPassword.value;
-    }
-    
-    saveUsers();
-    loadUsers();
-    userEditModal.classList.remove('active');
-    editingUserId = null;
-    
-    showNotification('User updated successfully');
-}); // Added missing closing brace and parenthesis
-
-// Remove user
-function removeUser(index) {
-    if (confirm('Are you sure you want to remove this user?')) {
-        if (index >= 0 && index < users.length) {
-            users.splice(index, 1);
+        // Confirm user edit
+        confirmUserEdit.addEventListener('click', function() {
+            if (editingUserId === null) return;
+            
+            const user = users[editingUserId];
+            if (!user) {
+                showNotification('User not found');
+                return;
+            }
+            
+            user.username = editUsername.value;
+            user.email = editUserEmail.value;
+            user.contact = editUserContact.value;
+            user.role = editUserRole.value;
+            
+            // Update password if provided
+            if (editUserPassword.value) {
+                user.password = editUserPassword.value;
+            }
+            
             saveUsers();
             loadUsers();
-            showNotification('User removed successfully');
-        } else {
-            showNotification('Invalid user index');
-        }
-    }
-}
+            userEditModal.classList.remove('active');
+            editingUserId = null;
+            
+            showNotification('User updated successfully');
+        });
 
-// Load weight options
-function loadWeightOptions() {
-    if (!weightOptions || !boatWeightOptions) return;
-    
-    weightOptions.innerHTML = '';
-    boatWeightOptions.innerHTML = '';
-    
-    // Load cargo weight options
-    cargoPriceRanges.forEach(range => {
-        const option = document.createElement('div');
-        option.className = 'weight-option';
-        option.innerHTML = `
-            <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
-                ${range.min}-${range.max} kg
-            </button>
-        `;
-        weightOptions.appendChild(option);
-    });
-    
-    // Load boat weight options
-    boatPriceRanges.forEach(range => {
-        const boatOption = document.createElement('div');
-        boatOption.className = 'weight-option';
-        boatOption.innerHTML = `
-            <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
-                ${range.min}-${range.max} kg
-            </button>
-        `;
-        boatWeightOptions.appendChild(boatOption);
-    });
-    
-    // Add event listeners to weight buttons
-    document.querySelectorAll('.weight-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            // Remove active class from all buttons in the same container
-            const parentContainer = this.parentElement?.parentElement;
-            if (parentContainer) {
-                parentContainer.querySelectorAll('.weight-btn').forEach(b => {
-                    b.classList.remove('active');
-                });
-            }
-            
-            // Add active class to clicked button
-            this.classList.add('active');
-            
-            // Update price display
-            const price = this.getAttribute('data-price');
-            const container = this.closest('.form-container');
-            if (container) {
-                const priceDisplay = container.querySelector('.price-display .price-value span:last-child');
-                if (priceDisplay) {
-                    priceDisplay.textContent = price;
+        // Remove user
+        function removeUser(index) {
+            if (confirm('Are you sure you want to remove this user?')) {
+                if (index >= 0 && index < users.length) {
+                    users.splice(index, 1);
+                    saveUsers();
+                    loadUsers();
+                    showNotification('User removed successfully');
+                } else {
+                    showNotification('Invalid user index');
                 }
             }
-        });
-    });
-}
-
-// Load cargo data
-function loadCargoData() {
-    if (!cargoTableBody) return;
-    
-    cargoTableBody.innerHTML = '';
-    
-    // Filter data based on user role
-    let displayCargoDeliveries = cargoDeliveries;
-    if (currentUser && currentUser.role !== 'admin') {
-        displayCargoDeliveries = cargoDeliveries.filter(d => d.createdBy === currentUser.email);
-    }
-    
-    if (displayCargoDeliveries.length === 0) {
-        if (cargoEmptyMessage) cargoEmptyMessage.style.display = 'block';
-        return;
-    }
-    
-    if (cargoEmptyMessage) cargoEmptyMessage.style.display = 'none';
-    
-    displayCargoDeliveries.forEach(delivery => {
-        const statusClass = getStatusClass(delivery.status);
-        const paymentClass = getPaymentStatusClass(delivery.paymentStatus);
-        const paymentText = getPaymentStatusText(delivery.paymentStatus);
-        
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>
-                <a class="reference-link ${delivery.status === 'Delivered' ? 'reference-completed' : 'reference-pending'}" onclick="trackDeliveryByReference('${delivery.referenceNumber}')">
-                    ${delivery.referenceNumber}
-                </a>
-            </td>
-            <td>${delivery.customerName}</td>
-            <td>${delivery.customerContact}</td>
-            <td>${delivery.pickupLocation}${delivery.packageDetails ? ` (${delivery.packageDetails})` : delivery.addressName ? ` (${delivery.addressName})` : ''}</td>
-            <td>${delivery.deliveryLocation}</td>
-            <td>${delivery.packageWeight}</td>
-            <td>${delivery.deliveryPrice} MVR</td>
-            <td>${formatDate(delivery.deliveryDate)}</td>
-            <td>
-                <div class="countdown-timer" id="countdown-${delivery.id}">
-                    <div class="countdown-label">Time Remaining</div>
-                    <div class="countdown-display">
-                        <div class="countdown-unit">
-                            <span class="countdown-value" id="days-${delivery.id}">00</span>
-                            <span class="countdown-label-small">Days</span>
-                        </div>
-                        <div class="countdown-unit">
-                            <span class="countdown-value" id="hours-${delivery.id}">00</span>
-                            <span class="countdown-label-small">Hours</span>
-                        </div>
-                        <div class="countdown-unit">
-                            <span class="countdown-value" id="minutes-${delivery.id}">00</span>
-                            <span class="countdown-label-small">Minutes</span>
-                        </div>
-                    </div>
-                </div>
-            </td>
-            <td>
-                <span class="status-badge ${statusClass}">${delivery.status}</span>
-            </td>
-            <td>
-                <span class="status-badge ${paymentClass}">${paymentText}</span>
-                ${delivery.paymentSlip ? `<br><button class="action-btn view-btn" onclick="viewPaymentSlip('${delivery.paymentSlip}')">View Slip</button>` : ''}
-            </td>
-            <td>
-                <div class="action-buttons">
-                    <button class="action-btn update-btn" onclick="openStatusModal('cargo', ${delivery.id})">Update</button>
-                    ${currentUser && currentUser.role === 'admin' && delivery.paymentStatus === 'under_review' ? 
-                        `<button class="action-btn review-btn" onclick="approvePayment('cargo', ${delivery.id})">Approve</button>` : ''}
-                    <button class="action-btn delete-btn" onclick="deleteDelivery('cargo', ${delivery.id})">Delete</button>
-                </div>
-            </td>
-        `;
-        cargoTableBody.appendChild(row);
-        
-        // Start countdown timer for this delivery
-        startCountdownTimer(delivery.id, delivery.deliveryDate);
-    });
-}
-
-// Load boat data
-function loadBoatData() {
-    if (!boatTableBody) return;
-    
-    boatTableBody.innerHTML = '';
-    
-    // Filter data based on user role
-    let displayBoatDeliveries = boatDeliveries;
-    if (currentUser && currentUser.role !== 'admin') {
-        displayBoatDeliveries = boatDeliveries.filter(d => d.createdBy === currentUser.email);
-    }
-    
-    if (displayBoatDeliveries.length === 0) {
-        if (boatEmptyMessage) boatEmptyMessage.style.display = 'block';
-        return;
-    }
-    
-    if (boatEmptyMessage) boatEmptyMessage.style.display = 'none';
-    
-    displayBoatDeliveries.forEach(delivery => {
-        const statusClass = getStatusClass(delivery.status);
-        const paymentClass = getPaymentStatusClass(delivery.paymentStatus);
-        const paymentText = getPaymentStatusText(delivery.paymentStatus);
-        
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>
-                <a class="reference-link ${delivery.status === 'Delivered' ? 'reference-completed' : 'reference-pending'}" onclick="trackDeliveryByReference('${delivery.referenceNumber}')">
-                    ${delivery.referenceNumber}
-                </a>
-            </td>
-            <td>${delivery.customerName}</td>
-            <td>${delivery.customerContact}</td>
-            <td>${delivery.boatName}</td>
-            <td>${delivery.island}</td>
-            <td>${delivery.packageLabel}</td>
-            <td>${delivery.packageWeight}</td>
-            <td>${delivery.deliveryPrice} MVR</td>
-            <td>${formatDate(delivery.deliveryDate)}</td>
-            <td>
-                <div class="countdown-timer" id="countdown-${delivery.id}">
-                    <div class="countdown-label">Time Remaining</div>
-                    <div class="countdown-display">
-                        <div class="countdown-unit">
-                            <span class="countdown-value" id="days-${delivery.id}">00</span>
-                            <span class="countdown-label-small">Days</span>
-                        </div>
-                        <div class="countdown-unit">
-                            <span class="countdown-value" id="hours-${delivery.id}">00</span>
-                            <span class="countdown-label-small">Hours</span>
-                        </div>
-                        <div class="countdown-unit">
-                            <span class="countdown-value" id="minutes-${delivery.id}">00</span>
-                            <span class="countdown-label-small">Minutes</span>
-                        </div>
-                    </div>
-                </div>
-            </td>
-            <td>
-                <span class="status-badge ${statusClass}">${delivery.status}</span>
-            </td>
-            <td>
-                <span class="status-badge ${paymentClass}">${paymentText}</span>
-                ${delivery.paymentSlip ? `<br><button class="action-btn view-btn" onclick="viewPaymentSlip('${delivery.paymentSlip}')">View Slip</button>` : ''}
-            </td>
-            <td>
-                <div class="action-buttons">
-                    <button class="action-btn update-btn" onclick="openStatusModal('boat', ${delivery.id})">Update</button>
-                    ${currentUser && currentUser.role === 'admin' && delivery.paymentStatus === 'under_review' ? 
-                        `<button class="action-btn review-btn" onclick="approvePayment('boat', ${delivery.id})">Approve</button>` : ''}
-                    <button class="action-btn delete-btn" onclick="deleteDelivery('boat', ${delivery.id})">Delete</button>
-                </div>
-            </td>
-        `;
-        boatTableBody.appendChild(row);
-        
-        // Start countdown timer for this delivery
-        startCountdownTimer(delivery.id, delivery.deliveryDate);
-    });
-}
-
-// Global functions that are called from HTML onclick attributes
-window.trackDeliveryByReference = function(referenceNumber) {
-    // Search in cargo deliveries
-    let delivery = cargoDeliveries.find(d => d.referenceNumber === referenceNumber);
-    
-    // If not found in cargo, search in boat deliveries
-    if (!delivery) {
-        delivery = boatDeliveries.find(d => d.referenceNumber === referenceNumber);
-    }
-    
-    if (delivery) {
-        // Switch to track delivery section
-        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-        const trackDeliveryLink = document.querySelector('[data-section="track-delivery"]');
-        if (trackDeliveryLink) {
-            trackDeliveryLink.classList.add('active');
         }
-        
-        dashboardSections.forEach(section => {
-            section.classList.remove('active');
-            if (section.id === 'track-delivery') {
-                section.classList.add('active');
-            }
-        });
-        
-        // Set search contact and trigger search
-        const searchContact = document.getElementById('searchContact');
-        if (searchContact) {
-            searchContact.value = delivery.customerContact;
-            if (searchBtn) searchBtn.click();
-        }
-    } else {
-        showNotification('Delivery not found with this reference number');
-    }
-};
 
-window.viewPaymentSlip = function(slipData) {
-    if (slipImage) {
-        slipImage.src = slipData;
-        slipModal.classList.add('active');
-    }
-};
-
-window.openStatusModal = function(type, id) {
-    currentDeliveryType = type;
-    currentDeliveryId = id;
-    
-    let delivery;
-    if (type === 'cargo') {
-        delivery = cargoDeliveries.find(d => d.id === id);
-    } else {
-        delivery = boatDeliveries.find(d => d.id === id);
-    }
-    
-    if (!delivery) return;
-    
-    // Set current status in dropdown
-    statusSelect.value = delivery.status;
-    
-    // Show/hide proof upload based on selected status
-    toggleProofUpload();
-    
-    // Show modal
-    statusModal.classList.add('active');
-};
-
-window.approvePayment = function(type, id) {
-    if (confirm('Are you sure you want to approve this payment?')) {
-        let delivery;
-        if (type === 'cargo') {
-            delivery = cargoDeliveries.find(d => d.id === id);
-        } else {
-            delivery = boatDeliveries.find(d => d.id === id);
-        }
-        
-        if (delivery) {
-            delivery.paymentStatus = 'paid';
-            saveUpdatedData(type);
+        // Global functions that are called from HTML onclick attributes
+        window.trackDeliveryByReference = function(referenceNumber) {
+            // Search in cargo deliveries
+            let delivery = cargoDeliveries.find(d => d.referenceNumber === referenceNumber);
             
-            // Add notification for the user who created the delivery
-            addNotification(
-                'Payment Approved',
-                `Payment for your ${type} delivery to ${delivery.customerName} has been approved. Reference: ${delivery.referenceNumber}`,
-                delivery.createdBy
-            );
+            // If not found in cargo, search in boat deliveries
+            if (!delivery) {
+                delivery = boatDeliveries.find(d => d.referenceNumber === referenceNumber);
+            }
             
-            showNotification('Payment approved successfully');
-        }
-    }
-};
-
-window.deleteDelivery = function(type, id) {
-    if (confirm('Are you sure you want to delete this delivery?')) {
-        if (type === 'cargo') {
-            cargoDeliveries = cargoDeliveries.filter(d => d.id !== id);
-            saveCargoData();
-            loadCargoData();
-            loadUserReferences();
-        } else {
-            boatDeliveries = boatDeliveries.filter(d => d.id !== id);
-            saveBoatData();
-            loadBoatData();
-            loadUserReferences();
-        }
-        showNotification('Delivery deleted successfully');
-    }
-};
-
-window.editCargoPriceRange = function(index) {
-    const range = cargoPriceRanges[index];
-    cargoMinWeight.value = range.min;
-    cargoMaxWeight.value = range.max;
-    cargoPriceValue.value = range.price;
-    
-    // Remove the range being edited
-    cargoPriceRanges.splice(index, 1);
-    saveCargoPriceRanges();
-    loadCargoPriceList();
-    loadWeightOptions();
-};
-
-window.editBoatPriceRange = function(index) {
-    const range = boatPriceRanges[index];
-    boatMinWeight.value = range.min;
-    boatMaxWeight.value = range.max;
-    boatPriceValue.value = range.price;
-    
-    // Remove the range being edited
-    boatPriceRanges.splice(index, 1);
-    saveBoatPriceRanges();
-    loadBoatPriceList();
-    loadWeightOptions();
-};
-
-window.removeCargoPriceRange = function(index) {
-    if (confirm('Are you sure you want to remove this price range?')) {
-        cargoPriceRanges.splice(index, 1);
-        saveCargoPriceRanges();
-        loadCargoPriceList();
-        loadWeightOptions();
-        showNotification('Cargo price range removed successfully');
-    }
-};
-
-window.removeBoatPriceRange = function(index) {
-    if (confirm('Are you sure you want to remove this price range?')) {
-        boatPriceRanges.splice(index, 1);
-        saveBoatPriceRanges();
-        loadBoatPriceList();
-        loadWeightOptions();
-        showNotification('Boat price range removed successfully');
-    }
-};
-
-// Firebase Data Management Functions
-function saveCargoData() {
-    if (cargoRef) {
-        cargoRef.set(cargoDeliveries)
-            .then(() => console.log('Cargo data saved to Firebase'))
-            .catch(error => console.error('Error saving cargo data:', error));
-    } else {
-        // Fallback to localStorage if Firebase not available
-        localStorage.setItem('cargoDeliveries', JSON.stringify(cargoDeliveries));
-    }
-}
-
-function saveBoatData() {
-    if (boatRef) {
-        boatRef.set(boatDeliveries)
-            .then(() => console.log('Boat data saved to Firebase'))
-            .catch(error => console.error('Error saving boat data:', error));
-    } else {
-        localStorage.setItem('boatDeliveries', JSON.stringify(boatDeliveries));
-    }
-}
-
-function saveCargoPriceRanges() {
-    if (cargoPriceRangesRef) {
-        cargoPriceRangesRef.set(cargoPriceRanges)
-            .then(() => console.log('Cargo price ranges saved to Firebase'))
-            .catch(error => console.error('Error saving cargo price ranges:', error));
-    } else {
-        localStorage.setItem('cargoPriceRanges', JSON.stringify(cargoPriceRanges));
-    }
-}
-
-function saveBoatPriceRanges() {
-    if (boatPriceRangesRef) {
-        boatPriceRangesRef.set(boatPriceRanges)
-            .then(() => console.log('Boat price ranges saved to Firebase'))
-            .catch(error => console.error('Error saving boat price ranges:', error));
-    } else {
-        localStorage.setItem('boatPriceRanges', JSON.stringify(boatPriceRanges));
-    }
-}
-
-function saveUsers() {
-    if (usersRef) {
-        usersRef.set(users)
-            .then(() => console.log('Users saved to Firebase'))
-            .catch(error => console.error('Error saving users:', error));
-    } else {
-        localStorage.setItem('users', JSON.stringify(users));
-    }
-}
-
-function saveNotifications() {
-    if (notificationsRef) {
-        notificationsRef.set(notifications)
-            .then(() => console.log('Notifications saved to Firebase'))
-            .catch(error => console.error('Error saving notifications:', error));
-    } else {
-        localStorage.setItem('notifications', JSON.stringify(notifications));
-    }
-}
-
-// Load data from Firebase or localStorage
-function loadStoredData() {
-    // Try Firebase first, then fallback to localStorage
-    if (cargoRef) {
-        // Load cargo deliveries
-        cargoRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                cargoDeliveries = data;
-                loadCargoData();
+            // If not found in boat, search in Greater Male City deliveries
+            if (!delivery) {
+                delivery = greaterMaleDeliveries.find(d => d.referenceNumber === referenceNumber);
             }
-        });
-        
-        // Load boat deliveries
-        boatRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                boatDeliveries = data;
-                loadBoatData();
+            
+            if (delivery) {
+                // Switch to track delivery section
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                const trackDeliveryLink = document.querySelector('[data-section="track-delivery"]');
+                if (trackDeliveryLink) {
+                    trackDeliveryLink.classList.add('active');
+                }
+                
+                dashboardSections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === 'track-delivery') {
+                        section.classList.add('active');
+                    }
+                });
+                
+                // Set search contact and trigger search
+                const searchContact = document.getElementById('searchContact');
+                if (searchContact) {
+                    searchContact.value = delivery.customerContact;
+                    if (searchBtn) searchBtn.click();
+                }
+            } else {
+                showNotification('Delivery not found with this reference number');
             }
-        });
-        
-        // Load cargo price ranges
-        cargoPriceRangesRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                cargoPriceRanges = data;
+        };
+
+        window.viewPaymentSlip = function(slipData) {
+            if (slipImage) {
+                slipImage.src = slipData;
+                slipModal.classList.add('active');
+            }
+        };
+
+        window.openStatusModal = function(type, id) {
+            currentDeliveryType = type;
+            currentDeliveryId = id;
+            
+            let delivery;
+            if (type === 'cargo') {
+                delivery = cargoDeliveries.find(d => d.id === id);
+            } else if (type === 'boat') {
+                delivery = boatDeliveries.find(d => d.id === id);
+            } else if (type === 'greater-male') {
+                delivery = greaterMaleDeliveries.find(d => d.id === id);
+            }
+            
+            if (!delivery) return;
+            
+            // Set current status in dropdown
+            statusSelect.value = delivery.status;
+            
+            // Show/hide proof upload based on selected status
+            toggleProofUpload();
+            
+            // Show modal
+            statusModal.classList.add('active');
+        };
+
+        window.approvePayment = function(type, id) {
+            if (confirm('Are you sure you want to approve this payment?')) {
+                let delivery;
+                if (type === 'cargo') {
+                    delivery = cargoDeliveries.find(d => d.id === id);
+                } else if (type === 'boat') {
+                    delivery = boatDeliveries.find(d => d.id === id);
+                } else if (type === 'greater-male') {
+                    delivery = greaterMaleDeliveries.find(d => d.id === id);
+                }
+                
+                if (delivery) {
+                    delivery.paymentStatus = 'paid';
+                    saveUpdatedData(type);
+                    
+                    // Add notification for the user who created the delivery
+                    addNotification(
+                        'Payment Approved',
+                        `Payment for your ${type} delivery to ${delivery.customerName} has been approved. Reference: ${delivery.referenceNumber}`,
+                        delivery.createdBy
+                    );
+                    
+                    showNotification('Payment approved successfully');
+                }
+            }
+        };
+
+        window.deleteDelivery = function(type, id) {
+            if (confirm('Are you sure you want to delete this delivery?')) {
+                if (type === 'cargo') {
+                    cargoDeliveries = cargoDeliveries.filter(d => d.id !== id);
+                    saveCargoData();
+                    loadCargoData();
+                    loadUserReferences();
+                } else if (type === 'boat') {
+                    boatDeliveries = boatDeliveries.filter(d => d.id !== id);
+                    saveBoatData();
+                    loadBoatData();
+                    loadUserReferences();
+                } else if (type === 'greater-male') {
+                    greaterMaleDeliveries = greaterMaleDeliveries.filter(d => d.id !== id);
+                    saveGreaterMaleData();
+                    loadGreaterMaleData();
+                    loadUserReferences();
+                }
+                showNotification('Delivery deleted successfully');
+            }
+        };
+
+        window.editCargoPriceRange = function(index) {
+            const range = cargoPriceRanges[index];
+            cargoMinWeight.value = range.min;
+            cargoMaxWeight.value = range.max;
+            cargoPriceValue.value = range.price;
+            
+            // Remove the range being edited
+            cargoPriceRanges.splice(index, 1);
+            saveCargoPriceRanges();
+            loadCargoPriceList();
+            loadWeightOptions();
+        };
+
+        window.editBoatPriceRange = function(index) {
+            const range = boatPriceRanges[index];
+            boatMinWeight.value = range.min;
+            boatMaxWeight.value = range.max;
+            boatPriceValue.value = range.price;
+            
+            // Remove the range being edited
+            boatPriceRanges.splice(index, 1);
+            saveBoatPriceRanges();
+            loadBoatPriceList();
+            loadWeightOptions();
+        };
+
+        window.removeCargoPriceRange = function(index) {
+            if (confirm('Are you sure you want to remove this price range?')) {
+                cargoPriceRanges.splice(index, 1);
+                saveCargoPriceRanges();
                 loadCargoPriceList();
                 loadWeightOptions();
+                showNotification('Cargo price range removed successfully');
             }
-        });
-        
-        // Load boat price ranges
-        boatPriceRangesRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                boatPriceRanges = data;
+        };
+
+        window.removeBoatPriceRange = function(index) {
+            if (confirm('Are you sure you want to remove this price range?')) {
+                boatPriceRanges.splice(index, 1);
+                saveBoatPriceRanges();
                 loadBoatPriceList();
                 loadWeightOptions();
+                showNotification('Boat price range removed successfully');
             }
-        });
-        
-        // Load users
-        usersRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                users = data;
+        };
+
+        // Firebase Data Management Functions
+        function saveCargoData() {
+            if (cargoRef) {
+                cargoRef.set(cargoDeliveries)
+                    .then(() => console.log('Cargo data saved to Firebase'))
+                    .catch(error => console.error('Error saving cargo data:', error));
+            } else {
+                // Fallback to localStorage if Firebase not available
+                localStorage.setItem('cargoDeliveries', JSON.stringify(cargoDeliveries));
             }
-        });
-        
-        // Load notifications
-        notificationsRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                notifications = data;
+        }
+
+        function saveBoatData() {
+            if (boatRef) {
+                boatRef.set(boatDeliveries)
+                    .then(() => console.log('Boat data saved to Firebase'))
+                    .catch(error => console.error('Error saving boat data:', error));
+            } else {
+                localStorage.setItem('boatDeliveries', JSON.stringify(boatDeliveries));
+            }
+        }
+
+        function saveGreaterMaleData() {
+            if (greaterMaleRef) {
+                greaterMaleRef.set(greaterMaleDeliveries)
+                    .then(() => console.log('Greater Male City data saved to Firebase'))
+                    .catch(error => console.error('Error saving Greater Male City data:', error));
+            } else {
+                localStorage.setItem('greaterMaleDeliveries', JSON.stringify(greaterMaleDeliveries));
+            }
+        }
+
+        function saveCargoPriceRanges() {
+            if (cargoPriceRangesRef) {
+                cargoPriceRangesRef.set(cargoPriceRanges)
+                    .then(() => console.log('Cargo price ranges saved to Firebase'))
+                    .catch(error => console.error('Error saving cargo price ranges:', error));
+            } else {
+                localStorage.setItem('cargoPriceRanges', JSON.stringify(cargoPriceRanges));
+            }
+        }
+
+        function saveBoatPriceRanges() {
+            if (boatPriceRangesRef) {
+                boatPriceRangesRef.set(boatPriceRanges)
+                    .then(() => console.log('Boat price ranges saved to Firebase'))
+                    .catch(error => console.error('Error saving boat price ranges:', error));
+            } else {
+                localStorage.setItem('boatPriceRanges', JSON.stringify(boatPriceRanges));
+            }
+        }
+
+        function saveGreaterMaleItemPrices() {
+            if (greaterMaleItemPricesRef) {
+                greaterMaleItemPricesRef.set(greaterMaleItemPrices)
+                    .then(() => console.log('Greater Male City item prices saved to Firebase'))
+                    .catch(error => console.error('Error saving Greater Male City item prices:', error));
+            } else {
+                localStorage.setItem('greaterMaleItemPrices', JSON.stringify(greaterMaleItemPrices));
+            }
+        }
+
+        function saveGreaterMaleDestinationPrices() {
+            if (greaterMaleDestinationPricesRef) {
+                greaterMaleDestinationPricesRef.set(greaterMaleDestinationPrices)
+                    .then(() => console.log('Greater Male City destination prices saved to Firebase'))
+                    .catch(error => console.error('Error saving Greater Male City destination prices:', error));
+            } else {
+                localStorage.setItem('greaterMaleDestinationPrices', JSON.stringify(greaterMaleDestinationPrices));
+            }
+        }
+
+        function saveUsers() {
+            if (usersRef) {
+                usersRef.set(users)
+                    .then(() => console.log('Users saved to Firebase'))
+                    .catch(error => console.error('Error saving users:', error));
+            } else {
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+        }
+
+        function saveNotifications() {
+            if (notificationsRef) {
+                notificationsRef.set(notifications)
+                    .then(() => console.log('Notifications saved to Firebase'))
+                    .catch(error => console.error('Error saving notifications:', error));
+            } else {
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+            }
+        }
+
+        // Load data from Firebase or localStorage
+        function loadStoredData() {
+            // Try Firebase first, then fallback to localStorage
+            if (cargoRef) {
+                // Load cargo deliveries
+                cargoRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        cargoDeliveries = data;
+                        loadCargoData();
+                    }
+                });
+                
+                // Load boat deliveries
+                boatRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        boatDeliveries = data;
+                        loadBoatData();
+                    }
+                });
+                
+                // Load Greater Male City deliveries
+                greaterMaleRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        greaterMaleDeliveries = data;
+                        loadGreaterMaleData();
+                    }
+                });
+                
+                // Load cargo price ranges
+                cargoPriceRangesRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        cargoPriceRanges = data;
+                        loadCargoPriceList();
+                        loadWeightOptions();
+                    }
+                });
+                
+                // Load boat price ranges
+                boatPriceRangesRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        boatPriceRanges = data;
+                        loadBoatPriceList();
+                        loadWeightOptions();
+                    }
+                });
+                
+                // Load Greater Male City item prices
+                greaterMaleItemPricesRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        greaterMaleItemPrices = data;
+                        loadItemPriceList();
+                    }
+                });
+                
+                // Load Greater Male City destination prices
+                greaterMaleDestinationPricesRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        greaterMaleDestinationPrices = data;
+                        loadDestinationPriceList();
+                    }
+                });
+                
+                // Load users
+                usersRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        users = data;
+                    }
+                });
+                
+                // Load notifications
+                notificationsRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        notifications = data;
+                        loadNotifications();
+                        updateNotificationBadge();
+                    }
+                });
+            } else {
+                // Fallback to localStorage
+                const savedCargo = localStorage.getItem('cargoDeliveries');
+                const savedBoat = localStorage.getItem('boatDeliveries');
+                const savedGreaterMale = localStorage.getItem('greaterMaleDeliveries');
+                const savedCargoPrices = localStorage.getItem('cargoPriceRanges');
+                const savedBoatPrices = localStorage.getItem('boatPriceRanges');
+                const savedGreaterMaleItemPrices = localStorage.getItem('greaterMaleItemPrices');
+                const savedGreaterMaleDestinationPrices = localStorage.getItem('greaterMaleDestinationPrices');
+                const savedUsers = localStorage.getItem('users');
+                const savedNotifications = localStorage.getItem('notifications');
+                
+                if (savedCargo) cargoDeliveries = JSON.parse(savedCargo);
+                if (savedBoat) boatDeliveries = JSON.parse(savedBoat);
+                if (savedGreaterMale) greaterMaleDeliveries = JSON.parse(savedGreaterMale);
+                if (savedCargoPrices) cargoPriceRanges = JSON.parse(savedCargoPrices);
+                if (savedBoatPrices) boatPriceRanges = JSON.parse(savedBoatPrices);
+                if (savedGreaterMaleItemPrices) greaterMaleItemPrices = JSON.parse(savedGreaterMaleItemPrices);
+                if (savedGreaterMaleDestinationPrices) greaterMaleDestinationPrices = JSON.parse(savedGreaterMaleDestinationPrices);
+                if (savedUsers) users = JSON.parse(savedUsers);
+                if (savedNotifications) notifications = JSON.parse(savedNotifications);
+                
+                loadCargoData();
+                loadBoatData();
+                loadGreaterMaleData();
+                loadCargoPriceList();
+                loadBoatPriceList();
+                loadItemPriceList();
+                loadDestinationPriceList();
+                loadWeightOptions();
                 loadNotifications();
                 updateNotificationBadge();
             }
-        });
-    } else {
-        // Fallback to localStorage
-        const savedCargo = localStorage.getItem('cargoDeliveries');
-        const savedBoat = localStorage.getItem('boatDeliveries');
-        const savedCargoPrices = localStorage.getItem('cargoPriceRanges');
-        const savedBoatPrices = localStorage.getItem('boatPriceRanges');
-        const savedUsers = localStorage.getItem('users');
-        const savedNotifications = localStorage.getItem('notifications');
-        
-        if (savedCargo) cargoDeliveries = JSON.parse(savedCargo);
-        if (savedBoat) boatDeliveries = JSON.parse(savedBoat);
-        if (savedCargoPrices) cargoPriceRanges = JSON.parse(savedCargoPrices);
-        if (savedBoatPrices) boatPriceRanges = JSON.parse(savedBoatPrices);
-        if (savedUsers) users = JSON.parse(savedUsers);
-        if (savedNotifications) notifications = JSON.parse(savedNotifications);
-        
-        loadCargoData();
-        loadBoatData();
-        loadCargoPriceList();
-        loadBoatPriceList();
-        loadWeightOptions();
-        loadNotifications();
-        updateNotificationBadge();
-    }
-}
+        }
 
-// Load price lists
-function loadPriceLists() {
-    loadCargoPriceList();
-    loadBoatPriceList();
-}
-
-// Format date for display
-function formatDate(dateString) {
-    if (!dateString) return 'N/A';
-    try {
-        const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString(undefined, options);
-    } catch (e) {
-        return 'Invalid Date';
-    }
-}
-
-// Format date and time for display
-function formatDateTime(dateTimeString) {
-    if (!dateTimeString) return 'N/A';
-    try {
-        const options = { 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        };
-        return new Date(dateTimeString).toLocaleDateString(undefined, options);
-    } catch (e) {
-        return 'Invalid Date';
-    }
-}
-
-// Show notification
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.innerHTML = `
-        <div class="notification-content">
-            <i class="fas fa-check-circle" style="margin-right: 8px;"></i>
-            ${message}
-        </div>
-        <button class="notification-close">
-            <i class="fas fa-times"></i>
-        </button>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Add event listener to close button
-    const closeBtn = notification.querySelector('.notification-close');
-    closeBtn.addEventListener('click', function() {
-        notification.classList.add('notification-slide-out');
-        setTimeout(() => {
-            if (notification.parentNode) {
-                document.body.removeChild(notification);
+        // Format date for display
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            try {
+                const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                return new Date(dateString).toLocaleDateString(undefined, options);
+            } catch (e) {
+                return 'Invalid Date';
             }
-        }, 300);
-    });
-    
-    // Auto remove after 5 seconds
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.classList.add('notification-slide-out');
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas fa-check-circle" style="margin-right: 8px;"></i>
+                    ${message}
+                </div>
+                <button class="notification-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Add event listener to close button
+            const closeBtn = notification.querySelector('.notification-close');
+            closeBtn.addEventListener('click', function() {
+                notification.classList.add('notification-slide-out');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            });
+            
+            // Auto remove after 5 seconds
             setTimeout(() => {
                 if (notification.parentNode) {
-                    document.body.removeChild(notification);
+                    notification.classList.add('notification-slide-out');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 300);
                 }
-            }, 300);
+            }, 5000);
         }
-    }, 5000);
-}
 
-// Initialize the application
-function init() {
-    // Check if user is already logged in
-    checkLoginStatus();
-    loadStoredData();
-}
+        // Initialize the application
+        function init() {
+            // Check if user is already logged in
+            checkLoginStatus();
+            loadStoredData();
+        }
 
-// Run initialization when page loads
-document.addEventListener('DOMContentLoaded', init);
+        // Run initialization when page loads
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
