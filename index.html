@@ -134,7 +134,7 @@
             font-weight: 500;
         }
 
-        .form-group input, .form-group select {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 15px;
             border: 1px solid #ddd;
@@ -145,11 +145,11 @@
             color: #333;
         }
 
-        .form-group input::placeholder {
+        .form-group input::placeholder, .form-group textarea::placeholder {
             color: #999;
         }
 
-        .form-group input:focus, .form-group select:focus {
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             border-color: #4cc9f0;
             box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
             outline: none;
@@ -2192,6 +2192,15 @@
         .filter-btn.reset:hover {
             background: #d0d0d0;
         }
+
+        /* Location-specific fields */
+        .location-specific {
+            display: none;
+        }
+
+        .location-specific.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -2411,63 +2420,62 @@
                 <h2 class="section-title">Cargo Delivery Management</h2>
                 
                 <div class="form-container">
-                    <h3 class="form-title"><i class="fas fa-truck"></i> New Cargo Delivery</h3>
+                    <h3 class="form-title"><i class="fas fa-truck"></i> Cargo Delivery Form</h3>
                     <form id="cargoForm">
-                        <div class="form-row">
-                            <div class="form-field">
-                                <label for="customerName">Customer Name</label>
-                                <input type="text" id="customerName" placeholder="Enter customer name" required>
-                            </div>
-                            <div class="form-field">
-                                <label for="customerContact">Contact Number</label>
-                                <input type="tel" id="customerContact" placeholder="Enter contact number" required>
-                            </div>
+                        <div class="form-group">
+                            <label for="customerName">Customer Name</label>
+                            <input type="text" id="customerName" placeholder="Enter customer name" required>
                         </div>
                         
-                        <div class="form-row">
-                            <div class="form-field">
-                                <label for="pickupLocation">Pickup Location</label>
-                                <select id="pickupLocation" required>
-                                    <option value="">Select Pickup Location</option>
-                                    <option value="Post Office">Post Office</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Phase 1">Phase 1</option>
-                                    <option value="Phase 2">Phase 2</option>
-                                    <option value="Phase 3">Phase 3</option>
-                                </select>
-                            </div>
-                            <div class="form-field" id="postOfficeField" style="display: none;">
-                                <label for="postOfficeMessage">Post Office Message</label>
-                                <textarea id="postOfficeMessage" placeholder="Enter post office message"></textarea>
-                            </div>
+                        <div class="form-group">
+                            <label for="customerContact">Contact Number</label>
+                            <input type="tel" id="customerContact" placeholder="Enter contact number" required>
                         </div>
                         
-                        <div class="form-row">
-                            <div class="form-field">
-                                <label for="deliveryLocation">Delivery Location</label>
-                                <select id="deliveryLocation" required>
-                                    <option value="">Select Delivery Location</option>
-                                    <option value="Addu">Addu</option>
-                                    <option value="Fuvamulak">Fuvamulak</option>
-                                    <option value="Laam Gan">Laam Gan</option>
-                                    <option value="Kulhudhufushi">Kulhudhufushi</option>
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label for="pickupLocation">Pickup Location</label>
+                            <select id="pickupLocation" required>
+                                <option value="">Select Pickup Location</option>
+                                <option value="Post Office">Post Office</option>
+                                <option value="Pickpost">Pickpost</option>
+                                <option value="Redbox">Redbox</option>
+                                <option value="Male">Male</option>
+                                <option value="Hulhumale">Hulhumale</option>
+                                <option value="Phase2">Phase 2</option>
+                            </select>
                         </div>
                         
-                        <div class="form-row">
-                            <div class="form-field">
+                        <!-- Package Details Field (for Post Office, Pickpost, Redbox) -->
+                        <div class="location-specific" id="packageDetailsField">
+                            <div class="form-group">
                                 <label for="packageDetails">Package Details</label>
-                                <textarea id="packageDetails" placeholder="Enter package details" required></textarea>
+                                <textarea id="packageDetails" placeholder="Enter package details" rows="3"></textarea>
                             </div>
                         </div>
                         
-                        <div class="form-row">
-                            <div class="form-field">
-                                <label>Package Weight Range (kg)</label>
-                                <div class="weight-options" id="weightOptions">
-                                    <!-- Weight options will be populated here -->
-                                </div>
+                        <!-- Address Field (for Male, Hulhumale, Phase2) -->
+                        <div class="location-specific" id="addressField">
+                            <div class="form-group">
+                                <label for="addressName">Address Name</label>
+                                <input type="text" id="addressName" placeholder="Enter full address">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="deliveryLocation">Delivery Location</label>
+                            <select id="deliveryLocation" required>
+                                <option value="">Select Delivery Location</option>
+                                <option value="Addu">Addu</option>
+                                <option value="Fuvamulak">Fuvamulak</option>
+                                <option value="Laam Gan">Laam Gan</option>
+                                <option value="Kulhudhufushi">Kulhudhufushi</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Package Weight Range (kg)</label>
+                            <div class="weight-options" id="weightOptions">
+                                <!-- Weight options will be populated here -->
                             </div>
                         </div>
                         
@@ -2476,11 +2484,9 @@
                             <div class="price-value"><span class="currency">MVR</span> <span id="deliveryPrice">0</span></div>
                         </div>
                         
-                        <div class="form-row">
-                            <div class="form-field">
-                                <label for="deliveryDate">Expected Delivery Date</label>
-                                <input type="date" id="deliveryDate" required>
-                            </div>
+                        <div class="form-group">
+                            <label for="deliveryDate">Expected Delivery Date</label>
+                            <input type="date" id="deliveryDate" required>
                         </div>
                         
                         <button type="submit" class="submit-btn">
@@ -3140,8 +3146,8 @@
         const userBoatReferences = document.getElementById('userBoatReferences');
         const notificationSound = document.getElementById('notificationSound');
         const pickupLocation = document.getElementById('pickupLocation');
-        const postOfficeField = document.getElementById('postOfficeField');
-        const postOfficeMessage = document.getElementById('postOfficeMessage');
+        const packageDetailsField = document.getElementById('packageDetailsField');
+        const addressField = document.getElementById('addressField');
         const deliveryLocation = document.getElementById('deliveryLocation');
         const userEditModal = document.getElementById('userEditModal');
         const editUsername = document.getElementById('editUsername');
@@ -4036,14 +4042,19 @@
             });
         }
 
-        // Show/hide post office message field based on pickup location selection
+        // Show/hide location-specific fields based on pickup location selection
         pickupLocation.addEventListener('change', function() {
-            if (this.value === 'Post Office') {
-                postOfficeField.style.display = 'block';
-                postOfficeMessage.setAttribute('required', 'required');
-            } else {
-                postOfficeField.style.display = 'none';
-                postOfficeMessage.removeAttribute('required');
+            const selectedLocation = this.value;
+            
+            // Hide all location-specific fields
+            packageDetailsField.classList.remove('active');
+            addressField.classList.remove('active');
+            
+            // Show appropriate field based on selection
+            if (selectedLocation === 'Post Office' || selectedLocation === 'Pickpost' || selectedLocation === 'Redbox') {
+                packageDetailsField.classList.add('active');
+            } else if (selectedLocation === 'Male' || selectedLocation === 'Hulhumale' || selectedLocation === 'Phase2') {
+                addressField.classList.add('active');
             }
         });
 
@@ -4063,9 +4074,9 @@
                 customerName: document.getElementById('customerName').value,
                 customerContact: document.getElementById('customerContact').value,
                 pickupLocation: document.getElementById('pickupLocation').value,
-                postOfficeMessage: document.getElementById('postOfficeMessage').value,
-                deliveryLocation: document.getElementById('deliveryLocation').value,
                 packageDetails: document.getElementById('packageDetails').value,
+                addressName: document.getElementById('addressName').value,
+                deliveryLocation: document.getElementById('deliveryLocation').value,
                 packageWeight: `${selectedWeight.getAttribute('data-min')}-${selectedWeight.getAttribute('data-max')} kg`,
                 weightMin: parseInt(selectedWeight.getAttribute('data-min')),
                 weightMax: parseInt(selectedWeight.getAttribute('data-max')),
@@ -4276,7 +4287,7 @@
                     </td>
                     <td>${delivery.customerName}</td>
                     <td>${delivery.customerContact}</td>
-                    <td>${delivery.pickupLocation}${delivery.postOfficeMessage ? ` (${delivery.postOfficeMessage})` : ''}</td>
+                    <td>${delivery.pickupLocation}${delivery.packageDetails ? ` (${delivery.packageDetails})` : delivery.addressName ? ` (${delivery.addressName})` : ''}</td>
                     <td>${delivery.deliveryLocation}</td>
                     <td>${delivery.packageWeight}</td>
                     <td>${delivery.deliveryPrice} MVR</td>
@@ -4726,15 +4737,11 @@
                     </div>
                     <div class="info-item">
                         <div class="info-label">Pickup Location</div>
-                        <div class="info-value">${delivery.pickupLocation}${delivery.postOfficeMessage ? ` (${delivery.postOfficeMessage})` : ''}</div>
+                        <div class="info-value">${delivery.pickupLocation}${delivery.packageDetails ? ` (${delivery.packageDetails})` : delivery.addressName ? ` (${delivery.addressName})` : ''}</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Delivery Location</div>
                         <div class="info-value">${delivery.deliveryLocation}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Package Details</div>
-                        <div class="info-value">${delivery.packageDetails}</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Weight</div>
@@ -5153,635 +5160,651 @@
             editingUserId = null;
         });
 
-        // Confirm user edit
-        confirmUserEdit.addEventListener('click', function() {
-            if (editingUserId === null) return;
-            
-            const user = users[editingUserId];
-            user.username = editUsername.value;
-            user.email = editUserEmail.value;
-            user.contact = editUserContact.value;
-            user.role = editUserRole.value;
-            
-            // Update password if provided
-            if (editUserPassword.value) {
-                user.password = editUserPassword.value;
-            }
-            
+      // Confirm user edit
+confirmUserEdit.addEventListener('click', function() {
+    if (editingUserId === null) return;
+    
+    const user = users[editingUserId];
+    if (!user) {
+        showNotification('User not found');
+        return;
+    }
+    
+    user.username = editUsername.value;
+    user.email = editUserEmail.value;
+    user.contact = editUserContact.value;
+    user.role = editUserRole.value;
+    
+    // Update password if provided
+    if (editUserPassword.value) {
+        user.password = editUserPassword.value;
+    }
+    
+    saveUsers();
+    loadUsers();
+    userEditModal.classList.remove('active');
+    editingUserId = null;
+    
+    showNotification('User updated successfully');
+}); // Added missing closing brace and parenthesis
+
+// Remove user
+function removeUser(index) {
+    if (confirm('Are you sure you want to remove this user?')) {
+        if (index >= 0 && index < users.length) {
+            users.splice(index, 1);
             saveUsers();
             loadUsers();
-            userEditModal.classList.remove('active');
-            editingUserId = null;
+            showNotification('User removed successfully');
+        } else {
+            showNotification('Invalid user index');
+        }
+    }
+}
+
+// Load weight options
+function loadWeightOptions() {
+    if (!weightOptions || !boatWeightOptions) return;
+    
+    weightOptions.innerHTML = '';
+    boatWeightOptions.innerHTML = '';
+    
+    // Load cargo weight options
+    cargoPriceRanges.forEach(range => {
+        const option = document.createElement('div');
+        option.className = 'weight-option';
+        option.innerHTML = `
+            <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
+                ${range.min}-${range.max} kg
+            </button>
+        `;
+        weightOptions.appendChild(option);
+    });
+    
+    // Load boat weight options
+    boatPriceRanges.forEach(range => {
+        const boatOption = document.createElement('div');
+        boatOption.className = 'weight-option';
+        boatOption.innerHTML = `
+            <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
+                ${range.min}-${range.max} kg
+            </button>
+        `;
+        boatWeightOptions.appendChild(boatOption);
+    });
+    
+    // Add event listeners to weight buttons
+    document.querySelectorAll('.weight-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active class from all buttons in the same container
+            const parentContainer = this.parentElement?.parentElement;
+            if (parentContainer) {
+                parentContainer.querySelectorAll('.weight-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+            }
             
-            showNotification('User updated successfully');
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Update price display
+            const price = this.getAttribute('data-price');
+            const container = this.closest('.form-container');
+            if (container) {
+                const priceDisplay = container.querySelector('.price-display .price-value span:last-child');
+                if (priceDisplay) {
+                    priceDisplay.textContent = price;
+                }
+            }
         });
+    });
+}
 
-        // Remove user
-        function removeUser(index) {
-            if (confirm('Are you sure you want to remove this user?')) {
-                users.splice(index, 1);
-                saveUsers();
-                loadUsers();
-                showNotification('User removed successfully');
-            }
-        }
-
-        // Load weight options
-        function loadWeightOptions() {
-            weightOptions.innerHTML = '';
-            boatWeightOptions.innerHTML = '';
-            
-            // Load cargo weight options
-            cargoPriceRanges.forEach(range => {
-                const option = document.createElement('div');
-                option.className = 'weight-option';
-                option.innerHTML = `
-                    <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
-                        ${range.min}-${range.max} kg
-                    </button>
-                `;
-                weightOptions.appendChild(option);
-            });
-            
-            // Load boat weight options
-            boatPriceRanges.forEach(range => {
-                const boatOption = document.createElement('div');
-                boatOption.className = 'weight-option';
-                boatOption.innerHTML = `
-                    <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
-                        ${range.min}-${range.max} kg
-                    </button>
-                `;
-                boatWeightOptions.appendChild(boatOption);
-            });
-            
-            // Add event listeners to weight buttons
-            document.querySelectorAll('.weight-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Remove active class from all buttons in the same container
-                    this.parentElement.parentElement.querySelectorAll('.weight-btn').forEach(b => {
-                        b.classList.remove('active');
-                    });
-                    
-                    // Add active class to clicked button
-                    this.classList.add('active');
-                    
-                    // Update price display
-                    const price = this.getAttribute('data-price');
-                    const container = this.closest('.form-container');
-                    const priceDisplay = container.querySelector('.price-display .price-value span:last-child');
-                    if (priceDisplay) {
-                        priceDisplay.textContent = price;
-                    }
-                });
-            });
-        }
-
-        // Load cargo data
-        function loadCargoData() {
-            if (!cargoTableBody) return;
-            
-            cargoTableBody.innerHTML = '';
-            
-            // Filter data based on user role
-            let displayCargoDeliveries = cargoDeliveries;
-            if (currentUser && currentUser.role !== 'admin') {
-                displayCargoDeliveries = cargoDeliveries.filter(d => d.createdBy === currentUser.email);
-            }
-            
-            if (displayCargoDeliveries.length === 0) {
-                if (cargoEmptyMessage) cargoEmptyMessage.style.display = 'block';
-                return;
-            }
-            
-            if (cargoEmptyMessage) cargoEmptyMessage.style.display = 'none';
-            
-            displayCargoDeliveries.forEach(delivery => {
-                const statusClass = getStatusClass(delivery.status);
-                const paymentClass = getPaymentStatusClass(delivery.paymentStatus);
-                const paymentText = getPaymentStatusText(delivery.paymentStatus);
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <a class="reference-link ${delivery.status === 'Delivered' ? 'reference-completed' : 'reference-pending'}" onclick="trackDeliveryByReference('${delivery.referenceNumber}')">
-                            ${delivery.referenceNumber}
-                        </a>
-                    </td>
-                    <td>${delivery.customerName}</td>
-                    <td>${delivery.customerContact}</td>
-                    <td>${delivery.pickupLocation}${delivery.postOfficeMessage ? ` (${delivery.postOfficeMessage})` : ''}</td>
-                    <td>${delivery.deliveryLocation}</td>
-                    <td>${delivery.packageWeight}</td>
-                    <td>${delivery.deliveryPrice} MVR</td>
-                    <td>${formatDate(delivery.deliveryDate)}</td>
-                    <td>
-                        <div class="countdown-timer" id="countdown-${delivery.id}">
-                            <div class="countdown-label">Time Remaining</div>
-                            <div class="countdown-display">
-                                <div class="countdown-unit">
-                                    <span class="countdown-value" id="days-${delivery.id}">00</span>
-                                    <span class="countdown-label-small">Days</span>
-                                </div>
-                                <div class="countdown-unit">
-                                    <span class="countdown-value" id="hours-${delivery.id}">00</span>
-                                    <span class="countdown-label-small">Hours</span>
-                                </div>
-                                <div class="countdown-unit">
-                                    <span class="countdown-value" id="minutes-${delivery.id}">00</span>
-                                    <span class="countdown-label-small">Minutes</span>
-                                </div>
-                            </div>
+// Load cargo data
+function loadCargoData() {
+    if (!cargoTableBody) return;
+    
+    cargoTableBody.innerHTML = '';
+    
+    // Filter data based on user role
+    let displayCargoDeliveries = cargoDeliveries;
+    if (currentUser && currentUser.role !== 'admin') {
+        displayCargoDeliveries = cargoDeliveries.filter(d => d.createdBy === currentUser.email);
+    }
+    
+    if (displayCargoDeliveries.length === 0) {
+        if (cargoEmptyMessage) cargoEmptyMessage.style.display = 'block';
+        return;
+    }
+    
+    if (cargoEmptyMessage) cargoEmptyMessage.style.display = 'none';
+    
+    displayCargoDeliveries.forEach(delivery => {
+        const statusClass = getStatusClass(delivery.status);
+        const paymentClass = getPaymentStatusClass(delivery.paymentStatus);
+        const paymentText = getPaymentStatusText(delivery.paymentStatus);
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>
+                <a class="reference-link ${delivery.status === 'Delivered' ? 'reference-completed' : 'reference-pending'}" onclick="trackDeliveryByReference('${delivery.referenceNumber}')">
+                    ${delivery.referenceNumber}
+                </a>
+            </td>
+            <td>${delivery.customerName}</td>
+            <td>${delivery.customerContact}</td>
+            <td>${delivery.pickupLocation}${delivery.packageDetails ? ` (${delivery.packageDetails})` : delivery.addressName ? ` (${delivery.addressName})` : ''}</td>
+            <td>${delivery.deliveryLocation}</td>
+            <td>${delivery.packageWeight}</td>
+            <td>${delivery.deliveryPrice} MVR</td>
+            <td>${formatDate(delivery.deliveryDate)}</td>
+            <td>
+                <div class="countdown-timer" id="countdown-${delivery.id}">
+                    <div class="countdown-label">Time Remaining</div>
+                    <div class="countdown-display">
+                        <div class="countdown-unit">
+                            <span class="countdown-value" id="days-${delivery.id}">00</span>
+                            <span class="countdown-label-small">Days</span>
                         </div>
-                    </td>
-                    <td>
-                        <span class="status-badge ${statusClass}">${delivery.status}</span>
-                    </td>
-                    <td>
-                        <span class="status-badge ${paymentClass}">${paymentText}</span>
-                        ${delivery.paymentSlip ? `<br><button class="action-btn view-btn" onclick="viewPaymentSlip('${delivery.paymentSlip}')">View Slip</button>` : ''}
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="action-btn update-btn" onclick="openStatusModal('cargo', ${delivery.id})">Update</button>
-                            ${currentUser && currentUser.role === 'admin' && delivery.paymentStatus === 'under_review' ? 
-                                `<button class="action-btn review-btn" onclick="approvePayment('cargo', ${delivery.id})">Approve</button>` : ''}
-                            <button class="action-btn delete-btn" onclick="deleteDelivery('cargo', ${delivery.id})">Delete</button>
+                        <div class="countdown-unit">
+                            <span class="countdown-value" id="hours-${delivery.id}">00</span>
+                            <span class="countdown-label-small">Hours</span>
                         </div>
-                    </td>
-                `;
-                cargoTableBody.appendChild(row);
-                
-                // Start countdown timer for this delivery
-                startCountdownTimer(delivery.id, delivery.deliveryDate);
-            });
-        }
-
-        // Load boat data
-        function loadBoatData() {
-            if (!boatTableBody) return;
-            
-            boatTableBody.innerHTML = '';
-            
-            // Filter data based on user role
-            let displayBoatDeliveries = boatDeliveries;
-            if (currentUser && currentUser.role !== 'admin') {
-                displayBoatDeliveries = boatDeliveries.filter(d => d.createdBy === currentUser.email);
-            }
-            
-            if (displayBoatDeliveries.length === 0) {
-                if (boatEmptyMessage) boatEmptyMessage.style.display = 'block';
-                return;
-            }
-            
-            if (boatEmptyMessage) boatEmptyMessage.style.display = 'none';
-            
-            displayBoatDeliveries.forEach(delivery => {
-                const statusClass = getStatusClass(delivery.status);
-                const paymentClass = getPaymentStatusClass(delivery.paymentStatus);
-                const paymentText = getPaymentStatusText(delivery.paymentStatus);
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <a class="reference-link ${delivery.status === 'Delivered' ? 'reference-completed' : 'reference-pending'}" onclick="trackDeliveryByReference('${delivery.referenceNumber}')">
-                            ${delivery.referenceNumber}
-                        </a>
-                    </td>
-                    <td>${delivery.customerName}</td>
-                    <td>${delivery.customerContact}</td>
-                    <td>${delivery.boatName}</td>
-                    <td>${delivery.island}</td>
-                    <td>${delivery.packageLabel}</td>
-                    <td>${delivery.packageWeight}</td>
-                    <td>${delivery.deliveryPrice} MVR</td>
-                    <td>${formatDate(delivery.deliveryDate)}</td>
-                    <td>
-                        <div class="countdown-timer" id="countdown-${delivery.id}">
-                            <div class="countdown-label">Time Remaining</div>
-                            <div class="countdown-display">
-                                <div class="countdown-unit">
-                                    <span class="countdown-value" id="days-${delivery.id}">00</span>
-                                    <span class="countdown-label-small">Days</span>
-                                </div>
-                                <div class="countdown-unit">
-                                    <span class="countdown-value" id="hours-${delivery.id}">00</span>
-                                    <span class="countdown-label-small">Hours</span>
-                                </div>
-                                <div class="countdown-unit">
-                                    <span class="countdown-value" id="minutes-${delivery.id}">00</span>
-                                    <span class="countdown-label-small">Minutes</span>
-                                </div>
-                            </div>
+                        <div class="countdown-unit">
+                            <span class="countdown-value" id="minutes-${delivery.id}">00</span>
+                            <span class="countdown-label-small">Minutes</span>
                         </div>
-                    </td>
-                    <td>
-                        <span class="status-badge ${statusClass}">${delivery.status}</span>
-                    </td>
-                    <td>
-                        <span class="status-badge ${paymentClass}">${paymentText}</span>
-                        ${delivery.paymentSlip ? `<br><button class="action-btn view-btn" onclick="viewPaymentSlip('${delivery.paymentSlip}')">View Slip</button>` : ''}
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="action-btn update-btn" onclick="openStatusModal('boat', ${delivery.id})">Update</button>
-                            ${currentUser && currentUser.role === 'admin' && delivery.paymentStatus === 'under_review' ? 
-                                `<button class="action-btn review-btn" onclick="approvePayment('boat', ${delivery.id})">Approve</button>` : ''}
-                            <button class="action-btn delete-btn" onclick="deleteDelivery('boat', ${delivery.id})">Delete</button>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <span class="status-badge ${statusClass}">${delivery.status}</span>
+            </td>
+            <td>
+                <span class="status-badge ${paymentClass}">${paymentText}</span>
+                ${delivery.paymentSlip ? `<br><button class="action-btn view-btn" onclick="viewPaymentSlip('${delivery.paymentSlip}')">View Slip</button>` : ''}
+            </td>
+            <td>
+                <div class="action-buttons">
+                    <button class="action-btn update-btn" onclick="openStatusModal('cargo', ${delivery.id})">Update</button>
+                    ${currentUser && currentUser.role === 'admin' && delivery.paymentStatus === 'under_review' ? 
+                        `<button class="action-btn review-btn" onclick="approvePayment('cargo', ${delivery.id})">Approve</button>` : ''}
+                    <button class="action-btn delete-btn" onclick="deleteDelivery('cargo', ${delivery.id})">Delete</button>
+                </div>
+            </td>
+        `;
+        cargoTableBody.appendChild(row);
+        
+        // Start countdown timer for this delivery
+        startCountdownTimer(delivery.id, delivery.deliveryDate);
+    });
+}
+
+// Load boat data
+function loadBoatData() {
+    if (!boatTableBody) return;
+    
+    boatTableBody.innerHTML = '';
+    
+    // Filter data based on user role
+    let displayBoatDeliveries = boatDeliveries;
+    if (currentUser && currentUser.role !== 'admin') {
+        displayBoatDeliveries = boatDeliveries.filter(d => d.createdBy === currentUser.email);
+    }
+    
+    if (displayBoatDeliveries.length === 0) {
+        if (boatEmptyMessage) boatEmptyMessage.style.display = 'block';
+        return;
+    }
+    
+    if (boatEmptyMessage) boatEmptyMessage.style.display = 'none';
+    
+    displayBoatDeliveries.forEach(delivery => {
+        const statusClass = getStatusClass(delivery.status);
+        const paymentClass = getPaymentStatusClass(delivery.paymentStatus);
+        const paymentText = getPaymentStatusText(delivery.paymentStatus);
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>
+                <a class="reference-link ${delivery.status === 'Delivered' ? 'reference-completed' : 'reference-pending'}" onclick="trackDeliveryByReference('${delivery.referenceNumber}')">
+                    ${delivery.referenceNumber}
+                </a>
+            </td>
+            <td>${delivery.customerName}</td>
+            <td>${delivery.customerContact}</td>
+            <td>${delivery.boatName}</td>
+            <td>${delivery.island}</td>
+            <td>${delivery.packageLabel}</td>
+            <td>${delivery.packageWeight}</td>
+            <td>${delivery.deliveryPrice} MVR</td>
+            <td>${formatDate(delivery.deliveryDate)}</td>
+            <td>
+                <div class="countdown-timer" id="countdown-${delivery.id}">
+                    <div class="countdown-label">Time Remaining</div>
+                    <div class="countdown-display">
+                        <div class="countdown-unit">
+                            <span class="countdown-value" id="days-${delivery.id}">00</span>
+                            <span class="countdown-label-small">Days</span>
                         </div>
-                    </td>
-                `;
-                boatTableBody.appendChild(row);
-                
-                // Start countdown timer for this delivery
-                startCountdownTimer(delivery.id, delivery.deliveryDate);
-            });
+                        <div class="countdown-unit">
+                            <span class="countdown-value" id="hours-${delivery.id}">00</span>
+                            <span class="countdown-label-small">Hours</span>
+                        </div>
+                        <div class="countdown-unit">
+                            <span class="countdown-value" id="minutes-${delivery.id}">00</span>
+                            <span class="countdown-label-small">Minutes</span>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <span class="status-badge ${statusClass}">${delivery.status}</span>
+            </td>
+            <td>
+                <span class="status-badge ${paymentClass}">${paymentText}</span>
+                ${delivery.paymentSlip ? `<br><button class="action-btn view-btn" onclick="viewPaymentSlip('${delivery.paymentSlip}')">View Slip</button>` : ''}
+            </td>
+            <td>
+                <div class="action-buttons">
+                    <button class="action-btn update-btn" onclick="openStatusModal('boat', ${delivery.id})">Update</button>
+                    ${currentUser && currentUser.role === 'admin' && delivery.paymentStatus === 'under_review' ? 
+                        `<button class="action-btn review-btn" onclick="approvePayment('boat', ${delivery.id})">Approve</button>` : ''}
+                    <button class="action-btn delete-btn" onclick="deleteDelivery('boat', ${delivery.id})">Delete</button>
+                </div>
+            </td>
+        `;
+        boatTableBody.appendChild(row);
+        
+        // Start countdown timer for this delivery
+        startCountdownTimer(delivery.id, delivery.deliveryDate);
+    });
+}
+
+// Global functions that are called from HTML onclick attributes
+window.trackDeliveryByReference = function(referenceNumber) {
+    // Search in cargo deliveries
+    let delivery = cargoDeliveries.find(d => d.referenceNumber === referenceNumber);
+    
+    // If not found in cargo, search in boat deliveries
+    if (!delivery) {
+        delivery = boatDeliveries.find(d => d.referenceNumber === referenceNumber);
+    }
+    
+    if (delivery) {
+        // Switch to track delivery section
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        const trackDeliveryLink = document.querySelector('[data-section="track-delivery"]');
+        if (trackDeliveryLink) {
+            trackDeliveryLink.classList.add('active');
         }
-
-        // Global functions that are called from HTML onclick attributes
-        window.trackDeliveryByReference = function(referenceNumber) {
-            // Search in cargo deliveries
-            let delivery = cargoDeliveries.find(d => d.referenceNumber === referenceNumber);
-            
-            // If not found in cargo, search in boat deliveries
-            if (!delivery) {
-                delivery = boatDeliveries.find(d => d.referenceNumber === referenceNumber);
+        
+        dashboardSections.forEach(section => {
+            section.classList.remove('active');
+            if (section.id === 'track-delivery') {
+                section.classList.add('active');
             }
-            
-            if (delivery) {
-                // Switch to track delivery section
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                const trackDeliveryLink = document.querySelector('[data-section="track-delivery"]');
-                if (trackDeliveryLink) {
-                    trackDeliveryLink.classList.add('active');
-                }
-                
-                dashboardSections.forEach(section => {
-                    section.classList.remove('active');
-                    if (section.id === 'track-delivery') {
-                        section.classList.add('active');
-                    }
-                });
-                
-                // Set search contact and trigger search
-                const searchContact = document.getElementById('searchContact');
-                if (searchContact) {
-                    searchContact.value = delivery.customerContact;
-                    if (searchBtn) searchBtn.click();
-                }
-            } else {
-                showNotification('Delivery not found with this reference number');
-            }
-        };
-
-        window.viewPaymentSlip = function(slipData) {
-            if (slipImage) {
-                slipImage.src = slipData;
-                slipModal.classList.add('active');
-            }
-        };
-
-        window.openStatusModal = function(type, id) {
-            currentDeliveryType = type;
-            currentDeliveryId = id;
-            
-            let delivery;
-            if (type === 'cargo') {
-                delivery = cargoDeliveries.find(d => d.id === id);
-            } else {
-                delivery = boatDeliveries.find(d => d.id === id);
-            }
-            
-            if (!delivery) return;
-            
-            // Set current status in dropdown
-            statusSelect.value = delivery.status;
-            
-            // Show/hide proof upload based on selected status
-            toggleProofUpload();
-            
-            // Show modal
-            statusModal.classList.add('active');
-        };
-
-        window.approvePayment = function(type, id) {
-            if (confirm('Are you sure you want to approve this payment?')) {
-                let delivery;
-                if (type === 'cargo') {
-                    delivery = cargoDeliveries.find(d => d.id === id);
-                } else {
-                    delivery = boatDeliveries.find(d => d.id === id);
-                }
-                
-                if (delivery) {
-                    delivery.paymentStatus = 'paid';
-                    saveUpdatedData(type);
-                    
-                    // Add notification for the user who created the delivery
-                    addNotification(
-                        'Payment Approved',
-                        `Payment for your ${type} delivery to ${delivery.customerName} has been approved. Reference: ${delivery.referenceNumber}`,
-                        delivery.createdBy
-                    );
-                    
-                    showNotification('Payment approved successfully');
-                }
-            }
-        };
-
-        window.deleteDelivery = function(type, id) {
-            if (confirm('Are you sure you want to delete this delivery?')) {
-                if (type === 'cargo') {
-                    cargoDeliveries = cargoDeliveries.filter(d => d.id !== id);
-                    saveCargoData();
-                    loadCargoData();
-                    loadUserReferences();
-                } else {
-                    boatDeliveries = boatDeliveries.filter(d => d.id !== id);
-                    saveBoatData();
-                    loadBoatData();
-                    loadUserReferences();
-                }
-                showNotification('Delivery deleted successfully');
-            }
-        };
-
-        window.editCargoPriceRange = function(index) {
-            const range = cargoPriceRanges[index];
-            cargoMinWeight.value = range.min;
-            cargoMaxWeight.value = range.max;
-            cargoPriceValue.value = range.price;
-            
-            // Remove the range being edited
-            cargoPriceRanges.splice(index, 1);
-            saveCargoPriceRanges();
-            loadCargoPriceList();
-            loadWeightOptions();
-        };
-
-        window.editBoatPriceRange = function(index) {
-            const range = boatPriceRanges[index];
-            boatMinWeight.value = range.min;
-            boatMaxWeight.value = range.max;
-            boatPriceValue.value = range.price;
-            
-            // Remove the range being edited
-            boatPriceRanges.splice(index, 1);
-            saveBoatPriceRanges();
-            loadBoatPriceList();
-            loadWeightOptions();
-        };
-
-        window.removeCargoPriceRange = function(index) {
-            if (confirm('Are you sure you want to remove this price range?')) {
-                cargoPriceRanges.splice(index, 1);
-                saveCargoPriceRanges();
-                loadCargoPriceList();
-                loadWeightOptions();
-                showNotification('Cargo price range removed successfully');
-            }
-        };
-
-        window.removeBoatPriceRange = function(index) {
-            if (confirm('Are you sure you want to remove this price range?')) {
-                boatPriceRanges.splice(index, 1);
-                saveBoatPriceRanges();
-                loadBoatPriceList();
-                loadWeightOptions();
-                showNotification('Boat price range removed successfully');
-            }
-        };
-
-        // Firebase Data Management Functions
-        function saveCargoData() {
-            if (cargoRef) {
-                cargoRef.set(cargoDeliveries)
-                    .then(() => console.log('Cargo data saved to Firebase'))
-                    .catch(error => console.error('Error saving cargo data:', error));
-            } else {
-                // Fallback to localStorage if Firebase not available
-                localStorage.setItem('cargoDeliveries', JSON.stringify(cargoDeliveries));
-            }
+        });
+        
+        // Set search contact and trigger search
+        const searchContact = document.getElementById('searchContact');
+        if (searchContact) {
+            searchContact.value = delivery.customerContact;
+            if (searchBtn) searchBtn.click();
         }
+    } else {
+        showNotification('Delivery not found with this reference number');
+    }
+};
 
-        function saveBoatData() {
-            if (boatRef) {
-                boatRef.set(boatDeliveries)
-                    .then(() => console.log('Boat data saved to Firebase'))
-                    .catch(error => console.error('Error saving boat data:', error));
-            } else {
-                localStorage.setItem('boatDeliveries', JSON.stringify(boatDeliveries));
-            }
+window.viewPaymentSlip = function(slipData) {
+    if (slipImage) {
+        slipImage.src = slipData;
+        slipModal.classList.add('active');
+    }
+};
+
+window.openStatusModal = function(type, id) {
+    currentDeliveryType = type;
+    currentDeliveryId = id;
+    
+    let delivery;
+    if (type === 'cargo') {
+        delivery = cargoDeliveries.find(d => d.id === id);
+    } else {
+        delivery = boatDeliveries.find(d => d.id === id);
+    }
+    
+    if (!delivery) return;
+    
+    // Set current status in dropdown
+    statusSelect.value = delivery.status;
+    
+    // Show/hide proof upload based on selected status
+    toggleProofUpload();
+    
+    // Show modal
+    statusModal.classList.add('active');
+};
+
+window.approvePayment = function(type, id) {
+    if (confirm('Are you sure you want to approve this payment?')) {
+        let delivery;
+        if (type === 'cargo') {
+            delivery = cargoDeliveries.find(d => d.id === id);
+        } else {
+            delivery = boatDeliveries.find(d => d.id === id);
         }
-
-        function saveCargoPriceRanges() {
-            if (cargoPriceRangesRef) {
-                cargoPriceRangesRef.set(cargoPriceRanges)
-                    .then(() => console.log('Cargo price ranges saved to Firebase'))
-                    .catch(error => console.error('Error saving cargo price ranges:', error));
-            } else {
-                localStorage.setItem('cargoPriceRanges', JSON.stringify(cargoPriceRanges));
-            }
+        
+        if (delivery) {
+            delivery.paymentStatus = 'paid';
+            saveUpdatedData(type);
+            
+            // Add notification for the user who created the delivery
+            addNotification(
+                'Payment Approved',
+                `Payment for your ${type} delivery to ${delivery.customerName} has been approved. Reference: ${delivery.referenceNumber}`,
+                delivery.createdBy
+            );
+            
+            showNotification('Payment approved successfully');
         }
+    }
+};
 
-        function saveBoatPriceRanges() {
-            if (boatPriceRangesRef) {
-                boatPriceRangesRef.set(boatPriceRanges)
-                    .then(() => console.log('Boat price ranges saved to Firebase'))
-                    .catch(error => console.error('Error saving boat price ranges:', error));
-            } else {
-                localStorage.setItem('boatPriceRanges', JSON.stringify(boatPriceRanges));
-            }
+window.deleteDelivery = function(type, id) {
+    if (confirm('Are you sure you want to delete this delivery?')) {
+        if (type === 'cargo') {
+            cargoDeliveries = cargoDeliveries.filter(d => d.id !== id);
+            saveCargoData();
+            loadCargoData();
+            loadUserReferences();
+        } else {
+            boatDeliveries = boatDeliveries.filter(d => d.id !== id);
+            saveBoatData();
+            loadBoatData();
+            loadUserReferences();
         }
+        showNotification('Delivery deleted successfully');
+    }
+};
 
-        function saveUsers() {
-            if (usersRef) {
-                usersRef.set(users)
-                    .then(() => console.log('Users saved to Firebase'))
-                    .catch(error => console.error('Error saving users:', error));
-            } else {
-                localStorage.setItem('users', JSON.stringify(users));
-            }
-        }
+window.editCargoPriceRange = function(index) {
+    const range = cargoPriceRanges[index];
+    cargoMinWeight.value = range.min;
+    cargoMaxWeight.value = range.max;
+    cargoPriceValue.value = range.price;
+    
+    // Remove the range being edited
+    cargoPriceRanges.splice(index, 1);
+    saveCargoPriceRanges();
+    loadCargoPriceList();
+    loadWeightOptions();
+};
 
-        function saveNotifications() {
-            if (notificationsRef) {
-                notificationsRef.set(notifications)
-                    .then(() => console.log('Notifications saved to Firebase'))
-                    .catch(error => console.error('Error saving notifications:', error));
-            } else {
-                localStorage.setItem('notifications', JSON.stringify(notifications));
-            }
-        }
+window.editBoatPriceRange = function(index) {
+    const range = boatPriceRanges[index];
+    boatMinWeight.value = range.min;
+    boatMaxWeight.value = range.max;
+    boatPriceValue.value = range.price;
+    
+    // Remove the range being edited
+    boatPriceRanges.splice(index, 1);
+    saveBoatPriceRanges();
+    loadBoatPriceList();
+    loadWeightOptions();
+};
 
-        // Load data from Firebase or localStorage
-        function loadStoredData() {
-            // Try Firebase first, then fallback to localStorage
-            if (cargoRef) {
-                // Load cargo deliveries
-                cargoRef.on('value', (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        cargoDeliveries = data;
-                        loadCargoData();
-                    }
-                });
-                
-                // Load boat deliveries
-                boatRef.on('value', (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        boatDeliveries = data;
-                        loadBoatData();
-                    }
-                });
-                
-                // Load cargo price ranges
-                cargoPriceRangesRef.on('value', (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        cargoPriceRanges = data;
-                        loadCargoPriceList();
-                        loadWeightOptions();
-                    }
-                });
-                
-                // Load boat price ranges
-                boatPriceRangesRef.on('value', (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        boatPriceRanges = data;
-                        loadBoatPriceList();
-                        loadWeightOptions();
-                    }
-                });
-                
-                // Load users
-                usersRef.on('value', (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        users = data;
-                    }
-                });
-                
-                // Load notifications
-                notificationsRef.on('value', (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        notifications = data;
-                        loadNotifications();
-                        updateNotificationBadge();
-                    }
-                });
-            } else {
-                // Fallback to localStorage
-                const savedCargo = localStorage.getItem('cargoDeliveries');
-                const savedBoat = localStorage.getItem('boatDeliveries');
-                const savedCargoPrices = localStorage.getItem('cargoPriceRanges');
-                const savedBoatPrices = localStorage.getItem('boatPriceRanges');
-                const savedUsers = localStorage.getItem('users');
-                const savedNotifications = localStorage.getItem('notifications');
-                
-                if (savedCargo) cargoDeliveries = JSON.parse(savedCargo);
-                if (savedBoat) boatDeliveries = JSON.parse(savedBoat);
-                if (savedCargoPrices) cargoPriceRanges = JSON.parse(savedCargoPrices);
-                if (savedBoatPrices) boatPriceRanges = JSON.parse(savedBoatPrices);
-                if (savedUsers) users = JSON.parse(savedUsers);
-                if (savedNotifications) notifications = JSON.parse(savedNotifications);
-                
+window.removeCargoPriceRange = function(index) {
+    if (confirm('Are you sure you want to remove this price range?')) {
+        cargoPriceRanges.splice(index, 1);
+        saveCargoPriceRanges();
+        loadCargoPriceList();
+        loadWeightOptions();
+        showNotification('Cargo price range removed successfully');
+    }
+};
+
+window.removeBoatPriceRange = function(index) {
+    if (confirm('Are you sure you want to remove this price range?')) {
+        boatPriceRanges.splice(index, 1);
+        saveBoatPriceRanges();
+        loadBoatPriceList();
+        loadWeightOptions();
+        showNotification('Boat price range removed successfully');
+    }
+};
+
+// Firebase Data Management Functions
+function saveCargoData() {
+    if (cargoRef) {
+        cargoRef.set(cargoDeliveries)
+            .then(() => console.log('Cargo data saved to Firebase'))
+            .catch(error => console.error('Error saving cargo data:', error));
+    } else {
+        // Fallback to localStorage if Firebase not available
+        localStorage.setItem('cargoDeliveries', JSON.stringify(cargoDeliveries));
+    }
+}
+
+function saveBoatData() {
+    if (boatRef) {
+        boatRef.set(boatDeliveries)
+            .then(() => console.log('Boat data saved to Firebase'))
+            .catch(error => console.error('Error saving boat data:', error));
+    } else {
+        localStorage.setItem('boatDeliveries', JSON.stringify(boatDeliveries));
+    }
+}
+
+function saveCargoPriceRanges() {
+    if (cargoPriceRangesRef) {
+        cargoPriceRangesRef.set(cargoPriceRanges)
+            .then(() => console.log('Cargo price ranges saved to Firebase'))
+            .catch(error => console.error('Error saving cargo price ranges:', error));
+    } else {
+        localStorage.setItem('cargoPriceRanges', JSON.stringify(cargoPriceRanges));
+    }
+}
+
+function saveBoatPriceRanges() {
+    if (boatPriceRangesRef) {
+        boatPriceRangesRef.set(boatPriceRanges)
+            .then(() => console.log('Boat price ranges saved to Firebase'))
+            .catch(error => console.error('Error saving boat price ranges:', error));
+    } else {
+        localStorage.setItem('boatPriceRanges', JSON.stringify(boatPriceRanges));
+    }
+}
+
+function saveUsers() {
+    if (usersRef) {
+        usersRef.set(users)
+            .then(() => console.log('Users saved to Firebase'))
+            .catch(error => console.error('Error saving users:', error));
+    } else {
+        localStorage.setItem('users', JSON.stringify(users));
+    }
+}
+
+function saveNotifications() {
+    if (notificationsRef) {
+        notificationsRef.set(notifications)
+            .then(() => console.log('Notifications saved to Firebase'))
+            .catch(error => console.error('Error saving notifications:', error));
+    } else {
+        localStorage.setItem('notifications', JSON.stringify(notifications));
+    }
+}
+
+// Load data from Firebase or localStorage
+function loadStoredData() {
+    // Try Firebase first, then fallback to localStorage
+    if (cargoRef) {
+        // Load cargo deliveries
+        cargoRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                cargoDeliveries = data;
                 loadCargoData();
+            }
+        });
+        
+        // Load boat deliveries
+        boatRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                boatDeliveries = data;
                 loadBoatData();
+            }
+        });
+        
+        // Load cargo price ranges
+        cargoPriceRangesRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                cargoPriceRanges = data;
                 loadCargoPriceList();
+                loadWeightOptions();
+            }
+        });
+        
+        // Load boat price ranges
+        boatPriceRangesRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                boatPriceRanges = data;
                 loadBoatPriceList();
                 loadWeightOptions();
+            }
+        });
+        
+        // Load users
+        usersRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                users = data;
+            }
+        });
+        
+        // Load notifications
+        notificationsRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                notifications = data;
                 loadNotifications();
                 updateNotificationBadge();
             }
-        }
+        });
+    } else {
+        // Fallback to localStorage
+        const savedCargo = localStorage.getItem('cargoDeliveries');
+        const savedBoat = localStorage.getItem('boatDeliveries');
+        const savedCargoPrices = localStorage.getItem('cargoPriceRanges');
+        const savedBoatPrices = localStorage.getItem('boatPriceRanges');
+        const savedUsers = localStorage.getItem('users');
+        const savedNotifications = localStorage.getItem('notifications');
+        
+        if (savedCargo) cargoDeliveries = JSON.parse(savedCargo);
+        if (savedBoat) boatDeliveries = JSON.parse(savedBoat);
+        if (savedCargoPrices) cargoPriceRanges = JSON.parse(savedCargoPrices);
+        if (savedBoatPrices) boatPriceRanges = JSON.parse(savedBoatPrices);
+        if (savedUsers) users = JSON.parse(savedUsers);
+        if (savedNotifications) notifications = JSON.parse(savedNotifications);
+        
+        loadCargoData();
+        loadBoatData();
+        loadCargoPriceList();
+        loadBoatPriceList();
+        loadWeightOptions();
+        loadNotifications();
+        updateNotificationBadge();
+    }
+}
 
-        // Load price lists
-        function loadPriceLists() {
-            loadCargoPriceList();
-            loadBoatPriceList();
-        }
+// Load price lists
+function loadPriceLists() {
+    loadCargoPriceList();
+    loadBoatPriceList();
+}
 
-        // Format date for display
-        function formatDate(dateString) {
-            if (!dateString) return 'N/A';
-            try {
-                const options = { year: 'numeric', month: 'short', day: 'numeric' };
-                return new Date(dateString).toLocaleDateString(undefined, options);
-            } catch (e) {
-                return 'Invalid Date';
+// Format date for display
+function formatDate(dateString) {
+    if (!dateString) return 'N/A';
+    try {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    } catch (e) {
+        return 'Invalid Date';
+    }
+}
+
+// Format date and time for display
+function formatDateTime(dateTimeString) {
+    if (!dateTimeString) return 'N/A';
+    try {
+        const options = { 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        };
+        return new Date(dateTimeString).toLocaleDateString(undefined, options);
+    } catch (e) {
+        return 'Invalid Date';
+    }
+}
+
+// Show notification
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-check-circle" style="margin-right: 8px;"></i>
+            ${message}
+        </div>
+        <button class="notification-close">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Add event listener to close button
+    const closeBtn = notification.querySelector('.notification-close');
+    closeBtn.addEventListener('click', function() {
+        notification.classList.add('notification-slide-out');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                document.body.removeChild(notification);
             }
-        }
-
-        // Format date and time for display
-        function formatDateTime(dateTimeString) {
-            if (!dateTimeString) return 'N/A';
-            try {
-                const options = { 
-                    year: 'numeric', 
-                    month: 'short', 
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                };
-                return new Date(dateTimeString).toLocaleDateString(undefined, options);
-            } catch (e) {
-                return 'Invalid Date';
-            }
-        }
-
-        // Show notification
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.innerHTML = `
-                <div class="notification-content">
-                    <i class="fas fa-check-circle" style="margin-right: 8px;"></i>
-                    ${message}
-                </div>
-                <button class="notification-close">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Add event listener to close button
-            const closeBtn = notification.querySelector('.notification-close');
-            closeBtn.addEventListener('click', function() {
-                notification.classList.add('notification-slide-out');
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        document.body.removeChild(notification);
-                    }
-                }, 300);
-            });
-            
-            // Auto remove after 5 seconds
+        }, 300);
+    });
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.classList.add('notification-slide-out');
             setTimeout(() => {
                 if (notification.parentNode) {
-                    notification.classList.add('notification-slide-out');
-                    setTimeout(() => {
-                        if (notification.parentNode) {
-                            document.body.removeChild(notification);
-                        }
-                    }, 300);
+                    document.body.removeChild(notification);
                 }
-            }, 5000);
+            }, 300);
         }
+    }, 5000);
+}
 
-        // Initialize the application
-        function init() {
-            // Check if user is already logged in
-            checkLoginStatus();
-            loadStoredData();
-        }
+// Initialize the application
+function init() {
+    // Check if user is already logged in
+    checkLoginStatus();
+    loadStoredData();
+}
 
-        // Run initialization when page loads
-        document.addEventListener('DOMContentLoaded', init);
+// Run initialization when page loads
+document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
