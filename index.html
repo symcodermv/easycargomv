@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CargoConnect - Delivery Management System</title>
+    <title>EasyCargo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -81,10 +81,6 @@
             gap: 10px;
             z-index: 1;
             margin-bottom: 10px;
-        }
-
-        .logo i {
-            color: #fff;
         }
 
         .hero-text h1 {
@@ -2225,7 +2221,7 @@
             </div>
             <!-- Login Form -->
             <div class="login-form" id="loginFormSection">
-               <div class="logo">
+                 <div class="logo">
             <img src="ChatGPT Image Oct 9, 2025, 08_19_04 PM.png" alt="" class="logo-image">
         
         </div>
@@ -3502,6 +3498,11 @@
                             if (targetSection === 'user-management') {
                                 loadUsers();
                             }
+                            
+                            // Load price lists when price management section is accessed
+                            if (targetSection === 'price-management') {
+                                loadPriceLists();
+                            }
                         }
                     });
                     
@@ -3526,6 +3527,30 @@
                 loginContainer.style.display = 'block';
                 loginForm.reset();
                 currentUser = null;
+            });
+            
+            // Initialize price tabs
+            initializePriceTabs();
+        }
+
+        // Initialize price tabs functionality
+        function initializePriceTabs() {
+            priceTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const targetTab = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    priceTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show target content
+                    priceContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === targetTab) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
             });
         }
 
@@ -3850,13 +3875,6 @@
         function loadRevenueData() {
             revenueStats.innerHTML = '';
             
-            // Get date filter values
-            const startDateValue = startDate.value ? new Date(startDate.value) : null;
-            const endDateValue = endDate.value ? new Date(endDate.value) : null;
-            
-            // Calculate revenue based on filter
-            const filteredRevenue = calculateRevenueForPeriod(startDateValue, endDateValue);
-            
             // Calculate today's revenue
             const today = new Date().toISOString().split('T')[0];
             const todayRevenue = calculateRevenueForDate(today);
@@ -3899,97 +3917,7 @@
                     <div class="amount">${monthRevenue} MVR</div>
                     <div class="period">This Month</div>
                 </div>
-                ${startDateValue || endDateValue ? `
-                <div class="revenue-card">
-                    <h3>Filtered Revenue</h3>
-                    <div class="amount">${filteredRevenue} MVR</div>
-                    <div class="period">${startDateValue ? formatDate(startDateValue.toISOString().split('T')[0]) : 'Start'} - ${endDateValue ? formatDate(endDateValue.toISOString().split('T')[0]) : 'End'}</div>
-                </div>
-                ` : ''}
             `;
-            
-            // Update revenue chart
-            updateRevenueChart(startDateValue, endDateValue);
-        }
-
-        // Update revenue chart
-        function updateRevenueChart(startDate, endDate) {
-            const ctx = revenueChart.getContext('2d');
-            
-            // Get revenue data for the last 7 days if no date range is specified
-            const labels = [];
-            const data = [];
-            
-            if (!startDate && !endDate) {
-                // Default to last 7 days
-                for (let i = 6; i >= 0; i--) {
-                    const date = new Date();
-                    date.setDate(date.getDate() - i);
-                    const dateString = date.toISOString().split('T')[0];
-                    labels.push(formatDate(dateString));
-                    data.push(calculateRevenueForDate(dateString));
-                }
-            } else {
-                // Use the specified date range
-                const currentDate = startDate ? new Date(startDate) : new Date();
-                const endDateObj = endDate ? new Date(endDate) : new Date();
-                
-                while (currentDate <= endDateObj) {
-                    const dateString = currentDate.toISOString().split('T')[0];
-                    labels.push(formatDate(dateString));
-                    data.push(calculateRevenueForDate(dateString));
-                    currentDate.setDate(currentDate.getDate() + 1);
-                }
-            }
-            
-            // Destroy existing chart if it exists
-            if (window.revenueChartInstance) {
-                window.revenueChartInstance.destroy();
-            }
-            
-            // Create new chart
-            window.revenueChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Revenue (MVR)',
-                        data: data,
-                        borderColor: '#4cc9f0',
-                        backgroundColor: 'rgba(76, 201, 240, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: 'Revenue Trend'
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Revenue (MVR)'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Date'
-                            }
-                        }
-                    }
-                }
-            });
         }
 
         // Calculate revenue for a specific date
@@ -4017,18 +3945,11 @@
         function calculateRevenueForPeriod(startDate, endDate) {
             let total = 0;
             
-            // If no dates provided, return 0
-            if (!startDate && !endDate) return 0;
-            
-            // Set default values if not provided
-            const start = startDate || new Date(0); // Beginning of time
-            const end = endDate || new Date(); // Current date
-            
             // Add revenue from cargo deliveries
             cargoDeliveries.forEach(delivery => {
                 if (delivery.paidAt && delivery.paymentStatus === 'paid') {
                     const paidDate = new Date(delivery.paidAt);
-                    if (paidDate >= start && paidDate <= end) {
+                    if (paidDate >= startDate && paidDate <= endDate) {
                         total += delivery.deliveryPrice;
                     }
                 }
@@ -4038,7 +3959,7 @@
             boatDeliveries.forEach(delivery => {
                 if (delivery.paidAt && delivery.paymentStatus === 'paid') {
                     const paidDate = new Date(delivery.paidAt);
-                    if (paidDate >= start && paidDate <= end) {
+                    if (paidDate >= startDate && paidDate <= endDate) {
                         total += delivery.deliveryPrice;
                     }
                 }
@@ -4046,17 +3967,6 @@
             
             return total;
         }
-
-        // Date filter functionality
-        applyFilter.addEventListener('click', function() {
-            loadRevenueData();
-        });
-
-        resetFilter.addEventListener('click', function() {
-            startDate.value = '';
-            endDate.value = '';
-            loadRevenueData();
-        });
 
         // Records management tabs
         recordsTabs.forEach(tab => {
@@ -4077,30 +3987,12 @@
             });
         });
 
-        // Price management tabs
-        priceTabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                const targetTab = this.getAttribute('data-tab');
-                
-                // Update active tab
-                priceTabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Show target content
-                priceContents.forEach(content => {
-                    content.classList.remove('active');
-                    if (content.id === targetTab) {
-                        content.classList.add('active');
-                    }
-                });
-            });
-        });
-
         // Load weight options
         function loadWeightOptions() {
             weightOptions.innerHTML = '';
             boatWeightOptions.innerHTML = '';
             
+            // Load cargo weight options
             cargoPriceRanges.forEach(range => {
                 const option = document.createElement('div');
                 option.className = 'weight-option';
@@ -4112,6 +4004,7 @@
                 weightOptions.appendChild(option);
             });
             
+            // Load boat weight options
             boatPriceRanges.forEach(range => {
                 const boatOption = document.createElement('div');
                 boatOption.className = 'weight-option';
@@ -4302,7 +4195,6 @@
             saveCargoData();
             loadCargoData();
             loadUserReferences();
-            loadAllReferences();
             cargoForm.reset();
             resetWeightSelection();
             
@@ -4326,7 +4218,6 @@
             saveBoatData();
             loadBoatData();
             loadUserReferences();
-            loadAllReferences();
             boatForm.reset();
             resetWeightSelection();
             
@@ -4726,8 +4617,19 @@
                 reader.onload = function(e) {
                     delivery.deliveryImage = e.target.result;
                     delivery.completedAt = new Date().toISOString();
+                    
+                    // Save the updated data
                     saveUpdatedData(currentDeliveryType);
+                    
+                    // Close the modal
                     statusModal.classList.remove('active');
+                    
+                    // Reset modal state
+                    currentDeliveryType = null;
+                    currentDeliveryId = null;
+                    proofImage.value = '';
+                    
+                    // Show success notification
                     showNotification('Delivery status updated successfully!');
                     
                     // Add notification for the user who created the delivery
@@ -4741,15 +4643,25 @@
                     
                     // Reload user references to update colors
                     loadUserReferences();
-                    loadAllReferences();
                 };
                 reader.readAsDataURL(proofImage.files[0]);
             } else {
                 if (newStatus === 'Delivered') {
                     delivery.completedAt = new Date().toISOString();
                 }
+                
+                // Save the updated data
                 saveUpdatedData(currentDeliveryType);
+                
+                // Close the modal
                 statusModal.classList.remove('active');
+                
+                // Reset modal state
+                currentDeliveryType = null;
+                currentDeliveryId = null;
+                proofImage.value = '';
+                
+                // Show success notification
                 showNotification('Delivery status updated successfully!');
                 
                 // Add notification for the user who created the delivery
@@ -4763,13 +4675,7 @@
                 
                 // Reload user references to update colors
                 loadUserReferences();
-                loadAllReferences();
             }
-            
-            // Reset modal state
-            currentDeliveryType = null;
-            currentDeliveryId = null;
-            proofImage.value = '';
         });
 
         // Search customer by contact number
@@ -4966,19 +4872,17 @@
                     saveCargoData();
                     loadCargoData();
                     loadUserReferences();
-                    loadAllReferences();
                 } else {
                     boatDeliveries = boatDeliveries.filter(d => d.id !== id);
                     saveBoatData();
                     loadBoatData();
                     loadUserReferences();
-                    loadAllReferences();
                 }
                 showNotification('Delivery deleted successfully');
             }
         }
 
-        // Price management for cargo
+        // Price management
         addCargoPriceBtn.addEventListener('click', function() {
             const minWeight = parseFloat(cargoMinWeight.value);
             const maxWeight = parseFloat(cargoMaxWeight.value);
@@ -4994,18 +4898,14 @@
                 return;
             }
             
-            if (minWeight < 0 || maxWeight < 0 || price < 0) {
-                showNotification('Values cannot be negative');
-                return;
-            }
-            
-            // Check for overlapping ranges with improved validation
-            const validationResult = validatePriceRange(cargoPriceRanges, minWeight, maxWeight);
-            
-            if (!validationResult.valid) {
-                cargoValidationMessage.textContent = validationResult.message;
-                cargoValidationMessage.className = 'validation-message validation-error';
-                return;
+            // Check for overlapping ranges
+            for (let range of cargoPriceRanges) {
+                if ((minWeight >= range.min && minWeight <= range.max) || 
+                    (maxWeight >= range.min && maxWeight <= range.max) ||
+                    (minWeight <= range.min && maxWeight >= range.max)) {
+                    showNotification('Weight range overlaps with existing range');
+                    return;
+                }
             }
             
             // Add new price range
@@ -5018,13 +4918,10 @@
             cargoMinWeight.value = '';
             cargoMaxWeight.value = '';
             cargoPriceValue.value = '';
-            cargoValidationMessage.textContent = 'Price range added successfully!';
-            cargoValidationMessage.className = 'validation-message validation-success';
             
             showNotification('Cargo price range added successfully');
         });
 
-        // Price management for boat
         addBoatPriceBtn.addEventListener('click', function() {
             const minWeight = parseFloat(boatMinWeight.value);
             const maxWeight = parseFloat(boatMaxWeight.value);
@@ -5040,18 +4937,14 @@
                 return;
             }
             
-            if (minWeight < 0 || maxWeight < 0 || price < 0) {
-                showNotification('Values cannot be negative');
-                return;
-            }
-            
-            // Check for overlapping ranges with improved validation
-            const validationResult = validatePriceRange(boatPriceRanges, minWeight, maxWeight);
-            
-            if (!validationResult.valid) {
-                boatValidationMessage.textContent = validationResult.message;
-                boatValidationMessage.className = 'validation-message validation-error';
-                return;
+            // Check for overlapping ranges
+            for (let range of boatPriceRanges) {
+                if ((minWeight >= range.min && minWeight <= range.max) || 
+                    (maxWeight >= range.min && maxWeight <= range.max) ||
+                    (minWeight <= range.min && maxWeight >= range.max)) {
+                    showNotification('Weight range overlaps with existing range');
+                    return;
+                }
             }
             
             // Add new price range
@@ -5064,66 +4957,11 @@
             boatMinWeight.value = '';
             boatMaxWeight.value = '';
             boatPriceValue.value = '';
-            boatValidationMessage.textContent = 'Price range added successfully!';
-            boatValidationMessage.className = 'validation-message validation-success';
             
             showNotification('Boat price range added successfully');
         });
 
-        // Validate price range to prevent overlaps
-        function validatePriceRange(priceRanges, minWeight, maxWeight) {
-            // Check for overlaps with existing ranges
-            for (let range of priceRanges) {
-                // Check if the new range overlaps with an existing range
-                if ((minWeight >= range.min && minWeight <= range.max) || 
-                    (maxWeight >= range.min && maxWeight <= range.max) ||
-                    (minWeight <= range.min && maxWeight >= range.max)) {
-                    return {
-                        valid: false,
-                        message: `Weight range overlaps with existing range (${range.min}-${range.max} kg)`
-                    };
-                }
-            }
-            
-            // Check for gaps in the weight ranges
-            const sortedRanges = [...priceRanges].sort((a, b) => a.min - b.min);
-            let hasGap = false;
-            
-            // Check if the new range creates a gap
-            if (sortedRanges.length > 0) {
-                // Check if the new range starts before the first range
-                if (maxWeight < sortedRanges[0].min) {
-                    hasGap = false; // This is fine - it's before the first range
-                } 
-                // Check if the new range ends after the last range
-                else if (minWeight > sortedRanges[sortedRanges.length - 1].max) {
-                    hasGap = false; // This is fine - it's after the last range
-                } 
-                // Check for gaps between existing ranges
-                else {
-                    for (let i = 0; i < sortedRanges.length - 1; i++) {
-                        const currentRange = sortedRanges[i];
-                        const nextRange = sortedRanges[i + 1];
-                        
-                        // If the new range fits between two existing ranges without overlapping
-                        if (minWeight > currentRange.max && maxWeight < nextRange.min) {
-                            hasGap = false; // This is fine - it fills a gap
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            return { valid: true, message: 'Valid price range' };
-        }
-
         // Load price lists
-        function loadPriceLists() {
-            loadCargoPriceList();
-            loadBoatPriceList();
-        }
-
-        // Load cargo price list
         function loadCargoPriceList() {
             cargoPriceList.innerHTML = '';
             
@@ -5150,7 +4988,6 @@
             });
         }
 
-        // Load boat price list
         function loadBoatPriceList() {
             boatPriceList.innerHTML = '';
             
@@ -5177,7 +5014,7 @@
             });
         }
 
-        // Edit cargo price range
+        // Edit price range
         function editCargoPriceRange(index) {
             const range = cargoPriceRanges[index];
             cargoMinWeight.value = range.min;
@@ -5189,12 +5026,8 @@
             saveCargoPriceRanges();
             loadCargoPriceList();
             loadWeightOptions();
-            
-            cargoValidationMessage.textContent = 'Editing price range. Make changes and click "Add Cargo Price" to save.';
-            cargoValidationMessage.className = 'validation-message validation-success';
         }
 
-        // Edit boat price range
         function editBoatPriceRange(index) {
             const range = boatPriceRanges[index];
             boatMinWeight.value = range.min;
@@ -5206,14 +5039,11 @@
             saveBoatPriceRanges();
             loadBoatPriceList();
             loadWeightOptions();
-            
-            boatValidationMessage.textContent = 'Editing price range. Make changes and click "Add Boat Price" to save.';
-            boatValidationMessage.className = 'validation-message validation-success';
         }
 
-        // Remove cargo price range
+        // Remove price range
         function removeCargoPriceRange(index) {
-            if (confirm('Are you sure you want to remove this cargo price range?')) {
+            if (confirm('Are you sure you want to remove this price range?')) {
                 cargoPriceRanges.splice(index, 1);
                 saveCargoPriceRanges();
                 loadCargoPriceList();
@@ -5222,9 +5052,8 @@
             }
         }
 
-        // Remove boat price range
         function removeBoatPriceRange(index) {
-            if (confirm('Are you sure you want to remove this boat price range?')) {
+            if (confirm('Are you sure you want to remove this price range?')) {
                 boatPriceRanges.splice(index, 1);
                 saveBoatPriceRanges();
                 loadBoatPriceList();
@@ -5239,7 +5068,6 @@
             const email = document.getElementById('newUserEmail').value;
             const contact = document.getElementById('newUserContact').value;
             const password = document.getElementById('newUserPassword').value;
-            const role = document.getElementById('newUserRole').value;
             
             if (!username || !email || !contact || !password) {
                 showNotification('Please fill all fields');
@@ -5252,14 +5080,14 @@
                 return;
             }
             
-            // Add new user
+            // Add new user with staff role
             users.push({
                 id: Date.now(),
                 username: username,
                 email: email,
                 contact: contact,
                 password: password,
-                role: role
+                role: 'staff'
             });
             
             saveUsers();
@@ -5309,16 +5137,13 @@
         // Edit user
         function editUser(index) {
             const user = users[index];
-            editingUserId = user.id;
-            
-            // Fill the edit form with user data
             editUsername.value = user.username;
             editUserEmail.value = user.email;
             editUserContact.value = user.contact;
             editUserPassword.value = '';
             editUserRole.value = user.role;
             
-            // Show the edit modal
+            editingUserId = index;
             userEditModal.classList.add('active');
         }
 
@@ -5330,30 +5155,17 @@
 
         // Confirm user edit
         confirmUserEdit.addEventListener('click', function() {
-            const username = editUsername.value;
-            const email = editUserEmail.value;
-            const contact = editUserContact.value;
-            const password = editUserPassword.value;
-            const role = editUserRole.value;
+            if (editingUserId === null) return;
             
-            if (!username || !email || !contact) {
-                showNotification('Please fill all required fields');
-                return;
-            }
+            const user = users[editingUserId];
+            user.username = editUsername.value;
+            user.email = editUserEmail.value;
+            user.contact = editUserContact.value;
+            user.role = editUserRole.value;
             
-            // Find the user being edited
-            const userIndex = users.findIndex(user => user.id === editingUserId);
-            if (userIndex === -1) return;
-            
-            // Update user data
-            users[userIndex].username = username;
-            users[userIndex].email = email;
-            users[userIndex].contact = contact;
-            users[userIndex].role = role;
-            
-            // Update password only if provided
-            if (password) {
-                users[userIndex].password = password;
+            // Update password if provided
+            if (editUserPassword.value) {
+                user.password = editUserPassword.value;
             }
             
             saveUsers();
@@ -5374,122 +5186,551 @@
             }
         }
 
+        // Load weight options
+        function loadWeightOptions() {
+            weightOptions.innerHTML = '';
+            boatWeightOptions.innerHTML = '';
+            
+            // Load cargo weight options
+            cargoPriceRanges.forEach(range => {
+                const option = document.createElement('div');
+                option.className = 'weight-option';
+                option.innerHTML = `
+                    <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
+                        ${range.min}-${range.max} kg
+                    </button>
+                `;
+                weightOptions.appendChild(option);
+            });
+            
+            // Load boat weight options
+            boatPriceRanges.forEach(range => {
+                const boatOption = document.createElement('div');
+                boatOption.className = 'weight-option';
+                boatOption.innerHTML = `
+                    <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
+                        ${range.min}-${range.max} kg
+                    </button>
+                `;
+                boatWeightOptions.appendChild(boatOption);
+            });
+            
+            // Add event listeners to weight buttons
+            document.querySelectorAll('.weight-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons in the same container
+                    this.parentElement.parentElement.querySelectorAll('.weight-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Update price display
+                    const price = this.getAttribute('data-price');
+                    const container = this.closest('.form-container');
+                    const priceDisplay = container.querySelector('.price-display .price-value span:last-child');
+                    if (priceDisplay) {
+                        priceDisplay.textContent = price;
+                    }
+                });
+            });
+        }
+
+        // Load cargo data
+        function loadCargoData() {
+            if (!cargoTableBody) return;
+            
+            cargoTableBody.innerHTML = '';
+            
+            // Filter data based on user role
+            let displayCargoDeliveries = cargoDeliveries;
+            if (currentUser && currentUser.role !== 'admin') {
+                displayCargoDeliveries = cargoDeliveries.filter(d => d.createdBy === currentUser.email);
+            }
+            
+            if (displayCargoDeliveries.length === 0) {
+                if (cargoEmptyMessage) cargoEmptyMessage.style.display = 'block';
+                return;
+            }
+            
+            if (cargoEmptyMessage) cargoEmptyMessage.style.display = 'none';
+            
+            displayCargoDeliveries.forEach(delivery => {
+                const statusClass = getStatusClass(delivery.status);
+                const paymentClass = getPaymentStatusClass(delivery.paymentStatus);
+                const paymentText = getPaymentStatusText(delivery.paymentStatus);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <a class="reference-link ${delivery.status === 'Delivered' ? 'reference-completed' : 'reference-pending'}" onclick="trackDeliveryByReference('${delivery.referenceNumber}')">
+                            ${delivery.referenceNumber}
+                        </a>
+                    </td>
+                    <td>${delivery.customerName}</td>
+                    <td>${delivery.customerContact}</td>
+                    <td>${delivery.pickupLocation}${delivery.postOfficeMessage ? ` (${delivery.postOfficeMessage})` : ''}</td>
+                    <td>${delivery.deliveryLocation}</td>
+                    <td>${delivery.packageWeight}</td>
+                    <td>${delivery.deliveryPrice} MVR</td>
+                    <td>${formatDate(delivery.deliveryDate)}</td>
+                    <td>
+                        <div class="countdown-timer" id="countdown-${delivery.id}">
+                            <div class="countdown-label">Time Remaining</div>
+                            <div class="countdown-display">
+                                <div class="countdown-unit">
+                                    <span class="countdown-value" id="days-${delivery.id}">00</span>
+                                    <span class="countdown-label-small">Days</span>
+                                </div>
+                                <div class="countdown-unit">
+                                    <span class="countdown-value" id="hours-${delivery.id}">00</span>
+                                    <span class="countdown-label-small">Hours</span>
+                                </div>
+                                <div class="countdown-unit">
+                                    <span class="countdown-value" id="minutes-${delivery.id}">00</span>
+                                    <span class="countdown-label-small">Minutes</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="status-badge ${statusClass}">${delivery.status}</span>
+                    </td>
+                    <td>
+                        <span class="status-badge ${paymentClass}">${paymentText}</span>
+                        ${delivery.paymentSlip ? `<br><button class="action-btn view-btn" onclick="viewPaymentSlip('${delivery.paymentSlip}')">View Slip</button>` : ''}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn update-btn" onclick="openStatusModal('cargo', ${delivery.id})">Update</button>
+                            ${currentUser && currentUser.role === 'admin' && delivery.paymentStatus === 'under_review' ? 
+                                `<button class="action-btn review-btn" onclick="approvePayment('cargo', ${delivery.id})">Approve</button>` : ''}
+                            <button class="action-btn delete-btn" onclick="deleteDelivery('cargo', ${delivery.id})">Delete</button>
+                        </div>
+                    </td>
+                `;
+                cargoTableBody.appendChild(row);
+                
+                // Start countdown timer for this delivery
+                startCountdownTimer(delivery.id, delivery.deliveryDate);
+            });
+        }
+
+        // Load boat data
+        function loadBoatData() {
+            if (!boatTableBody) return;
+            
+            boatTableBody.innerHTML = '';
+            
+            // Filter data based on user role
+            let displayBoatDeliveries = boatDeliveries;
+            if (currentUser && currentUser.role !== 'admin') {
+                displayBoatDeliveries = boatDeliveries.filter(d => d.createdBy === currentUser.email);
+            }
+            
+            if (displayBoatDeliveries.length === 0) {
+                if (boatEmptyMessage) boatEmptyMessage.style.display = 'block';
+                return;
+            }
+            
+            if (boatEmptyMessage) boatEmptyMessage.style.display = 'none';
+            
+            displayBoatDeliveries.forEach(delivery => {
+                const statusClass = getStatusClass(delivery.status);
+                const paymentClass = getPaymentStatusClass(delivery.paymentStatus);
+                const paymentText = getPaymentStatusText(delivery.paymentStatus);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <a class="reference-link ${delivery.status === 'Delivered' ? 'reference-completed' : 'reference-pending'}" onclick="trackDeliveryByReference('${delivery.referenceNumber}')">
+                            ${delivery.referenceNumber}
+                        </a>
+                    </td>
+                    <td>${delivery.customerName}</td>
+                    <td>${delivery.customerContact}</td>
+                    <td>${delivery.boatName}</td>
+                    <td>${delivery.island}</td>
+                    <td>${delivery.packageLabel}</td>
+                    <td>${delivery.packageWeight}</td>
+                    <td>${delivery.deliveryPrice} MVR</td>
+                    <td>${formatDate(delivery.deliveryDate)}</td>
+                    <td>
+                        <div class="countdown-timer" id="countdown-${delivery.id}">
+                            <div class="countdown-label">Time Remaining</div>
+                            <div class="countdown-display">
+                                <div class="countdown-unit">
+                                    <span class="countdown-value" id="days-${delivery.id}">00</span>
+                                    <span class="countdown-label-small">Days</span>
+                                </div>
+                                <div class="countdown-unit">
+                                    <span class="countdown-value" id="hours-${delivery.id}">00</span>
+                                    <span class="countdown-label-small">Hours</span>
+                                </div>
+                                <div class="countdown-unit">
+                                    <span class="countdown-value" id="minutes-${delivery.id}">00</span>
+                                    <span class="countdown-label-small">Minutes</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="status-badge ${statusClass}">${delivery.status}</span>
+                    </td>
+                    <td>
+                        <span class="status-badge ${paymentClass}">${paymentText}</span>
+                        ${delivery.paymentSlip ? `<br><button class="action-btn view-btn" onclick="viewPaymentSlip('${delivery.paymentSlip}')">View Slip</button>` : ''}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn update-btn" onclick="openStatusModal('boat', ${delivery.id})">Update</button>
+                            ${currentUser && currentUser.role === 'admin' && delivery.paymentStatus === 'under_review' ? 
+                                `<button class="action-btn review-btn" onclick="approvePayment('boat', ${delivery.id})">Approve</button>` : ''}
+                            <button class="action-btn delete-btn" onclick="deleteDelivery('boat', ${delivery.id})">Delete</button>
+                        </div>
+                    </td>
+                `;
+                boatTableBody.appendChild(row);
+                
+                // Start countdown timer for this delivery
+                startCountdownTimer(delivery.id, delivery.deliveryDate);
+            });
+        }
+
+        // Global functions that are called from HTML onclick attributes
+        window.trackDeliveryByReference = function(referenceNumber) {
+            // Search in cargo deliveries
+            let delivery = cargoDeliveries.find(d => d.referenceNumber === referenceNumber);
+            
+            // If not found in cargo, search in boat deliveries
+            if (!delivery) {
+                delivery = boatDeliveries.find(d => d.referenceNumber === referenceNumber);
+            }
+            
+            if (delivery) {
+                // Switch to track delivery section
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                const trackDeliveryLink = document.querySelector('[data-section="track-delivery"]');
+                if (trackDeliveryLink) {
+                    trackDeliveryLink.classList.add('active');
+                }
+                
+                dashboardSections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === 'track-delivery') {
+                        section.classList.add('active');
+                    }
+                });
+                
+                // Set search contact and trigger search
+                const searchContact = document.getElementById('searchContact');
+                if (searchContact) {
+                    searchContact.value = delivery.customerContact;
+                    if (searchBtn) searchBtn.click();
+                }
+            } else {
+                showNotification('Delivery not found with this reference number');
+            }
+        };
+
+        window.viewPaymentSlip = function(slipData) {
+            if (slipImage) {
+                slipImage.src = slipData;
+                slipModal.classList.add('active');
+            }
+        };
+
+        window.openStatusModal = function(type, id) {
+            currentDeliveryType = type;
+            currentDeliveryId = id;
+            
+            let delivery;
+            if (type === 'cargo') {
+                delivery = cargoDeliveries.find(d => d.id === id);
+            } else {
+                delivery = boatDeliveries.find(d => d.id === id);
+            }
+            
+            if (!delivery) return;
+            
+            // Set current status in dropdown
+            statusSelect.value = delivery.status;
+            
+            // Show/hide proof upload based on selected status
+            toggleProofUpload();
+            
+            // Show modal
+            statusModal.classList.add('active');
+        };
+
+        window.approvePayment = function(type, id) {
+            if (confirm('Are you sure you want to approve this payment?')) {
+                let delivery;
+                if (type === 'cargo') {
+                    delivery = cargoDeliveries.find(d => d.id === id);
+                } else {
+                    delivery = boatDeliveries.find(d => d.id === id);
+                }
+                
+                if (delivery) {
+                    delivery.paymentStatus = 'paid';
+                    saveUpdatedData(type);
+                    
+                    // Add notification for the user who created the delivery
+                    addNotification(
+                        'Payment Approved',
+                        `Payment for your ${type} delivery to ${delivery.customerName} has been approved. Reference: ${delivery.referenceNumber}`,
+                        delivery.createdBy
+                    );
+                    
+                    showNotification('Payment approved successfully');
+                }
+            }
+        };
+
+        window.deleteDelivery = function(type, id) {
+            if (confirm('Are you sure you want to delete this delivery?')) {
+                if (type === 'cargo') {
+                    cargoDeliveries = cargoDeliveries.filter(d => d.id !== id);
+                    saveCargoData();
+                    loadCargoData();
+                    loadUserReferences();
+                } else {
+                    boatDeliveries = boatDeliveries.filter(d => d.id !== id);
+                    saveBoatData();
+                    loadBoatData();
+                    loadUserReferences();
+                }
+                showNotification('Delivery deleted successfully');
+            }
+        };
+
+        window.editCargoPriceRange = function(index) {
+            const range = cargoPriceRanges[index];
+            cargoMinWeight.value = range.min;
+            cargoMaxWeight.value = range.max;
+            cargoPriceValue.value = range.price;
+            
+            // Remove the range being edited
+            cargoPriceRanges.splice(index, 1);
+            saveCargoPriceRanges();
+            loadCargoPriceList();
+            loadWeightOptions();
+        };
+
+        window.editBoatPriceRange = function(index) {
+            const range = boatPriceRanges[index];
+            boatMinWeight.value = range.min;
+            boatMaxWeight.value = range.max;
+            boatPriceValue.value = range.price;
+            
+            // Remove the range being edited
+            boatPriceRanges.splice(index, 1);
+            saveBoatPriceRanges();
+            loadBoatPriceList();
+            loadWeightOptions();
+        };
+
+        window.removeCargoPriceRange = function(index) {
+            if (confirm('Are you sure you want to remove this price range?')) {
+                cargoPriceRanges.splice(index, 1);
+                saveCargoPriceRanges();
+                loadCargoPriceList();
+                loadWeightOptions();
+                showNotification('Cargo price range removed successfully');
+            }
+        };
+
+        window.removeBoatPriceRange = function(index) {
+            if (confirm('Are you sure you want to remove this price range?')) {
+                boatPriceRanges.splice(index, 1);
+                saveBoatPriceRanges();
+                loadBoatPriceList();
+                loadWeightOptions();
+                showNotification('Boat price range removed successfully');
+            }
+        };
+
         // Firebase Data Management Functions
         function saveCargoData() {
-            cargoRef.set(cargoDeliveries)
-                .then(() => console.log('Cargo data saved to Firebase'))
-                .catch(error => console.error('Error saving cargo data:', error));
+            if (cargoRef) {
+                cargoRef.set(cargoDeliveries)
+                    .then(() => console.log('Cargo data saved to Firebase'))
+                    .catch(error => console.error('Error saving cargo data:', error));
+            } else {
+                // Fallback to localStorage if Firebase not available
+                localStorage.setItem('cargoDeliveries', JSON.stringify(cargoDeliveries));
+            }
         }
 
         function saveBoatData() {
-            boatRef.set(boatDeliveries)
-                .then(() => console.log('Boat data saved to Firebase'))
-                .catch(error => console.error('Error saving boat data:', error));
+            if (boatRef) {
+                boatRef.set(boatDeliveries)
+                    .then(() => console.log('Boat data saved to Firebase'))
+                    .catch(error => console.error('Error saving boat data:', error));
+            } else {
+                localStorage.setItem('boatDeliveries', JSON.stringify(boatDeliveries));
+            }
         }
 
         function saveCargoPriceRanges() {
-            cargoPriceRangesRef.set(cargoPriceRanges)
-                .then(() => console.log('Cargo price ranges saved to Firebase'))
-                .catch(error => console.error('Error saving cargo price ranges:', error));
+            if (cargoPriceRangesRef) {
+                cargoPriceRangesRef.set(cargoPriceRanges)
+                    .then(() => console.log('Cargo price ranges saved to Firebase'))
+                    .catch(error => console.error('Error saving cargo price ranges:', error));
+            } else {
+                localStorage.setItem('cargoPriceRanges', JSON.stringify(cargoPriceRanges));
+            }
         }
 
         function saveBoatPriceRanges() {
-            boatPriceRangesRef.set(boatPriceRanges)
-                .then(() => console.log('Boat price ranges saved to Firebase'))
-                .catch(error => console.error('Error saving boat price ranges:', error));
-        }
-        
-        function saveUsers() {
-            usersRef.set(users)
-                .then(() => console.log('Users saved to Firebase'))
-                .catch(error => console.error('Error saving users:', error));
-        }
-        
-        function saveNotifications() {
-            notificationsRef.set(notifications)
-                .then(() => console.log('Notifications saved to Firebase'))
-                .catch(error => console.error('Error saving notifications:', error));
+            if (boatPriceRangesRef) {
+                boatPriceRangesRef.set(boatPriceRanges)
+                    .then(() => console.log('Boat price ranges saved to Firebase'))
+                    .catch(error => console.error('Error saving boat price ranges:', error));
+            } else {
+                localStorage.setItem('boatPriceRanges', JSON.stringify(boatPriceRanges));
+            }
         }
 
-        // Load data from Firebase
+        function saveUsers() {
+            if (usersRef) {
+                usersRef.set(users)
+                    .then(() => console.log('Users saved to Firebase'))
+                    .catch(error => console.error('Error saving users:', error));
+            } else {
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+        }
+
+        function saveNotifications() {
+            if (notificationsRef) {
+                notificationsRef.set(notifications)
+                    .then(() => console.log('Notifications saved to Firebase'))
+                    .catch(error => console.error('Error saving notifications:', error));
+            } else {
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+            }
+        }
+
+        // Load data from Firebase or localStorage
         function loadStoredData() {
-            // Load cargo deliveries
-            cargoRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    cargoDeliveries = data;
-                    loadCargoData();
-                    loadUserReferences();
-                    loadAllReferences();
-                }
-            });
-            
-            // Load boat deliveries
-            boatRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    boatDeliveries = data;
-                    loadBoatData();
-                    loadUserReferences();
-                    loadAllReferences();
-                }
-            });
-            
-            // Load cargo price ranges
-            cargoPriceRangesRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    cargoPriceRanges = data;
-                    loadWeightOptions();
-                    loadCargoPriceList();
-                }
-            });
-            
-            // Load boat price ranges
-            boatPriceRangesRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    boatPriceRanges = data;
-                    loadWeightOptions();
-                    loadBoatPriceList();
-                }
-            });
-            
-            // Load users
-            usersRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    users = data;
-                }
-            });
-            
-            // Load notifications
-            notificationsRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    notifications = data;
-                    loadNotifications();
-                    updateNotificationBadge();
-                }
-            });
+            // Try Firebase first, then fallback to localStorage
+            if (cargoRef) {
+                // Load cargo deliveries
+                cargoRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        cargoDeliveries = data;
+                        loadCargoData();
+                    }
+                });
+                
+                // Load boat deliveries
+                boatRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        boatDeliveries = data;
+                        loadBoatData();
+                    }
+                });
+                
+                // Load cargo price ranges
+                cargoPriceRangesRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        cargoPriceRanges = data;
+                        loadCargoPriceList();
+                        loadWeightOptions();
+                    }
+                });
+                
+                // Load boat price ranges
+                boatPriceRangesRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        boatPriceRanges = data;
+                        loadBoatPriceList();
+                        loadWeightOptions();
+                    }
+                });
+                
+                // Load users
+                usersRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        users = data;
+                    }
+                });
+                
+                // Load notifications
+                notificationsRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        notifications = data;
+                        loadNotifications();
+                        updateNotificationBadge();
+                    }
+                });
+            } else {
+                // Fallback to localStorage
+                const savedCargo = localStorage.getItem('cargoDeliveries');
+                const savedBoat = localStorage.getItem('boatDeliveries');
+                const savedCargoPrices = localStorage.getItem('cargoPriceRanges');
+                const savedBoatPrices = localStorage.getItem('boatPriceRanges');
+                const savedUsers = localStorage.getItem('users');
+                const savedNotifications = localStorage.getItem('notifications');
+                
+                if (savedCargo) cargoDeliveries = JSON.parse(savedCargo);
+                if (savedBoat) boatDeliveries = JSON.parse(savedBoat);
+                if (savedCargoPrices) cargoPriceRanges = JSON.parse(savedCargoPrices);
+                if (savedBoatPrices) boatPriceRanges = JSON.parse(savedBoatPrices);
+                if (savedUsers) users = JSON.parse(savedUsers);
+                if (savedNotifications) notifications = JSON.parse(savedNotifications);
+                
+                loadCargoData();
+                loadBoatData();
+                loadCargoPriceList();
+                loadBoatPriceList();
+                loadWeightOptions();
+                loadNotifications();
+                updateNotificationBadge();
+            }
+        }
+
+        // Load price lists
+        function loadPriceLists() {
+            loadCargoPriceList();
+            loadBoatPriceList();
         }
 
         // Format date for display
         function formatDate(dateString) {
-            const options = { year: 'numeric', month: 'short', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString(undefined, options);
+            if (!dateString) return 'N/A';
+            try {
+                const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                return new Date(dateString).toLocaleDateString(undefined, options);
+            } catch (e) {
+                return 'Invalid Date';
+            }
         }
 
         // Format date and time for display
         function formatDateTime(dateTimeString) {
-            const options = { 
-                year: 'numeric', 
-                month: 'short', 
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            };
-            return new Date(dateTimeString).toLocaleDateString(undefined, options);
+            if (!dateTimeString) return 'N/A';
+            try {
+                const options = { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+                return new Date(dateTimeString).toLocaleDateString(undefined, options);
+            } catch (e) {
+                return 'Invalid Date';
+            }
         }
 
         // Show notification
