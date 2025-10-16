@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EasyCargo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -1652,7 +1653,7 @@
 
         .notification-item.unread {
             background: #e8f4fd;
-            border-left-color: #2196f3;
+            border-left-color: #4caf50;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
@@ -2652,7 +2653,10 @@
             </div>
             <!-- Login Form -->
             <div class="login-form" id="loginFormSection">
-                <h2>Welcome Back</h2>
+               <div class="logo">
+            <img src="ChatGPT Image Oct 9, 2025, 08_19_04 PM.png" alt="" class="logo-image">
+        
+        </div>
                 <p>Sign in to track and manage shipments</p>
                 
                 <form id="loginForm">
@@ -4980,7 +4984,8 @@
             const vehiclePrice = parseFloat(selectedVehicle.getAttribute('data-price'));
             const destinationPrice = parseFloat(selectedDestination.getAttribute('data-price'));
             
-            return (itemPrice + vehiclePrice + destinationPrice) * quantity;
+            // FIX: Only multiply item price by quantity, not vehicle and destination fees
+            return (itemPrice * quantity) + vehiclePrice + destinationPrice;
         }
 
         // Update Greater Male City price breakdown
@@ -5001,11 +5006,13 @@
             const itemPrice = parseFloat(selectedItemSize.getAttribute('data-price'));
             const vehiclePrice = parseFloat(selectedVehicle.getAttribute('data-price'));
             const destinationPrice = parseFloat(selectedDestination.getAttribute('data-price'));
-            const totalPrice = (itemPrice + vehiclePrice + destinationPrice) * quantity;
+            
+            // FIX: Only multiply item price by quantity, not vehicle and destination fees
+            const totalPrice = (itemPrice * quantity) + vehiclePrice + destinationPrice;
             
             itemPriceValue.textContent = `${itemPrice * quantity} MVR`;
-            vehiclePriceValue.textContent = `${vehiclePrice * quantity} MVR`;
-            destinationPriceValue.textContent = `${destinationPrice * quantity} MVR`;
+            vehiclePriceValue.textContent = `${vehiclePrice} MVR`;
+            destinationPriceValue.textContent = `${destinationPrice} MVR`;
             greaterMaleTotalPrice.textContent = `${totalPrice} MVR`;
         }
 
