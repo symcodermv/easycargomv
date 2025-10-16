@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EasyCargomv</title>
+    <title>EasyCargo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -1070,7 +1069,6 @@
             cursor: pointer;
             transition: all 0.3s;
             border: none;
-            flex: 1;
         }
 
         .modal-btn.cancel {
@@ -1717,6 +1715,11 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             z-index: 250;
             transition: all 0.3s;
+        }
+
+        .notifications-toggle:hover {
+            background: #3ab0d6;
+            transform: scale(1.05);
         }
 
         .notifications-toggle.has-unread::after {
@@ -2377,49 +2380,248 @@
             color: #1a2a6c;
         }
 
-        /* NEW STYLES FOR GREATER MALE CITY FORM */
-        .greater-male-pickup-location-specific {
+        /* Management Panel Styles */
+        .management-panel {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0f0f0;
+        }
+        
+        .management-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .management-title {
+            font-size: 18px;
+            color: #1a2a6c;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .management-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .management-list {
+            margin-top: 20px;
+        }
+        
+        .management-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .management-item:last-child {
+            border-bottom: none;
+        }
+        
+        .management-item-details {
+            flex: 1;
+        }
+        
+        .management-item-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .management-item-description {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .management-item-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .add-management-btn {
+            padding: 10px 20px;
+            background: #4cc9f0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .add-management-btn:hover {
+            background: #3ab0d6;
+        }
+        
+        /* Social Login Links */
+        .social-login a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* NEW STYLES FOR IMPROVED TRACKING SYSTEM */
+        
+        /* Customer search results with all references */
+        .customer-references {
+            margin-top: 20px;
             display: none;
         }
-
-        .greater-male-pickup-location-specific.active {
+        
+        .customer-references.active {
             display: block;
         }
-
-        .greater-male-destination-specific {
-            display: none;
+        
+        .reference-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
         }
-
-        .greater-male-destination-specific.active {
-            display: block;
+        
+        .reference-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-
+        
+        .reference-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .reference-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .reference-card-type {
+            font-size: 12px;
+            color: #666;
+            background: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+        
+        .reference-card-details {
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .reference-card-date {
+            font-size: 12px;
+            color: #888;
+            margin-top: 8px;
+        }
+        
+        /* Item size visualization */
+        .item-size-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
         .item-size-image {
-            width: 40px;
-            height: 40px;
+            width: 60px;
+            height: 60px;
+            background: #f0f0f0;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-size: 24px;
+            color: #4cc9f0;
         }
-
-        .item-size-image img {
-            max-width: 100%;
-            max-height: 100%;
+        
+        .item-size-description {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
         }
-
-        .vehicle-image {
-            width: 50px;
-            height: 50px;
+        
+        /* Enhanced references panel */
+        .references-panel .reference-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 4px solid #4cc9f0;
+            background: #f9f9f9;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .references-panel .reference-item:hover {
+            background: #e8f4fd;
+        }
+        
+        .references-panel .reference-item.completed {
+            border-left-color: #4caf50;
+        }
+        
+        .references-panel .reference-item.pending {
+            border-left-color: #ff9800;
+        }
+        
+        .references-panel .reference-header {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 5px;
         }
-
-        .vehicle-image img {
-            max-width: 100%;
-            max-height: 100%;
+        
+        .references-panel .reference-number {
+            font-weight: 600;
+            color: #1a2a6c;
+            font-size: 14px;
+        }
+        
+        .references-panel .reference-type {
+            font-size: 10px;
+            color: #666;
+            background: #e0e0e0;
+            padding: 2px 6px;
+            border-radius: 8px;
+        }
+        
+        .references-panel .reference-details {
+            color: #555;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        
+        .references-panel .reference-date {
+            font-size: 11px;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .references-panel .reference-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -2450,10 +2652,7 @@
             </div>
             <!-- Login Form -->
             <div class="login-form" id="loginFormSection">
-                <div class="logo">
-            <img src="ChatGPT Image Oct 9, 2025, 08_19_04 PM.png" alt="" class="logo-image">
-        
-        </div>
+                <h2>Welcome Back</h2>
                 <p>Sign in to track and manage shipments</p>
                 
                 <form id="loginForm">
@@ -2482,15 +2681,15 @@
                 </form>
                 
                 <div class="social-login">
-                    <div class="social-btn facebook">
+                    <a href="https://web.facebook.com/profile.php?id=61581778516619" target="_blank" class="social-btn facebook">
                         <i class="fab fa-facebook-f"></i>
-                    </div>
-                    <div class="social-btn google">
+                    </a>
+                    <a href="https://google.com" target="_blank" class="social-btn google">
                         <i class="fab fa-google"></i>
-                    </div>
-                    <div class="social-btn apple">
+                    </a>
+                    <a href="https://apple.com" target="_blank" class="social-btn apple">
                         <i class="fab fa-apple"></i>
-                    </div>
+                    </a>
                 </div>
                 
                 <div class="signup">
@@ -2821,85 +3020,26 @@
                             <label for="greaterMalePickupLocation">Pickup Location</label>
                             <select id="greaterMalePickupLocation" required>
                                 <option value="">Select Pickup Location</option>
-                                <option value="Post Office">Post Office</option>
-                                <option value="Pickpost">Pickpost</option>
-                                <option value="Redbox">Redbox</option>
-                                <option value="Male">Male</option>
-                                <option value="Hulhumale">Hulhumale</option>
-                                <option value="Phase2">Phase 2</option>
+                                <!-- Pickup locations will be populated from management -->
                             </select>
                         </div>
                         
-                        <!-- Package Details Field (for Post Office, Pickpost, Redbox) -->
-                        <div class="greater-male-pickup-location-specific" id="greaterMalePackageDetailsField">
-                            <div class="form-group">
-                                <label for="greaterMalePackageDetails">Package Details</label>
-                                <textarea id="greaterMalePackageDetails" placeholder="Enter package details" rows="3"></textarea>
-                            </div>
+                        <!-- Address Field for Male, Hulhumale, Phase2 -->
+                        <div class="form-group" id="greaterMaleAddressField">
+                            <label for="greaterMaleAddressName">Address Name</label>
+                            <input type="text" id="greaterMaleAddressName" placeholder="Enter full address">
                         </div>
                         
-                        <!-- Address Field (for Male, Hulhumale, Phase2) -->
-                        <div class="greater-male-pickup-location-specific" id="greaterMaleAddressField">
-                            <div class="form-group">
-                                <label for="greaterMaleAddressName">Address Name</label>
-                                <input type="text" id="greaterMaleAddressName" placeholder="Enter full address">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="greaterMaleDeliveryLocation">Delivery Location</label>
-                            <select id="greaterMaleDeliveryLocation" required>
-                                <option value="">Select Delivery Location</option>
-                                <option value="Male to Hulhumale">Male to Hulhumale</option>
-                                <option value="Hulhumale to Male">Hulhumale to Male</option>
-                                <option value="Male to Phase 2">Male to Phase 2</option>
-                                <option value="Male">Male</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Address Field for Male destination -->
-                        <div class="greater-male-destination-specific" id="greaterMaleDeliveryAddressField">
-                            <div class="form-group">
-                                <label for="greaterMaleDeliveryAddressName">Delivery Address Name</label>
-                                <input type="text" id="greaterMaleDeliveryAddressName" placeholder="Enter delivery address">
-                            </div>
+                        <!-- Package Details Field for Redbox, Post Office, Pickpost -->
+                        <div class="form-group" id="greaterMalePackageDetailsField">
+                            <label for="greaterMalePackageDetails">Package Details</label>
+                            <textarea id="greaterMalePackageDetails" placeholder="Enter package details" rows="3"></textarea>
                         </div>
                         
                         <div class="form-group">
                             <label>Select Delivery Item Size</label>
                             <div class="item-size-options" id="itemSizeOptions">
-                                <div class="item-size-option">
-                                    <button type="button" class="item-size-btn" data-size="small-package" data-price="25">
-                                        <div class="item-size-image">
-                                            <i class="fas fa-box"></i>
-                                        </div>
-                                        <span>Small Package</span>
-                                    </button>
-                                </div>
-                                <div class="item-size-option">
-                                    <button type="button" class="item-size-btn" data-size="large-package" data-price="40">
-                                        <div class="item-size-image">
-                                            <i class="fas fa-box-open"></i>
-                                        </div>
-                                        <span>Large Package</span>
-                                    </button>
-                                </div>
-                                <div class="item-size-option">
-                                    <button type="button" class="item-size-btn" data-size="small-box" data-price="30">
-                                        <div class="item-size-image">
-                                            <i class="fas fa-cube"></i>
-                                        </div>
-                                        <span>Small Box</span>
-                                    </button>
-                                </div>
-                                <div class="item-size-option">
-                                    <button type="button" class="item-size-btn" data-size="large-box" data-price="50">
-                                        <div class="item-size-image">
-                                            <i class="fas fa-cubes"></i>
-                                        </div>
-                                        <span>Large Box</span>
-                                    </button>
-                                </div>
+                                <!-- Item size options will be populated from management -->
                             </div>
                         </div>
                         
@@ -2915,23 +3055,27 @@
                         <div class="form-group">
                             <label>Select Vehicle</label>
                             <div class="vehicle-options" id="vehicleOptions">
-                                <div class="vehicle-option">
-                                    <button type="button" class="vehicle-btn" data-vehicle="motorcycle" data-price="0">
-                                        <div class="vehicle-image">
-                                            <i class="fas fa-motorcycle"></i>
-                                        </div>
-                                        <span>Motorcycle</span>
-                                    </button>
-                                </div>
-                                <div class="vehicle-option">
-                                    <button type="button" class="vehicle-btn" data-vehicle="pickup" data-price="20">
-                                        <div class="vehicle-image">
-                                            <i class="fas fa-truck-pickup"></i>
-                                        </div>
-                                        <span>Pickup</span>
-                                    </button>
-                                </div>
+                                <!-- Vehicle options will be populated from management -->
                             </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Select Destination</label>
+                            <div class="destination-options" id="destinationOptions">
+                                <!-- Destination options will be populated from management -->
+                            </div>
+                        </div>
+                        
+                        <!-- Boat Name Field for Male to Boat and Hulhumale to Boat -->
+                        <div class="form-group" id="boatNameField">
+                            <label for="boatNameInput">Boat Name</label>
+                            <input type="text" id="boatNameInput" placeholder="Enter boat name">
+                        </div>
+                        
+                        <!-- Address Name Field for other destinations -->
+                        <div class="form-group" id="destinationAddressField">
+                            <label for="destinationAddressName">Address Name</label>
+                            <input type="text" id="destinationAddressName" placeholder="Enter destination address">
                         </div>
                         
                         <div class="price-breakdown" id="greaterMalePriceBreakdown">
@@ -3084,6 +3228,14 @@
                             <input type="tel" id="searchContact" placeholder="Enter customer contact number">
                         </div>
                         <button class="search-btn" id="searchBtn">Search</button>
+                    </div>
+                    
+                    <!-- Customer References Results -->
+                    <div class="customer-references" id="customerReferences">
+                        <h3 class="form-title"><i class="fas fa-list"></i> All Delivery References for This Customer</h3>
+                        <div class="reference-list" id="referenceList">
+                            <!-- Customer references will be populated here -->
+                        </div>
                     </div>
                     
                     <div class="customer-details" id="customerDetails">
@@ -3266,10 +3418,7 @@
                                 <div class="form-field price-input">
                                     <label for="itemType">Item Type</label>
                                     <select id="itemType">
-                                        <option value="small-package">Small Package</option>
-                                        <option value="large-package">Large Package</option>
-                                        <option value="small-box">Small Box</option>
-                                        <option value="large-box">Large Box</option>
+                                        <!-- Item types will be populated from management -->
                                     </select>
                                 </div>
                                 <div class="form-field price-input">
@@ -3293,12 +3442,7 @@
                                 <div class="form-field price-input">
                                     <label for="destinationType">Destination</label>
                                     <select id="destinationType">
-                                        <option value="male-to-hulhumale">Male to Hulhumale</option>
-                                        <option value="hulhumale-to-male">Hulhumale to Male</option>
-                                        <option value="male-to-phase2">Male to Phase 2</option>
-                                        <option value="hulhumale-to-phase2">Hulhumale to Phase 2</option>
-                                        <option value="male-to-boat">Male to Boat</option>
-                                        <option value="hulhumale-to-boat">Hulhumale to Boat</option>
+                                        <!-- Destinations will be populated from management -->
                                     </select>
                                 </div>
                                 <div class="form-field price-input">
@@ -3366,6 +3510,75 @@
                     
                     <div class="user-list" id="userList">
                         <!-- User list will be populated here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Management Section -->
+            <div class="dashboard-section" id="management">
+                <h2 class="section-title">System Management</h2>
+                
+                <div class="management-panel">
+                    <div class="management-header">
+                        <div class="management-title">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Pickup Location Management</span>
+                        </div>
+                        <button class="add-management-btn" id="addPickupLocationBtn">
+                            <i class="fas fa-plus"></i> Add Location
+                        </button>
+                    </div>
+                    
+                    <div class="management-list" id="pickupLocationList">
+                        <!-- Pickup locations will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="management-panel">
+                    <div class="management-header">
+                        <div class="management-title">
+                            <i class="fas fa-route"></i>
+                            <span>Destination Management</span>
+                        </div>
+                        <button class="add-management-btn" id="addDestinationBtn">
+                            <i class="fas fa-plus"></i> Add Destination
+                        </button>
+                    </div>
+                    
+                    <div class="management-list" id="destinationList">
+                        <!-- Destinations will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="management-panel">
+                    <div class="management-header">
+                        <div class="management-title">
+                            <i class="fas fa-box"></i>
+                            <span>Item Size Management</span>
+                        </div>
+                        <button class="add-management-btn" id="addItemSizeBtn">
+                            <i class="fas fa-plus"></i> Add Item Size
+                        </button>
+                    </div>
+                    
+                    <div class="management-list" id="itemSizeList">
+                        <!-- Item sizes will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="management-panel">
+                    <div class="management-header">
+                        <div class="management-title">
+                            <i class="fas fa-truck"></i>
+                            <span>Vehicle Management</span>
+                        </div>
+                        <button class="add-management-btn" id="addVehicleBtn">
+                            <i class="fas fa-plus"></i> Add Vehicle
+                        </button>
+                    </div>
+                    
+                    <div class="management-list" id="vehicleList">
+                        <!-- Vehicles will be populated here -->
                     </div>
                 </div>
             </div>
@@ -3493,7 +3706,7 @@
             </div>
             <div class="form-field">
                 <label for="editUserRole">Role</label>
-                                <select id="editUserRole">
+                <select id="editUserRole">
                     <option value="staff">Staff</option>
                     <option value="admin">Admin</option>
                 </select>
@@ -3501,6 +3714,29 @@
             <div class="modal-actions">
                 <button class="modal-btn cancel" id="cancelUserEdit">Cancel</button>
                 <button class="modal-btn confirm" id="confirmUserEdit">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Management Item Modal -->
+    <div class="modal-overlay" id="managementModal">
+        <div class="modal">
+            <h3 class="modal-title" id="managementModalTitle">Add Item</h3>
+            <div class="form-field">
+                <label for="managementName">Name</label>
+                <input type="text" id="managementName" placeholder="Enter name">
+            </div>
+            <div class="form-field">
+                <label for="managementDescription">Description</label>
+                <textarea id="managementDescription" placeholder="Enter description" rows="3"></textarea>
+            </div>
+            <div class="form-field" id="managementPriceField" style="display: none;">
+                <label for="managementPrice">Price (MVR)</label>
+                <input type="number" id="managementPrice" placeholder="Enter price" min="0" step="0.01">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" id="cancelManagement">Cancel</button>
+                <button class="modal-btn confirm" id="confirmManagement">Save</button>
             </div>
         </div>
     </div>
@@ -3545,27 +3781,41 @@
             { min: 7, max: 10, price: 130 }
         ];
         
+        // Greater Male City management data
+        let pickupLocations = [
+            { id: 1, name: "Male", description: "Male City", type: "address" },
+            { id: 2, name: "Hulhumale", description: "Hulhumale City", type: "address" },
+            { id: 3, name: "Phase2", description: "Phase 2", type: "address" },
+            { id: 4, name: "Post Office", description: "Main Post Office", type: "package" },
+            { id: 5, name: "Pickpost", description: "Pickpost Location", type: "package" },
+            { id: 6, name: "Redbox", description: "Redbox Location", type: "package" }
+        ];
+        
+        let destinations = [
+            { id: 1, name: "Male to Hulhumale", description: "From Male to Hulhumale", price: 30, type: "address" },
+            { id: 2, name: "Hulhumale to Male", description: "From Hulhumale to Male", price: 30, type: "address" },
+            { id: 3, name: "Male to Phase2", description: "From Male to Phase 2", price: 25, type: "address" },
+            { id: 4, name: "Hulhumale to Phase2", description: "From Hulhumale to Phase 2", price: 20, type: "address" },
+            { id: 5, name: "Male to Boat", description: "From Male to Boat", price: 15, type: "boat" },
+            { id: 6, name: "Hulhumale to Boat", description: "From Hulhumale to Boat", price: 15, type: "boat" }
+        ];
+        
+        let itemSizes = [
+            { id: 1, name: "Small Package", description: "Small package up to 1kg", price: 25, icon: "fas fa-box", visual: "Small envelope or document" },
+            { id: 2, name: "Large Package", description: "Large package up to 3kg", price: 40, icon: "fas fa-box-open", visual: "Medium box or bag" },
+            { id: 3, name: "Small Box", description: "Small box up to 5kg", price: 30, icon: "fas fa-cube", visual: "Small moving box" },
+            { id: 4, name: "Large Box", description: "Large box up to 10kg", price: 50, icon: "fas fa-cubes", visual: "Large moving box" }
+        ];
+        
+        let vehicles = [
+            { id: 1, name: "Motorcycle", description: "Motorcycle delivery", price: 0 },
+            { id: 2, name: "Pickup", description: "Pickup truck delivery", price: 20 }
+        ];
+        
         // Greater Male City pricing
-        let greaterMaleItemPrices = {
-            'small-package': 25,
-            'large-package': 40,
-            'small-box': 30,
-            'large-box': 50
-        };
-        
-        let greaterMaleDestinationPrices = {
-            'male-to-hulhumale': 30,
-            'hulhumale-to-male': 30,
-            'male-to-phase2': 25,
-            'hulhumale-to-phase2': 20,
-            'male-to-boat': 15,
-            'hulhumale-to-boat': 15
-        };
-        
-        let greaterMaleVehiclePrices = {
-            'motorcycle': 0,
-            'pickup': 20
-        };
+        let greaterMaleItemPrices = {};
+        let greaterMaleDestinationPrices = {};
+        let greaterMaleVehiclePrices = {};
         
         // User management
         let users = [
@@ -3577,6 +3827,10 @@
         // Notifications
         let notifications = [];
         let lastLoginTime = null;
+        
+        // Management
+        let currentManagementType = null;
+        let editingManagementId = null;
 
         // DOM elements
         const loginContainer = document.getElementById('loginContainer');
@@ -3687,9 +3941,9 @@
         const revenueChart = document.getElementById('revenueChart');
         
         // Greater Male City elements
-        const itemSizeOptions = document.querySelectorAll('.item-size-btn');
-        const vehicleOptions = document.querySelectorAll('.vehicle-btn');
-        const destinationOptions = document.querySelectorAll('.destination-btn');
+        const itemSizeOptions = document.getElementById('itemSizeOptions');
+        const vehicleOptions = document.getElementById('vehicleOptions');
+        const destinationOptions = document.getElementById('destinationOptions');
         const decreaseQuantity = document.getElementById('decreaseQuantity');
         const increaseQuantity = document.getElementById('increaseQuantity');
         const itemQuantity = document.getElementById('itemQuantity');
@@ -3701,13 +3955,39 @@
         const addDestinationPriceBtn = document.getElementById('addDestinationPriceBtn');
         const itemPriceList = document.getElementById('itemPriceList');
         const destinationPriceList = document.getElementById('destinationPriceList');
-
-        // NEW ELEMENTS FOR GREATER MALE CITY FORM
         const greaterMalePickupLocation = document.getElementById('greaterMalePickupLocation');
-        const greaterMalePackageDetailsField = document.getElementById('greaterMalePackageDetailsField');
         const greaterMaleAddressField = document.getElementById('greaterMaleAddressField');
-        const greaterMaleDeliveryLocation = document.getElementById('greaterMaleDeliveryLocation');
-        const greaterMaleDeliveryAddressField = document.getElementById('greaterMaleDeliveryAddressField');
+        const greaterMalePackageDetailsField = document.getElementById('greaterMalePackageDetailsField');
+        const boatNameField = document.getElementById('boatNameField');
+        const destinationAddressField = document.getElementById('destinationAddressField');
+        const boatNameInput = document.getElementById('boatNameInput');
+        const destinationAddressName = document.getElementById('destinationAddressName');
+        const greaterMaleAddressName = document.getElementById('greaterMaleAddressName');
+        const greaterMalePackageDetails = document.getElementById('greaterMalePackageDetails');
+        
+        // Management elements
+        const addPickupLocationBtn = document.getElementById('addPickupLocationBtn');
+        const addDestinationBtn = document.getElementById('addDestinationBtn');
+        const addItemSizeBtn = document.getElementById('addItemSizeBtn');
+        const addVehicleBtn = document.getElementById('addVehicleBtn');
+        const pickupLocationList = document.getElementById('pickupLocationList');
+        const destinationList = document.getElementById('destinationList');
+        const itemSizeList = document.getElementById('itemSizeList');
+        const vehicleList = document.getElementById('vehicleList');
+        const managementModal = document.getElementById('managementModal');
+        const managementModalTitle = document.getElementById('managementModalTitle');
+        const managementName = document.getElementById('managementName');
+        const managementDescription = document.getElementById('managementDescription');
+        const managementPriceField = document.getElementById('managementPriceField');
+        const managementPrice = document.getElementById('managementPrice');
+        const cancelManagement = document.getElementById('cancelManagement');
+        const confirmManagement = document.getElementById('confirmManagement');
+        const itemType = document.getElementById('itemType');
+        const destinationType = document.getElementById('destinationType');
+
+        // NEW ELEMENTS FOR IMPROVED TRACKING
+        const customerReferences = document.getElementById('customerReferences');
+        const referenceList = document.getElementById('referenceList');
 
         // Firebase Database References
         const cargoRef = database.ref('cargoDeliveries');
@@ -3715,8 +3995,13 @@
         const greaterMaleRef = database.ref('greaterMaleDeliveries');
         const cargoPriceRangesRef = database.ref('cargoPriceRanges');
         const boatPriceRangesRef = database.ref('boatPriceRanges');
+        const pickupLocationsRef = database.ref('pickupLocations');
+        const destinationsRef = database.ref('destinations');
+        const itemSizesRef = database.ref('itemSizes');
+        const vehiclesRef = database.ref('vehicles');
         const greaterMaleItemPricesRef = database.ref('greaterMaleItemPrices');
         const greaterMaleDestinationPricesRef = database.ref('greaterMaleDestinationPrices');
+        const greaterMaleVehiclePricesRef = database.ref('greaterMaleVehiclePrices');
         const usersRef = database.ref('users');
         const notificationsRef = database.ref('notifications');
 
@@ -3899,6 +4184,7 @@
             loadPriceLists();
             loadUsers();
             loadNotifications();
+            loadManagementData();
             
             // Check for new notifications
             checkNewNotifications();
@@ -3974,6 +4260,12 @@
                             <span>User Management</span>
                         </a>
                     </div>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link" data-section="management">
+                            <i class="fas fa-cog"></i>
+                            <span>System Management</span>
+                        </a>
+                    </div>
                 `;
                 
                 // Hide cargo and boat delivery forms for admin
@@ -4013,6 +4305,7 @@
                 document.getElementById('price-management').style.display = 'none';
                 document.getElementById('user-management').style.display = 'none';
                 document.getElementById('revenue-dashboard').style.display = 'none';
+                document.getElementById('management').style.display = 'none';
             }
             
             // Reattach event listeners to navigation links
@@ -4057,6 +4350,11 @@
                             if (targetSection === 'price-management') {
                                 loadPriceLists();
                             }
+                            
+                            // Load management data when management section is accessed
+                            if (targetSection === 'management') {
+                                loadManagementData();
+                            }
                         }
                     });
                     
@@ -4088,6 +4386,9 @@
             
             // Initialize Greater Male City form
             initializeGreaterMaleForm();
+            
+            // Initialize management
+            initializeManagement();
         }
 
         // Initialize price tabs functionality
@@ -4113,66 +4414,45 @@
 
         // Initialize Greater Male City form
         function initializeGreaterMaleForm() {
-            // Show/hide location-specific fields based on pickup location selection
+            // Pickup location change handler
             greaterMalePickupLocation.addEventListener('change', function() {
-                const selectedLocation = this.value;
-                
-                // Hide all location-specific fields
-                greaterMalePackageDetailsField.classList.remove('active');
-                greaterMaleAddressField.classList.remove('active');
-                
-                // Show appropriate field based on selection
-                if (selectedLocation === 'Post Office' || selectedLocation === 'Pickpost' || selectedLocation === 'Redbox') {
-                    greaterMalePackageDetailsField.classList.add('active');
-                } else if (selectedLocation === 'Male' || selectedLocation === 'Hulhumale' || selectedLocation === 'Phase2') {
-                    greaterMaleAddressField.classList.add('active');
+                const selectedLocation = pickupLocations.find(loc => loc.name === this.value);
+                if (selectedLocation) {
+                    if (selectedLocation.type === 'address') {
+                        greaterMaleAddressField.style.display = 'block';
+                        greaterMalePackageDetailsField.style.display = 'none';
+                    } else {
+                        greaterMaleAddressField.style.display = 'none';
+                        greaterMalePackageDetailsField.style.display = 'block';
+                    }
                 }
-            });
-
-            // Show/hide delivery address field based on destination selection
-            greaterMaleDeliveryLocation.addEventListener('change', function() {
-                const selectedDestination = this.value;
-                
-                // Hide delivery address field
-                greaterMaleDeliveryAddressField.classList.remove('active');
-                
-                // Show delivery address field only for Male destination
-                if (selectedDestination === 'Male') {
-                    greaterMaleDeliveryAddressField.classList.add('active');
-                }
-            });
-
-            // Item size selection
-            itemSizeOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    // Remove active class from all buttons
-                    itemSizeOptions.forEach(btn => btn.classList.remove('active'));
-                    
-                    // Add active class to clicked button
-                    this.classList.add('active');
-                    
-                    // Update vehicle options based on selected item size and quantity
-                    updateVehicleOptions(this.getAttribute('data-size'), parseInt(itemQuantity.value));
-                    
-                    // Update price breakdown
-                    updateGreaterMalePrice();
-                });
             });
             
-            // Vehicle selection
-            vehicleOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    if (this.classList.contains('disabled')) return;
-                    
+            // Destination change handler
+            destinationOptions.addEventListener('click', function(e) {
+                if (e.target.classList.contains('destination-btn')) {
                     // Remove active class from all buttons
-                    vehicleOptions.forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.destination-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
                     
                     // Add active class to clicked button
-                    this.classList.add('active');
+                    e.target.classList.add('active');
+                    
+                    const selectedDestination = destinations.find(dest => dest.name === e.target.textContent);
+                    if (selectedDestination) {
+                        if (selectedDestination.type === 'boat') {
+                            boatNameField.style.display = 'block';
+                            destinationAddressField.style.display = 'none';
+                        } else {
+                            boatNameField.style.display = 'none';
+                            destinationAddressField.style.display = 'block';
+                        }
+                    }
                     
                     // Update price breakdown
                     updateGreaterMalePrice();
-                });
+                }
             });
             
             // Quantity controls
@@ -4180,11 +4460,6 @@
                 let currentValue = parseInt(itemQuantity.value);
                 if (currentValue > 1) {
                     itemQuantity.value = currentValue - 1;
-                    // Update vehicle options based on selected item size and new quantity
-                    const selectedItemSize = document.querySelector('.item-size-btn.active');
-                    if (selectedItemSize) {
-                        updateVehicleOptions(selectedItemSize.getAttribute('data-size'), currentValue - 1);
-                    }
                     updateGreaterMalePrice();
                 }
             });
@@ -4193,11 +4468,6 @@
                 let currentValue = parseInt(itemQuantity.value);
                 if (currentValue < 10) {
                     itemQuantity.value = currentValue + 1;
-                    // Update vehicle options based on selected item size and new quantity
-                    const selectedItemSize = document.querySelector('.item-size-btn.active');
-                    if (selectedItemSize) {
-                        updateVehicleOptions(selectedItemSize.getAttribute('data-size'), currentValue + 1);
-                    }
                     updateGreaterMalePrice();
                 }
             });
@@ -4209,11 +4479,6 @@
                 } else if (value > 10) {
                     this.value = 10;
                 }
-                // Update vehicle options based on selected item size and new quantity
-                const selectedItemSize = document.querySelector('.item-size-btn.active');
-                if (selectedItemSize) {
-                    updateVehicleOptions(selectedItemSize.getAttribute('data-size'), value);
-                }
                 updateGreaterMalePrice();
             });
             
@@ -4223,9 +4488,10 @@
                 
                 const selectedItemSize = document.querySelector('.item-size-btn.active');
                 const selectedVehicle = document.querySelector('.vehicle-btn.active');
+                const selectedDestination = document.querySelector('.destination-btn.active');
                 
-                if (!selectedItemSize || !selectedVehicle) {
-                    showNotification('Please select item size and vehicle');
+                if (!selectedItemSize || !selectedVehicle || !selectedDestination) {
+                    showNotification('Please select item size, vehicle, and destination');
                     return;
                 }
                 
@@ -4235,15 +4501,16 @@
                     customerName: document.getElementById('greaterMaleCustomerName').value,
                     customerContact: document.getElementById('greaterMaleCustomerContact').value,
                     pickupLocation: document.getElementById('greaterMalePickupLocation').value,
-                    packageDetails: document.getElementById('greaterMalePackageDetails').value,
                     addressName: document.getElementById('greaterMaleAddressName').value,
-                    deliveryLocation: document.getElementById('greaterMaleDeliveryLocation').value,
-                    deliveryAddressName: document.getElementById('greaterMaleDeliveryAddressName').value,
+                    packageDetails: document.getElementById('greaterMalePackageDetails').value,
                     itemSize: selectedItemSize.getAttribute('data-size'),
                     itemSizeDisplay: selectedItemSize.querySelector('span').textContent,
                     quantity: parseInt(itemQuantity.value),
                     vehicle: selectedVehicle.getAttribute('data-vehicle'),
                     vehicleDisplay: selectedVehicle.querySelector('span').textContent,
+                    destination: selectedDestination.textContent,
+                    boatName: document.getElementById('boatNameInput').value,
+                    destinationAddress: document.getElementById('destinationAddressName').value,
                     totalPrice: calculateGreaterMaleTotalPrice(),
                     status: 'Order Placed',
                     progress: 1,
@@ -4260,29 +4527,443 @@
             });
         }
 
-        // Update vehicle options based on selected item size and quantity
-        function updateVehicleOptions(selectedSize, quantity) {
-            const motorcycleBtn = document.querySelector('.vehicle-btn[data-vehicle="motorcycle"]');
-            const pickupBtn = document.querySelector('.vehicle-btn[data-vehicle="pickup"]');
+        // Initialize management functionality
+        function initializeManagement() {
+            // Add pickup location button
+            addPickupLocationBtn.addEventListener('click', function() {
+                currentManagementType = 'pickupLocation';
+                editingManagementId = null;
+                managementModalTitle.textContent = 'Add Pickup Location';
+                managementName.value = '';
+                managementDescription.value = '';
+                managementPriceField.style.display = 'none';
+                managementModal.classList.add('active');
+            });
+            
+            // Add destination button
+            addDestinationBtn.addEventListener('click', function() {
+                currentManagementType = 'destination';
+                editingManagementId = null;
+                managementModalTitle.textContent = 'Add Destination';
+                managementName.value = '';
+                managementDescription.value = '';
+                managementPriceField.style.display = 'block';
+                managementPrice.value = '';
+                managementModal.classList.add('active');
+            });
+            
+            // Add item size button
+            addItemSizeBtn.addEventListener('click', function() {
+                currentManagementType = 'itemSize';
+                editingManagementId = null;
+                managementModalTitle.textContent = 'Add Item Size';
+                managementName.value = '';
+                managementDescription.value = '';
+                managementPriceField.style.display = 'block';
+                managementPrice.value = '';
+                managementModal.classList.add('active');
+            });
+            
+            // Add vehicle button
+            addVehicleBtn.addEventListener('click', function() {
+                currentManagementType = 'vehicle';
+                editingManagementId = null;
+                managementModalTitle.textContent = 'Add Vehicle';
+                managementName.value = '';
+                managementDescription.value = '';
+                managementPriceField.style.display = 'block';
+                managementPrice.value = '';
+                managementModal.classList.add('active');
+            });
+            
+            // Cancel management
+            cancelManagement.addEventListener('click', function() {
+                managementModal.classList.remove('active');
+                currentManagementType = null;
+                editingManagementId = null;
+            });
+            
+            // Confirm management
+            confirmManagement.addEventListener('click', function() {
+                const name = managementName.value.trim();
+                const description = managementDescription.value.trim();
+                const price = managementPrice.value ? parseFloat(managementPrice.value) : 0;
+                
+                if (!name) {
+                    showNotification('Please enter a name');
+                    return;
+                }
+                
+                if ((currentManagementType === 'destination' || currentManagementType === 'itemSize' || currentManagementType === 'vehicle') && isNaN(price)) {
+                    showNotification('Please enter a valid price');
+                    return;
+                }
+                
+                if (editingManagementId) {
+                    // Update existing item
+                    let item;
+                    let collection;
+                    
+                    switch(currentManagementType) {
+                        case 'pickupLocation':
+                            collection = pickupLocations;
+                            break;
+                        case 'destination':
+                            collection = destinations;
+                            break;
+                        case 'itemSize':
+                            collection = itemSizes;
+                            break;
+                        case 'vehicle':
+                            collection = vehicles;
+                            break;
+                    }
+                    
+                    item = collection.find(i => i.id === editingManagementId);
+                    if (item) {
+                        item.name = name;
+                        item.description = description;
+                        if (currentManagementType !== 'pickupLocation') {
+                            item.price = price;
+                        }
+                        
+                        saveManagementData(currentManagementType);
+                        loadManagementData();
+                        showNotification(`${currentManagementType} updated successfully`);
+                    }
+                } else {
+                    // Add new item
+                    const newItem = {
+                        id: Date.now(),
+                        name: name,
+                        description: description
+                    };
+                    
+                    if (currentManagementType !== 'pickupLocation') {
+                        newItem.price = price;
+                    }
+                    
+                    if (currentManagementType === 'pickupLocation') {
+                        // For pickup locations, we need to determine the type
+                        if (name.toLowerCase().includes('male') || name.toLowerCase().includes('phase')) {
+                            newItem.type = 'address';
+                        } else {
+                            newItem.type = 'package';
+                        }
+                        pickupLocations.push(newItem);
+                    } else if (currentManagementType === 'destination') {
+                        // For destinations, we need to determine the type
+                        if (name.toLowerCase().includes('boat')) {
+                            newItem.type = 'boat';
+                        } else {
+                            newItem.type = 'address';
+                        }
+                        destinations.push(newItem);
+                    } else if (currentManagementType === 'itemSize') {
+                        itemSizes.push(newItem);
+                    } else if (currentManagementType === 'vehicle') {
+                        vehicles.push(newItem);
+                    }
+                    
+                    saveManagementData(currentManagementType);
+                    loadManagementData();
+                    showNotification(`${currentManagementType} added successfully`);
+                }
+                
+                managementModal.classList.remove('active');
+                currentManagementType = null;
+                editingManagementId = null;
+            });
+        }
+
+        // Load management data
+        function loadManagementData() {
+            // Load pickup locations
+            loadPickupLocations();
+            
+            // Load destinations
+            loadDestinations();
+            
+            // Load item sizes
+            loadItemSizes();
+            
+            // Load vehicles
+            loadVehicles();
+            
+            // Update Greater Male City form options
+            updateGreaterMaleFormOptions();
+        }
+
+        // Load pickup locations
+        function loadPickupLocations() {
+            pickupLocationList.innerHTML = '';
+            
+            if (pickupLocations.length === 0) {
+                pickupLocationList.innerHTML = '<div class="empty-message">No pickup locations defined</div>';
+                return;
+            }
+            
+            pickupLocations.forEach(location => {
+                const item = document.createElement('div');
+                item.className = 'management-item';
+                item.innerHTML = `
+                    <div class="management-item-details">
+                        <div class="management-item-name">${location.name}</div>
+                        <div class="management-item-description">${location.description} (${location.type})</div>
+                    </div>
+                    <div class="management-item-actions">
+                        <button class="edit-user-btn" onclick="editManagementItem('pickupLocation', ${location.id})">Edit</button>
+                        <button class="remove-user-btn" onclick="removeManagementItem('pickupLocation', ${location.id})">Remove</button>
+                    </div>
+                `;
+                pickupLocationList.appendChild(item);
+            });
+        }
+
+        // Load destinations
+        function loadDestinations() {
+            destinationList.innerHTML = '';
+            
+            if (destinations.length === 0) {
+                destinationList.innerHTML = '<div class="empty-message">No destinations defined</div>';
+                return;
+            }
+            
+            destinations.forEach(destination => {
+                const item = document.createElement('div');
+                item.className = 'management-item';
+                item.innerHTML = `
+                    <div class="management-item-details">
+                        <div class="management-item-name">${destination.name}</div>
+                        <div class="management-item-description">${destination.description} (${destination.type}) - ${destination.price} MVR</div>
+                    </div>
+                    <div class="management-item-actions">
+                        <button class="edit-user-btn" onclick="editManagementItem('destination', ${destination.id})">Edit</button>
+                        <button class="remove-user-btn" onclick="removeManagementItem('destination', ${destination.id})">Remove</button>
+                    </div>
+                `;
+                destinationList.appendChild(item);
+            });
+        }
+
+        // Load item sizes
+        function loadItemSizes() {
+            itemSizeList.innerHTML = '';
+            
+            if (itemSizes.length === 0) {
+                itemSizeList.innerHTML = '<div class="empty-message">No item sizes defined</div>';
+                return;
+            }
+            
+            itemSizes.forEach(itemSize => {
+                const item = document.createElement('div');
+                item.className = 'management-item';
+                item.innerHTML = `
+                    <div class="management-item-details">
+                        <div class="management-item-name">${itemSize.name}</div>
+                        <div class="management-item-description">${itemSize.description} - ${itemSize.price} MVR</div>
+                    </div>
+                    <div class="management-item-actions">
+                        <button class="edit-user-btn" onclick="editManagementItem('itemSize', ${itemSize.id})">Edit</button>
+                        <button class="remove-user-btn" onclick="removeManagementItem('itemSize', ${itemSize.id})">Remove</button>
+                    </div>
+                `;
+                itemSizeList.appendChild(item);
+            });
+        }
+
+        // Load vehicles
+        function loadVehicles() {
+            vehicleList.innerHTML = '';
+            
+            if (vehicles.length === 0) {
+                vehicleList.innerHTML = '<div class="empty-message">No vehicles defined</div>';
+                return;
+            }
+            
+            vehicles.forEach(vehicle => {
+                const item = document.createElement('div');
+                item.className = 'management-item';
+                item.innerHTML = `
+                    <div class="management-item-details">
+                        <div class="management-item-name">${vehicle.name}</div>
+                        <div class="management-item-description">${vehicle.description} - ${vehicle.price} MVR</div>
+                    </div>
+                    <div class="management-item-actions">
+                        <button class="edit-user-btn" onclick="editManagementItem('vehicle', ${vehicle.id})">Edit</button>
+                        <button class="remove-user-btn" onclick="removeManagementItem('vehicle', ${vehicle.id})">Remove</button>
+                    </div>
+                `;
+                vehicleList.appendChild(item);
+            });
+        }
+
+        // Update Greater Male City form options
+        function updateGreaterMaleFormOptions() {
+            // Update pickup locations dropdown
+            greaterMalePickupLocation.innerHTML = '<option value="">Select Pickup Location</option>';
+            pickupLocations.forEach(location => {
+                const option = document.createElement('option');
+                option.value = location.name;
+                option.textContent = location.name;
+                greaterMalePickupLocation.appendChild(option);
+            });
+            
+            // Update item size options
+            itemSizeOptions.innerHTML = '';
+            itemSizes.forEach(itemSize => {
+                const option = document.createElement('div');
+                option.className = 'item-size-option';
+                option.innerHTML = `
+                    <button type="button" class="item-size-btn" data-size="${itemSize.name}" data-price="${itemSize.price}">
+                        <div class="item-size-visual">
+                            <div class="item-size-image">
+                                <i class="${itemSize.icon}"></i>
+                            </div>
+                            <div class="item-size-description">${itemSize.visual}</div>
+                        </div>
+                        <span>${itemSize.name}</span>
+                    </button>
+                `;
+                itemSizeOptions.appendChild(option);
+            });
+            
+            // Update vehicle options
+            vehicleOptions.innerHTML = '';
+            vehicles.forEach(vehicle => {
+                const option = document.createElement('div');
+                option.className = 'vehicle-option';
+                option.innerHTML = `
+                    <button type="button" class="vehicle-btn" data-vehicle="${vehicle.name}" data-price="${vehicle.price}">
+                        <i class="fas fa-truck vehicle-icon"></i>
+                        <span>${vehicle.name}</span>
+                    </button>
+                `;
+                vehicleOptions.appendChild(option);
+            });
+            
+            // Update destination options
+            destinationOptions.innerHTML = '';
+            destinations.forEach(destination => {
+                const option = document.createElement('div');
+                option.className = 'destination-option';
+                option.innerHTML = `
+                    <button type="button" class="destination-btn" data-destination="${destination.name}" data-price="${destination.price}">
+                        ${destination.name}
+                    </button>
+                `;
+                destinationOptions.appendChild(option);
+            });
+            
+            // Update price management dropdowns
+            itemType.innerHTML = '';
+            itemSizes.forEach(itemSize => {
+                const option = document.createElement('option');
+                option.value = itemSize.name;
+                option.textContent = itemSize.name;
+                itemType.appendChild(option);
+            });
+            
+            destinationType.innerHTML = '';
+            destinations.forEach(destination => {
+                const option = document.createElement('option');
+                option.value = destination.name;
+                option.textContent = destination.name;
+                destinationType.appendChild(option);
+            });
+            
+            // Add event listeners to the new buttons
+            document.querySelectorAll('.item-size-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.item-size-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Update vehicle options based on selected item size
+                    updateVehicleOptions(this.getAttribute('data-size'));
+                    
+                    // Update price breakdown
+                    updateGreaterMalePrice();
+                });
+            });
+            
+            document.querySelectorAll('.vehicle-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.classList.contains('disabled')) return;
+                    
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.vehicle-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Update price breakdown
+                    updateGreaterMalePrice();
+                });
+            });
+            
+            document.querySelectorAll('.destination-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.destination-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    const selectedDestination = destinations.find(dest => dest.name === this.textContent);
+                    if (selectedDestination) {
+                        if (selectedDestination.type === 'boat') {
+                            boatNameField.style.display = 'block';
+                            destinationAddressField.style.display = 'none';
+                        } else {
+                            boatNameField.style.display = 'none';
+                            destinationAddressField.style.display = 'block';
+                        }
+                    }
+                    
+                    // Update price breakdown
+                    updateGreaterMalePrice();
+                });
+            });
+        }
+
+        // Update vehicle options based on selected item size
+        function updateVehicleOptions(selectedSize) {
+            const motorcycleBtn = document.querySelector('.vehicle-btn[data-vehicle="Motorcycle"]');
+            const pickupBtn = document.querySelector('.vehicle-btn[data-vehicle="Pickup"]');
             
             // Reset all buttons
-            vehicleOptions.forEach(btn => {
+            document.querySelectorAll('.vehicle-btn').forEach(btn => {
                 btn.classList.remove('active', 'disabled');
             });
             
-            // Enable/disable buttons based on item size and quantity
-            if ((selectedSize === 'small-package' && quantity <= 4) || 
-                (selectedSize === 'small-box' && quantity <= 2)) {
-                // Only motorcycle allowed for small items with limited quantity
-                motorcycleBtn.classList.remove('disabled');
-                pickupBtn.classList.add('disabled');
-                motorcycleBtn.classList.add('active');
+            // Enable/disable buttons based on item size
+            if (selectedSize === 'Small Package' || selectedSize === 'Small Box') {
+                // Only motorcycle allowed for small items
+                if (motorcycleBtn) {
+                    motorcycleBtn.classList.remove('disabled');
+                    motorcycleBtn.classList.add('active');
+                }
+                if (pickupBtn) {
+                    pickupBtn.classList.add('disabled');
+                }
             } else {
-                // Both vehicles allowed for other cases
-                motorcycleBtn.classList.remove('disabled');
-                pickupBtn.classList.remove('disabled');
-                // Default to motorcycle
-                motorcycleBtn.classList.add('active');
+                // Both vehicles allowed for large items
+                if (motorcycleBtn) {
+                    motorcycleBtn.classList.remove('disabled');
+                    motorcycleBtn.classList.add('active');
+                }
+                if (pickupBtn) {
+                    pickupBtn.classList.remove('disabled');
+                }
             }
         }
 
@@ -4290,23 +4971,26 @@
         function calculateGreaterMaleTotalPrice() {
             const selectedItemSize = document.querySelector('.item-size-btn.active');
             const selectedVehicle = document.querySelector('.vehicle-btn.active');
+            const selectedDestination = document.querySelector('.destination-btn.active');
             const quantity = parseInt(itemQuantity.value);
             
-            if (!selectedItemSize || !selectedVehicle) return 0;
+            if (!selectedItemSize || !selectedVehicle || !selectedDestination) return 0;
             
-            const itemPrice = greaterMaleItemPrices[selectedItemSize.getAttribute('data-size')];
-            const vehiclePrice = greaterMaleVehiclePrices[selectedVehicle.getAttribute('data-vehicle')];
+            const itemPrice = parseFloat(selectedItemSize.getAttribute('data-price'));
+            const vehiclePrice = parseFloat(selectedVehicle.getAttribute('data-price'));
+            const destinationPrice = parseFloat(selectedDestination.getAttribute('data-price'));
             
-            return (itemPrice + vehiclePrice) * quantity;
+            return (itemPrice + vehiclePrice + destinationPrice) * quantity;
         }
 
         // Update Greater Male City price breakdown
         function updateGreaterMalePrice() {
             const selectedItemSize = document.querySelector('.item-size-btn.active');
             const selectedVehicle = document.querySelector('.vehicle-btn.active');
+            const selectedDestination = document.querySelector('.destination-btn.active');
             const quantity = parseInt(itemQuantity.value);
             
-            if (!selectedItemSize || !selectedVehicle) {
+            if (!selectedItemSize || !selectedVehicle || !selectedDestination) {
                 itemPriceValue.textContent = '0 MVR';
                 vehiclePriceValue.textContent = '0 MVR';
                 destinationPriceValue.textContent = '0 MVR';
@@ -4314,13 +4998,14 @@
                 return;
             }
             
-            const itemPrice = greaterMaleItemPrices[selectedItemSize.getAttribute('data-size')];
-            const vehiclePrice = greaterMaleVehiclePrices[selectedVehicle.getAttribute('data-vehicle')];
-            const totalPrice = (itemPrice + vehiclePrice) * quantity;
+            const itemPrice = parseFloat(selectedItemSize.getAttribute('data-price'));
+            const vehiclePrice = parseFloat(selectedVehicle.getAttribute('data-price'));
+            const destinationPrice = parseFloat(selectedDestination.getAttribute('data-price'));
+            const totalPrice = (itemPrice + vehiclePrice + destinationPrice) * quantity;
             
             itemPriceValue.textContent = `${itemPrice * quantity} MVR`;
             vehiclePriceValue.textContent = `${vehiclePrice * quantity} MVR`;
-            destinationPriceValue.textContent = '0 MVR'; // No destination fee in this version
+            destinationPriceValue.textContent = `${destinationPrice * quantity} MVR`;
             greaterMaleTotalPrice.textContent = `${totalPrice} MVR`;
         }
 
@@ -5127,21 +5812,27 @@
         // Reset Greater Male City form
         function resetGreaterMaleForm() {
             // Reset all selections
-            itemSizeOptions.forEach(btn => btn.classList.remove('active'));
-            vehicleOptions.forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.item-size-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.vehicle-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.destination-btn').forEach(btn => btn.classList.remove('active'));
             
             // Reset quantity
             itemQuantity.value = 1;
             
+            // Reset additional fields
+            greaterMaleAddressName.value = '';
+            greaterMalePackageDetails.value = '';
+            boatNameInput.value = '';
+            destinationAddressName.value = '';
+            
+            // Hide additional fields
+            greaterMaleAddressField.style.display = 'none';
+            greaterMalePackageDetailsField.style.display = 'none';
+            boatNameField.style.display = 'none';
+            destinationAddressField.style.display = 'none';
+            
             // Reset price breakdown
             updateGreaterMalePrice();
-            
-            // Reset pickup location specific fields
-            greaterMalePackageDetailsField.classList.remove('active');
-            greaterMaleAddressField.classList.remove('active');
-            
-            // Reset delivery location specific fields
-            greaterMaleDeliveryAddressField.classList.remove('active');
         }
 
         // Reset weight selection
@@ -5342,11 +6033,11 @@
                     </td>
                     <td>${delivery.customerName}</td>
                     <td>${delivery.customerContact}</td>
-                    <td>${delivery.pickupLocation}${delivery.packageDetails ? ` (${delivery.packageDetails})` : delivery.addressName ? ` (${delivery.addressName})` : ''}</td>
+                    <td>${delivery.pickupLocation}${delivery.addressName ? ` (${delivery.addressName})` : delivery.packageDetails ? ` (${delivery.packageDetails})` : ''}</td>
                     <td>${delivery.itemSizeDisplay}</td>
                     <td>${delivery.quantity}</td>
                     <td>${delivery.vehicleDisplay}</td>
-                    <td>${delivery.deliveryLocation}${delivery.deliveryAddressName ? ` (${delivery.deliveryAddressName})` : ''}</td>
+                    <td>${delivery.destination}${delivery.boatName ? ` (${delivery.boatName})` : delivery.destinationAddress ? ` (${delivery.destinationAddress})` : ''}</td>
                     <td>${delivery.totalPrice} MVR</td>
                     <td>
                         <span class="status-badge ${statusClass}">${delivery.status}</span>
@@ -5397,6 +6088,97 @@
             // Update immediately and then every minute
             updateCountdown();
             setInterval(updateCountdown, 60000);
+        }
+
+        // IMPROVED TRACKING SYSTEM - Search customer by contact number
+        searchBtn.addEventListener('click', function() {
+            const contact = document.getElementById('searchContact').value.trim();
+            
+            if (!contact) {
+                showNotification('Please enter a contact number');
+                return;
+            }
+            
+            // Search in all deliveries
+            const customerCargoDeliveries = cargoDeliveries.filter(d => d.customerContact === contact);
+            const customerBoatDeliveries = boatDeliveries.filter(d => d.customerContact === contact);
+            const customerGreaterMaleDeliveries = greaterMaleDeliveries.filter(d => d.customerContact === contact);
+            
+            const allCustomerDeliveries = [
+                ...customerCargoDeliveries,
+                ...customerBoatDeliveries,
+                ...customerGreaterMaleDeliveries
+            ];
+            
+            if (allCustomerDeliveries.length === 0) {
+                showNotification('No delivery found for this contact number');
+                customerDetails.classList.remove('active');
+                customerReferences.classList.remove('active');
+                return;
+            }
+            
+            // Display all customer references
+            displayCustomerReferences(allCustomerDeliveries);
+            
+            // Show the first delivery by default
+            if (allCustomerDeliveries.length > 0) {
+                currentDelivery = allCustomerDeliveries[0];
+                displayCustomerDetails(currentDelivery);
+                updateProgressTracker(currentDelivery.progress);
+                customerDetails.classList.add('active');
+            }
+        });
+
+        // Display all customer references
+        function displayCustomerReferences(deliveries) {
+            referenceList.innerHTML = '';
+            
+            if (deliveries.length === 0) {
+                customerReferences.classList.remove('active');
+                return;
+            }
+            
+            // Sort deliveries by creation date (newest first)
+            deliveries.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            deliveries.forEach(delivery => {
+                const referenceCard = document.createElement('div');
+                referenceCard.className = 'reference-card';
+                
+                let typeText = '';
+                if (delivery.type === 'cargo') typeText = 'Cargo';
+                else if (delivery.type === 'boat') typeText = 'Boat';
+                else if (delivery.type === 'greater-male') typeText = 'Greater Male';
+                
+                referenceCard.innerHTML = `
+                    <div class="reference-card-header">
+                        <div class="reference-number">${delivery.referenceNumber}</div>
+                        <div class="reference-card-type">${typeText}</div>
+                    </div>
+                    <div class="reference-card-details">
+                        <div><strong>Status:</strong> ${delivery.status}</div>
+                        <div><strong>Price:</strong> ${delivery.deliveryPrice || delivery.totalPrice} MVR</div>
+                    </div>
+                    <div class="reference-card-date">Created: ${formatDate(delivery.createdAt)}</div>
+                `;
+                
+                // Add click event to select this delivery
+                referenceCard.addEventListener('click', function() {
+                    currentDelivery = delivery;
+                    displayCustomerDetails(delivery);
+                    updateProgressTracker(delivery.progress);
+                    
+                    // Highlight selected card
+                    document.querySelectorAll('.reference-card').forEach(card => {
+                        card.style.border = '1px solid #e0e0e0';
+                    });
+                    this.style.border = '2px solid #4cc9f0';
+                });
+                
+                referenceList.appendChild(referenceCard);
+            });
+            
+            customerReferences.classList.add('active');
         }
 
         // Track delivery by reference number
@@ -5655,39 +6437,6 @@
             }
         });
 
-        // Search customer by contact number
-        searchBtn.addEventListener('click', function() {
-            const contact = document.getElementById('searchContact').value.trim();
-            
-            if (!contact) {
-                showNotification('Please enter a contact number');
-                return;
-            }
-            
-            // Search in cargo deliveries
-            let delivery = cargoDeliveries.find(d => d.customerContact === contact);
-            
-            // If not found in cargo, search in boat deliveries
-            if (!delivery) {
-                delivery = boatDeliveries.find(d => d.customerContact === contact);
-            }
-            
-            // If not found in boat, search in Greater Male City deliveries
-            if (!delivery) {
-                delivery = greaterMaleDeliveries.find(d => d.customerContact === contact);
-            }
-            
-            if (delivery) {
-                currentDelivery = delivery;
-                displayCustomerDetails(delivery);
-                updateProgressTracker(delivery.progress);
-                customerDetails.classList.add('active');
-            } else {
-                showNotification('No delivery found for this contact number');
-                customerDetails.classList.remove('active');
-            }
-        });
-
         // Display customer details
         function displayCustomerDetails(delivery) {
             let detailsHTML = '';
@@ -5802,7 +6551,7 @@
                     </div>
                     <div class="info-item">
                         <div class="info-label">Pickup Location</div>
-                        <div class="info-value">${delivery.pickupLocation}${delivery.packageDetails ? ` (${delivery.packageDetails})` : delivery.addressName ? ` (${delivery.addressName})` : ''}</div>
+                        <div class="info-value">${delivery.pickupLocation}${delivery.addressName ? ` (${delivery.addressName})` : delivery.packageDetails ? ` (${delivery.packageDetails})` : ''}</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Item Size</div>
@@ -5818,7 +6567,7 @@
                     </div>
                     <div class="info-item">
                         <div class="info-label">Destination</div>
-                        <div class="info-value">${delivery.deliveryLocation}${delivery.deliveryAddressName ? ` (${delivery.deliveryAddressName})` : ''}</div>
+                        <div class="info-value">${delivery.destination}${delivery.boatName ? ` (${delivery.boatName})` : delivery.destinationAddress ? ` (${delivery.destinationAddress})` : ''}</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Price</div>
@@ -5887,6 +6636,7 @@
         function resetSearch() {
             document.getElementById('searchContact').value = '';
             customerDetails.classList.remove('active');
+            customerReferences.classList.remove('active');
             currentDelivery = null;
             deliveryPreview.classList.remove('active');
             noImageMessage.style.display = 'block';
@@ -6100,16 +6850,8 @@
                 const item = document.createElement('div');
                 item.className = 'price-item';
                 
-                let itemTypeDisplay = '';
-                switch(itemType) {
-                    case 'small-package': itemTypeDisplay = 'Small Package'; break;
-                    case 'large-package': itemTypeDisplay = 'Large Package'; break;
-                    case 'small-box': itemTypeDisplay = 'Small Box'; break;
-                    case 'large-box': itemTypeDisplay = 'Large Box'; break;
-                }
-                
                 item.innerHTML = `
-                    <div class="price-range">${itemTypeDisplay}</div>
+                    <div class="price-range">${itemType}</div>
                     <div class="price-amount">${price} MVR</div>
                 `;
                 itemPriceList.appendChild(item);
@@ -6128,18 +6870,8 @@
                 const item = document.createElement('div');
                 item.className = 'price-item';
                 
-                let destinationTypeDisplay = '';
-                switch(destinationType) {
-                    case 'male-to-hulhumale': destinationTypeDisplay = 'Male to Hulhumale'; break;
-                    case 'hulhumale-to-male': destinationTypeDisplay = 'Hulhumale to Male'; break;
-                    case 'male-to-phase2': destinationTypeDisplay = 'Male to Phase 2'; break;
-                    case 'hulhumale-to-phase2': destinationTypeDisplay = 'Hulhumale to Phase 2'; break;
-                    case 'male-to-boat': destinationTypeDisplay = 'Male to Boat'; break;
-                    case 'hulhumale-to-boat': destinationTypeDisplay = 'Hulhumale to Boat'; break;
-                }
-                
                 item.innerHTML = `
-                    <div class="price-range">${destinationTypeDisplay}</div>
+                    <div class="price-range">${destinationType}</div>
                     <div class="price-amount">${price} MVR</div>
                 `;
                 destinationPriceList.appendChild(item);
@@ -6503,6 +7235,76 @@
             }
         };
 
+        window.editManagementItem = function(type, id) {
+            currentManagementType = type;
+            editingManagementId = id;
+            
+            let item;
+            let collection;
+            
+            switch(type) {
+                case 'pickupLocation':
+                    collection = pickupLocations;
+                    managementModalTitle.textContent = 'Edit Pickup Location';
+                    managementPriceField.style.display = 'none';
+                    break;
+                case 'destination':
+                    collection = destinations;
+                    managementModalTitle.textContent = 'Edit Destination';
+                    managementPriceField.style.display = 'block';
+                    break;
+                case 'itemSize':
+                    collection = itemSizes;
+                    managementModalTitle.textContent = 'Edit Item Size';
+                    managementPriceField.style.display = 'block';
+                    break;
+                case 'vehicle':
+                    collection = vehicles;
+                    managementModalTitle.textContent = 'Edit Vehicle';
+                    managementPriceField.style.display = 'block';
+                    break;
+            }
+            
+            item = collection.find(i => i.id === id);
+            if (item) {
+                managementName.value = item.name;
+                managementDescription.value = item.description;
+                if (type !== 'pickupLocation') {
+                    managementPrice.value = item.price;
+                }
+                managementModal.classList.add('active');
+            }
+        };
+
+        window.removeManagementItem = function(type, id) {
+            if (confirm('Are you sure you want to remove this item?')) {
+                let collection;
+                
+                switch(type) {
+                    case 'pickupLocation':
+                        collection = pickupLocations;
+                        break;
+                    case 'destination':
+                        collection = destinations;
+                        break;
+                    case 'itemSize':
+                        collection = itemSizes;
+                        break;
+                    case 'vehicle':
+                        collection = vehicles;
+                        break;
+                }
+                
+                const index = collection.findIndex(i => i.id === id);
+                if (index !== -1) {
+                    collection.splice(index, 1);
+                    saveManagementData(type);
+                    loadManagementData();
+                    showNotification('Item removed successfully');
+                }
+            }
+        };
+
         // Firebase Data Management Functions
         function saveCargoData() {
             if (cargoRef) {
@@ -6555,6 +7357,47 @@
             }
         }
 
+        function saveManagementData(type) {
+            switch(type) {
+                case 'pickupLocation':
+                    if (pickupLocationsRef) {
+                        pickupLocationsRef.set(pickupLocations)
+                            .then(() => console.log('Pickup locations saved to Firebase'))
+                            .catch(error => console.error('Error saving pickup locations:', error));
+                    } else {
+                        localStorage.setItem('pickupLocations', JSON.stringify(pickupLocations));
+                    }
+                    break;
+                case 'destination':
+                    if (destinationsRef) {
+                        destinationsRef.set(destinations)
+                            .then(() => console.log('Destinations saved to Firebase'))
+                            .catch(error => console.error('Error saving destinations:', error));
+                    } else {
+                        localStorage.setItem('destinations', JSON.stringify(destinations));
+                    }
+                    break;
+                case 'itemSize':
+                    if (itemSizesRef) {
+                        itemSizesRef.set(itemSizes)
+                            .then(() => console.log('Item sizes saved to Firebase'))
+                            .catch(error => console.error('Error saving item sizes:', error));
+                    } else {
+                        localStorage.setItem('itemSizes', JSON.stringify(itemSizes));
+                    }
+                    break;
+                case 'vehicle':
+                    if (vehiclesRef) {
+                        vehiclesRef.set(vehicles)
+                            .then(() => console.log('Vehicles saved to Firebase'))
+                            .catch(error => console.error('Error saving vehicles:', error));
+                    } else {
+                        localStorage.setItem('vehicles', JSON.stringify(vehicles));
+                    }
+                    break;
+            }
+        }
+
         function saveGreaterMaleItemPrices() {
             if (greaterMaleItemPricesRef) {
                 greaterMaleItemPricesRef.set(greaterMaleItemPrices)
@@ -6572,6 +7415,16 @@
                     .catch(error => console.error('Error saving Greater Male City destination prices:', error));
             } else {
                 localStorage.setItem('greaterMaleDestinationPrices', JSON.stringify(greaterMaleDestinationPrices));
+            }
+        }
+
+        function saveGreaterMaleVehiclePrices() {
+            if (greaterMaleVehiclePricesRef) {
+                greaterMaleVehiclePricesRef.set(greaterMaleVehiclePrices)
+                    .then(() => console.log('Greater Male City vehicle prices saved to Firebase'))
+                    .catch(error => console.error('Error saving Greater Male City vehicle prices:', error));
+            } else {
+                localStorage.setItem('greaterMaleVehiclePrices', JSON.stringify(greaterMaleVehiclePrices));
             }
         }
 
@@ -6646,6 +7499,42 @@
                     }
                 });
                 
+                // Load pickup locations
+                pickupLocationsRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        pickupLocations = data;
+                        loadManagementData();
+                    }
+                });
+                
+                // Load destinations
+                destinationsRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        destinations = data;
+                        loadManagementData();
+                    }
+                });
+                
+                // Load item sizes
+                itemSizesRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        itemSizes = data;
+                        loadManagementData();
+                    }
+                });
+                
+                // Load vehicles
+                vehiclesRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        vehicles = data;
+                        loadManagementData();
+                    }
+                });
+                
                 // Load Greater Male City item prices
                 greaterMaleItemPricesRef.on('value', (snapshot) => {
                     const data = snapshot.val();
@@ -6661,6 +7550,14 @@
                     if (data) {
                         greaterMaleDestinationPrices = data;
                         loadDestinationPriceList();
+                    }
+                });
+                
+                // Load Greater Male City vehicle prices
+                greaterMaleVehiclePricesRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        greaterMaleVehiclePrices = data;
                     }
                 });
                 
@@ -6688,8 +7585,13 @@
                 const savedGreaterMale = localStorage.getItem('greaterMaleDeliveries');
                 const savedCargoPrices = localStorage.getItem('cargoPriceRanges');
                 const savedBoatPrices = localStorage.getItem('boatPriceRanges');
+                const savedPickupLocations = localStorage.getItem('pickupLocations');
+                const savedDestinations = localStorage.getItem('destinations');
+                const savedItemSizes = localStorage.getItem('itemSizes');
+                const savedVehicles = localStorage.getItem('vehicles');
                 const savedGreaterMaleItemPrices = localStorage.getItem('greaterMaleItemPrices');
                 const savedGreaterMaleDestinationPrices = localStorage.getItem('greaterMaleDestinationPrices');
+                const savedGreaterMaleVehiclePrices = localStorage.getItem('greaterMaleVehiclePrices');
                 const savedUsers = localStorage.getItem('users');
                 const savedNotifications = localStorage.getItem('notifications');
                 
@@ -6698,8 +7600,13 @@
                 if (savedGreaterMale) greaterMaleDeliveries = JSON.parse(savedGreaterMale);
                 if (savedCargoPrices) cargoPriceRanges = JSON.parse(savedCargoPrices);
                 if (savedBoatPrices) boatPriceRanges = JSON.parse(savedBoatPrices);
+                if (savedPickupLocations) pickupLocations = JSON.parse(savedPickupLocations);
+                if (savedDestinations) destinations = JSON.parse(savedDestinations);
+                if (savedItemSizes) itemSizes = JSON.parse(savedItemSizes);
+                if (savedVehicles) vehicles = JSON.parse(savedVehicles);
                 if (savedGreaterMaleItemPrices) greaterMaleItemPrices = JSON.parse(savedGreaterMaleItemPrices);
                 if (savedGreaterMaleDestinationPrices) greaterMaleDestinationPrices = JSON.parse(savedGreaterMaleDestinationPrices);
+                if (savedGreaterMaleVehiclePrices) greaterMaleVehiclePrices = JSON.parse(savedGreaterMaleVehiclePrices);
                 if (savedUsers) users = JSON.parse(savedUsers);
                 if (savedNotifications) notifications = JSON.parse(savedNotifications);
                 
@@ -6711,6 +7618,7 @@
                 loadItemPriceList();
                 loadDestinationPriceList();
                 loadWeightOptions();
+                loadManagementData();
                 loadNotifications();
                 updateNotificationBadge();
             }
