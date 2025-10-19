@@ -11,10 +11,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <!-- Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_huqokZn3o6D1a5XenNO0FQmQuOKF8pw&libraries=places,drawing,geometry" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_huqokZn3o6D1a5XenNO0FQmQuOKF8pw&libraries=places,drawing,geometry&callback=initApp" async defer></script>
     
     <style>
-        /* All existing CSS styles from the original code */
         @font-face {
             font-family: 'Faruma';
             src: url('fonts/Mv_MAG_Round_XBold.otf');
@@ -2627,157 +2626,89 @@
             margin-top: 5px;
         }
 
-        /* NEW STYLES FOR GOOGLE MAPS INTEGRATION */
-        
+        /* Google Maps Styles */
         .map-container {
-            height: 400px;
             width: 100%;
-            margin-bottom: 20px;
-            border-radius: 12px;
+            height: 400px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
             border: 1px solid #e0e0e0;
         }
-        
+
         .map-controls {
             display: flex;
             gap: 10px;
             margin-bottom: 15px;
-            flex-wrap: wrap;
         }
-        
+
         .map-btn {
             padding: 10px 15px;
             background: #4cc9f0;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-weight: 600;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-weight: 500;
         }
-        
+
         .map-btn:hover {
             background: #3ab0d6;
         }
-        
-        .map-btn.secondary {
-            background: #f5f5f5;
-            color: #333;
+
+        .map-btn.active {
+            background: #1a2a6c;
         }
-        
-        .map-btn.secondary:hover {
-            background: #e9e9e9;
+
+        .map-search {
+            flex: 1;
         }
-        
-        .map-location-info {
+
+        .map-search input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        .map-info {
             background: #f9f9f9;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 15px;
             border: 1px solid #e0e0e0;
         }
-        
-        .location-details {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .location-item {
+
+        .map-info-item {
             display: flex;
             justify-content: space-between;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 8px;
         }
-        
-        .location-item:last-child {
-            border-bottom: none;
-        }
-        
-        .location-label {
+
+        .map-info-label {
             font-weight: 500;
             color: #666;
         }
-        
-        .location-value {
+
+        .map-info-value {
             font-weight: 600;
             color: #1a2a6c;
         }
-        
-        .map-address-input {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .map-address-input input {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-        
-        .map-search-btn {
-            padding: 12px 20px;
-            background: #4cc9f0;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .map-search-btn:hover {
-            background: #3ab0d6;
-        }
-        
-        .map-marker-info {
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            max-width: 200px;
-        }
-        
-        .map-marker-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #1a2a6c;
-        }
-        
-        .map-marker-address {
+
+        .map-info-distance {
             font-size: 14px;
-            color: #666;
-            margin-bottom: 8px;
+            color: #4caf50;
+            font-weight: 600;
         }
-        
-        .map-marker-actions {
-            display: flex;
-            gap: 5px;
+
+        .map-info-price {
+            font-size: 18px;
+            color: #1a2a6c;
+            font-weight: 700;
         }
-        
-        .map-marker-btn {
-            padding: 5px 10px;
-            background: #4cc9f0;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .map-marker-btn:hover {
-            background: #3ab0d6;
-        }
-        
-        .map-area-management {
+
+        .area-price-management {
             background: #fff;
             border-radius: 12px;
             padding: 20px;
@@ -2785,23 +2716,23 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             border: 1px solid #f0f0f0;
         }
-        
-        .area-form {
+
+        .area-price-form {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
-        
-        .area-input-group {
+
+        .area-price-input-group {
             display: flex;
             gap: 15px;
         }
-        
-        .area-input {
+
+        .area-price-input {
             flex: 1;
         }
-        
-        .add-area-btn {
+
+        .add-area-price-btn {
             padding: 12px 20px;
             background: #4cc9f0;
             color: white;
@@ -2815,53 +2746,47 @@
             justify-content: center;
             gap: 8px;
         }
-        
-        .add-area-btn:hover {
+
+        .add-area-price-btn:hover {
             background: #3ab0d6;
         }
-        
-        .area-list {
+
+        .area-price-list {
             margin-top: 20px;
         }
-        
-        .area-item {
+
+        .area-price-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 12px;
             border-bottom: 1px solid #f0f0f0;
         }
-        
-        .area-item:last-child {
+
+        .area-price-item:last-child {
             border-bottom: none;
         }
-        
-        .area-details {
-            flex: 1;
-        }
-        
-        .area-name {
+
+        .area-price-name {
             font-weight: 500;
-            margin-bottom: 5px;
         }
-        
-        .area-description {
+
+        .area-price-range {
             font-size: 14px;
             color: #666;
         }
-        
-        .area-price {
+
+        .area-price-amount {
             font-weight: 600;
             color: #1a2a6c;
-            margin-right: 15px;
         }
-        
-        .area-actions {
+
+        .area-price-actions {
             display: flex;
             gap: 10px;
         }
-        
-        .edit-area-btn, .remove-area-btn {
+
+        .edit-area-price-btn, .remove-area-price-btn {
             padding: 6px 12px;
             border-radius: 6px;
             font-size: 12px;
@@ -2870,57 +2795,39 @@
             transition: all 0.3s;
             border: none;
         }
-        
-        .edit-area-btn {
+
+        .edit-area-price-btn {
             background: #4cc9f0;
             color: white;
         }
-        
-        .remove-area-btn {
+
+        .remove-area-price-btn {
             background: #f44336;
             color: white;
         }
-        
-        .clickable-contact {
+
+        /* Clickable phone numbers */
+        .clickable-phone {
             color: #4cc9f0;
             text-decoration: none;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
         }
-        
-        .clickable-contact:hover {
-            color: #1a2a6c;
+
+        .clickable-phone:hover {
             text-decoration: underline;
         }
-        
-        .location-link {
+
+        /* Map links in records */
+        .map-link {
             color: #4cc9f0;
             text-decoration: none;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
         }
-        
-        .location-link:hover {
-            color: #1a2a6c;
+
+        .map-link:hover {
             text-decoration: underline;
-        }
-        
-        .map-view-btn {
-            padding: 6px 12px;
-            background: #4cc9f0;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .map-view-btn:hover {
-            background: #3ab0d6;
         }
     </style>
 </head>
@@ -2951,7 +2858,7 @@
             </div>
             <!-- Login Form -->
             <div class="login-form" id="loginFormSection">
-                <h2>Welcome Back</h2>
+                <h2>Welcome to EasyCargo</h2>
                 <p>Sign in to track and manage shipments</p>
                 
                 <form id="loginForm">
@@ -3318,67 +3225,56 @@
                         <div class="form-group">
                             <label>Select Delivery Method</label>
                             <div class="map-controls">
-                                <button type="button" class="map-btn" id="useMapBtn">
-                                    <i class="fas fa-map-marker-alt"></i> Use Map
-                                </button>
-                                <button type="button" class="map-btn secondary" id="useManualBtn">
-                                    <i class="fas fa-keyboard"></i> Manual Entry
-                                </button>
+                                <button type="button" class="map-btn active" id="useMapBtn">Use Map</button>
+                                <button type="button" class="map-btn" id="useManualBtn">Manual Entry</button>
                             </div>
                         </div>
                         
-                        <!-- Map Container -->
-                        <div class="map-container" id="mapContainer" style="display: none;">
-                            <!-- Google Map will be rendered here -->
-                        </div>
-                        
-                        <!-- Map Controls -->
-                        <div class="map-controls" id="mapControls" style="display: none;">
-                            <div class="map-address-input">
-                                <input type="text" id="mapSearchInput" placeholder="Search for an address...">
-                                <button type="button" class="map-search-btn" id="mapSearchBtn">
-                                    <i class="fas fa-search"></i> Search
-                                </button>
-                            </div>
-                            <button type="button" class="map-btn" id="setPickupBtn">
-                                <i class="fas fa-home"></i> Set as Pickup
-                            </button>
-                            <button type="button" class="map-btn" id="setDestinationBtn">
-                                <i class="fas fa-flag"></i> Set as Destination
-                            </button>
-                            <button type="button" class="map-btn secondary" id="clearMarkersBtn">
-                                <i class="fas fa-trash"></i> Clear Markers
-                            </button>
-                        </div>
-                        
-                        <!-- Location Information -->
-                        <div class="map-location-info" id="locationInfo" style="display: none;">
-                            <h4>Selected Locations</h4>
-                            <div class="location-details">
-                                <div class="location-item">
-                                    <span class="location-label">Pickup Location:</span>
-                                    <span class="location-value" id="pickupLocationValue">Not set</span>
-                                </div>
-                                <div class="location-item">
-                                    <span class="location-label">Destination:</span>
-                                    <span class="location-value" id="destinationLocationValue">Not set</span>
-                                </div>
-                                <div class="location-item">
-                                    <span class="location-label">Distance:</span>
-                                    <span class="location-value" id="distanceValue">0 km</span>
-                                </div>
-                                <div class="location-item">
-                                    <span class="location-label">Destination Fee:</span>
-                                    <span class="location-value" id="destinationFeeValue">0 MVR</span>
+                        <!-- Map-based delivery form -->
+                        <div id="mapDeliveryForm">
+                            <div class="form-group">
+                                <label>Select Locations on Map</label>
+                                <div class="map-controls">
+                                    <div class="map-search">
+                                        <input type="text" id="mapSearch" placeholder="Search for a location...">
+                                    </div>
+                                    <button type="button" class="map-btn" id="clearMapBtn">Clear Map</button>
                                 </div>
                             </div>
+                            
+                            <div class="map-container" id="map"></div>
+                            
+                            <div class="map-info">
+                                <div class="map-info-item">
+                                    <span class="map-info-label">Pickup Location:</span>
+                                    <span class="map-info-value" id="mapPickupLocation">Not selected</span>
+                                </div>
+                                <div class="map-info-item">
+                                    <span class="map-info-label">Destination:</span>
+                                    <span class="map-info-value" id="mapDestination">Not selected</span>
+                                </div>
+                                <div class="map-info-item">
+                                    <span class="map-info-label">Distance:</span>
+                                    <span class="map-info-distance" id="mapDistance">0 km</span>
+                                </div>
+                                <div class="map-info-item">
+                                    <span class="map-info-label">Delivery Fee:</span>
+                                    <span class="map-info-price" id="mapDeliveryFee">0 MVR</span>
+                                </div>
+                            </div>
+                            
+                            <input type="hidden" id="mapPickupLat">
+                            <input type="hidden" id="mapPickupLng">
+                            <input type="hidden" id="mapDestLat">
+                            <input type="hidden" id="mapDestLng">
+                            <input type="hidden" id="mapDistanceValue">
                         </div>
                         
-                        <!-- Manual Entry Fields (Hidden by default when using map) -->
-                        <div id="manualEntryFields">
+                        <!-- Manual delivery form -->
+                        <div id="manualDeliveryForm" style="display: none;">
                             <div class="form-group">
                                 <label for="greaterMalePickupLocation">Pickup Location</label>
-                                <select id="greaterMalePickupLocation" required>
+                                <select id="greaterMalePickupLocation">
                                     <option value="">Select Pickup Location</option>
                                     <!-- Pickup locations will be populated from management -->
                                 </select>
@@ -3398,16 +3294,16 @@
                             
                             <div class="form-group">
                                 <label for="greaterMaleDestination">Destination</label>
-                                <select id="greaterMaleDestination" required>
+                                <select id="greaterMaleDestination">
                                     <option value="">Select Destination</option>
                                     <!-- Destinations will be populated from management -->
                                 </select>
                             </div>
                             
-                            <!-- Address Name Field for other destinations -->
-                            <div class="form-group" id="destinationAddressField">
-                                <label for="destinationAddressName">Address Name</label>
-                                <input type="text" id="destinationAddressName" placeholder="Enter destination address">
+                            <!-- Address Field for destination -->
+                            <div class="form-group" id="greaterMaleDestAddressField">
+                                <label for="greaterMaleDestAddressName">Destination Address</label>
+                                <input type="text" id="greaterMaleDestAddressName" placeholder="Enter destination address">
                             </div>
                         </div>
                         
@@ -3434,12 +3330,6 @@
                             </div>
                         </div>
                         
-                        <!-- Boat Name Field for Male to Boat and Hulhumale to Boat -->
-                        <div class="form-group" id="boatNameField">
-                            <label for="boatNameInput">Boat Name</label>
-                            <input type="text" id="boatNameInput" placeholder="Enter boat name">
-                        </div>
-                        
                         <div class="price-breakdown" id="greaterMalePriceBreakdown">
                             <div class="price-item-row">
                                 <span>Item Price:</span>
@@ -3450,8 +3340,8 @@
                                 <span id="vehiclePriceValue">0 MVR</span>
                             </div>
                             <div class="price-item-row">
-                                <span>Destination Fee:</span>
-                                <span id="destinationPriceValue">0 MVR</span>
+                                <span>Delivery Fee:</span>
+                                <span id="deliveryFeeValue">0 MVR</span>
                             </div>
                             <div class="price-item-row price-total">
                                 <span>Total:</span>
@@ -3800,58 +3690,62 @@
                         </div>
                         
                         <div class="price-form" style="margin-top: 30px;">
-                            <h3 class="form-title"><i class="fas fa-route"></i> Set Destination Prices</h3>
+                            <h3 class="form-title"><i class="fas fa-route"></i> Set Vehicle Prices</h3>
                             <div class="price-input-group">
                                 <div class="form-field price-input">
-                                    <label for="destinationType">Destination</label>
-                                    <select id="destinationType">
-                                        <!-- Destinations will be populated from management -->
+                                    <label for="vehicleType">Vehicle</label>
+                                    <select id="vehicleType">
+                                        <!-- Vehicles will be populated from management -->
                                     </select>
                                 </div>
                                 <div class="form-field price-input">
-                                    <label for="destinationPrice">Price (MVR)</label>
-                                    <input type="number" id="destinationPrice" placeholder="Price in MVR" min="0" step="0.01">
+                                    <label for="vehiclePrice">Price (MVR)</label>
+                                    <input type="number" id="vehiclePrice" placeholder="Price in MVR" min="0" step="0.01">
                                 </div>
                             </div>
                             
-                            <button class="add-price-btn" id="addDestinationPriceBtn">
-                                <i class="fas fa-plus"></i> Add Destination Price
+                            <button class="add-price-btn" id="addVehiclePriceBtn">
+                                <i class="fas fa-plus"></i> Add Vehicle Price
                             </button>
                         </div>
                         
-                        <div class="price-list" id="destinationPriceList">
-                            <!-- Destination price list will be populated here -->
+                        <div class="price-list" id="vehiclePriceList">
+                            <!-- Vehicle price list will be populated here -->
                         </div>
                     </div>
                 </div>
                 
                 <!-- Area Price Management -->
                 <div class="price-content" id="area-prices">
-                    <div class="map-area-management">
-                        <h3 class="form-title"><i class="fas fa-map-marked-alt"></i> Set Area Prices for Map-Based Delivery</h3>
+                    <div class="area-price-management">
+                        <h3 class="form-title"><i class="fas fa-map-marked-alt"></i> Set Area Delivery Prices</h3>
                         
-                        <div class="area-form">
-                            <div class="area-input-group">
-                                <div class="form-field area-input">
+                        <div class="area-price-form">
+                            <div class="area-price-input-group">
+                                <div class="form-field area-price-input">
                                     <label for="areaName">Area Name</label>
                                     <input type="text" id="areaName" placeholder="Enter area name">
                                 </div>
-                                <div class="form-field area-input">
-                                    <label for="areaDescription">Description</label>
-                                    <input type="text" id="areaDescription" placeholder="Enter area description">
+                                <div class="form-field area-price-input">
+                                    <label for="areaMinDistance">Minimum Distance (km)</label>
+                                    <input type="number" id="areaMinDistance" placeholder="Min distance" min="0" step="0.1">
                                 </div>
-                                <div class="form-field area-input">
-                                    <label for="areaPrice">Price (MVR)</label>
-                                    <input type="number" id="areaPrice" placeholder="Price in MVR" min="0" step="0.01">
+                                <div class="form-field area-price-input">
+                                    <label for="areaMaxDistance">Maximum Distance (km)</label>
+                                    <input type="number" id="areaMaxDistance" placeholder="Max distance" min="0" step="0.1">
+                                </div>
+                                <div class="form-field area-price-input">
+                                    <label for="areaPriceValue">Price (MVR)</label>
+                                    <input type="number" id="areaPriceValue" placeholder="Price in MVR" min="0" step="0.01">
                                 </div>
                             </div>
                             
-                            <button class="add-area-btn" id="addAreaBtn">
+                            <button class="add-area-price-btn" id="addAreaPriceBtn">
                                 <i class="fas fa-plus"></i> Add Area Price
                             </button>
                         </div>
                         
-                        <div class="area-list" id="areaList">
+                        <div class="area-price-list" id="areaPriceList">
                             <!-- Area price list will be populated here -->
                         </div>
                     </div>
@@ -4176,6 +4070,13 @@
             { min: 7, max: 10, price: 130 }
         ];
         
+        // Area price ranges for map-based delivery
+        let areaPriceRanges = [
+            { name: "Male City", min: 0, max: 5, price: 25 },
+            { name: "Hulhumale", min: 5, max: 10, price: 35 },
+            { name: "Greater Male Area", min: 10, max: 20, price: 50 }
+        ];
+        
         // Greater Male City management data
         let pickupLocations = [
             { id: 1, name: "Male", description: "Male City", type: "address" },
@@ -4187,12 +4088,9 @@
         ];
         
         let destinations = [
-            { id: 1, name: "Male to Hulhumale", description: "From Male to Hulhumale", price: 30, type: "address" },
-            { id: 2, name: "Hulhumale to Male", description: "From Hulhumale to Male", price: 30, type: "address" },
-            { id: 3, name: "Male to Phase2", description: "From Male to Phase 2", price: 25, type: "address" },
-            { id: 4, name: "Hulhumale to Phase2", description: "From Hulhumale to Phase 2", price: 20, type: "address" },
-            { id: 5, name: "Male to Boat", description: "From Male to Boat", price: 15, type: "boat" },
-            { id: 6, name: "Hulhumale to Boat", description: "From Hulhumale to Boat", price: 15, type: "boat" }
+            { id: 1, name: "Male", description: "Male City", type: "address" },
+            { id: 2, name: "Hulhumale", description: "Hulhumale City", type: "address" },
+            { id: 3, name: "Phase2", description: "Phase 2", type: "address" }
         ];
         
         let itemSizes = [
@@ -4207,18 +4105,8 @@
             { id: 2, name: "Pickup", description: "Pickup truck delivery", price: 20 }
         ];
         
-        // Area prices for map-based delivery
-        let areaPrices = [
-            { id: 1, name: "Central Male", description: "Central Male area", price: 20 },
-            { id: 2, name: "North Male", description: "North Male area", price: 25 },
-            { id: 3, name: "South Male", description: "South Male area", price: 25 },
-            { id: 4, name: "Hulhumale Central", description: "Central Hulhumale area", price: 30 },
-            { id: 5, name: "Hulhumale Phase 2", description: "Hulhumale Phase 2 area", price: 35 }
-        ];
-        
         // Greater Male City pricing
         let greaterMaleItemPrices = {};
-        let greaterMaleDestinationPrices = {};
         let greaterMaleVehiclePrices = {};
         
         // User management
@@ -4235,7 +4123,7 @@
         // Management
         let currentManagementType = null;
         let editingManagementId = null;
-        
+
         // Google Maps variables
         let map;
         let pickupMarker = null;
@@ -4243,8 +4131,7 @@
         let directionsService;
         let directionsRenderer;
         let geocoder;
-        let usingMap = false;
-        let selectedArea = null;
+        let autocomplete;
 
         // DOM elements
         const loginContainer = document.getElementById('loginContainer');
@@ -4357,28 +4244,25 @@
         // Greater Male City elements
         const itemSizeOptions = document.getElementById('itemSizeOptions');
         const vehicleOptions = document.getElementById('vehicleOptions');
-        const destinationOptions = document.getElementById('destinationOptions');
         const decreaseQuantity = document.getElementById('decreaseQuantity');
         const increaseQuantity = document.getElementById('increaseQuantity');
         const itemQuantity = document.getElementById('itemQuantity');
         const itemPriceValue = document.getElementById('itemPriceValue');
         const vehiclePriceValue = document.getElementById('vehiclePriceValue');
-        const destinationPriceValue = document.getElementById('destinationPriceValue');
+        const deliveryFeeValue = document.getElementById('deliveryFeeValue');
         const greaterMaleTotalPrice = document.getElementById('greaterMaleTotalPrice');
         const addItemPriceBtn = document.getElementById('addItemPriceBtn');
-        const addDestinationPriceBtn = document.getElementById('addDestinationPriceBtn');
+        const addVehiclePriceBtn = document.getElementById('addVehiclePriceBtn');
         const itemPriceList = document.getElementById('itemPriceList');
-        const destinationPriceList = document.getElementById('destinationPriceList');
+        const vehiclePriceList = document.getElementById('vehiclePriceList');
         const greaterMalePickupLocation = document.getElementById('greaterMalePickupLocation');
         const greaterMaleAddressField = document.getElementById('greaterMaleAddressField');
         const greaterMalePackageDetailsField = document.getElementById('greaterMalePackageDetailsField');
-        const boatNameField = document.getElementById('boatNameField');
-        const destinationAddressField = document.getElementById('destinationAddressField');
-        const boatNameInput = document.getElementById('boatNameInput');
-        const destinationAddressName = document.getElementById('destinationAddressName');
+        const greaterMaleDestination = document.getElementById('greaterMaleDestination');
+        const greaterMaleDestAddressField = document.getElementById('greaterMaleDestAddressField');
         const greaterMaleAddressName = document.getElementById('greaterMaleAddressName');
         const greaterMalePackageDetails = document.getElementById('greaterMalePackageDetails');
-        const greaterMaleDestination = document.getElementById('greaterMaleDestination');
+        const greaterMaleDestAddressName = document.getElementById('greaterMaleDestAddressName');
         
         // Management elements
         const addPickupLocationBtn = document.getElementById('addPickupLocationBtn');
@@ -4398,33 +4282,32 @@
         const cancelManagement = document.getElementById('cancelManagement');
         const confirmManagement = document.getElementById('confirmManagement');
         const itemType = document.getElementById('itemType');
-        const destinationType = document.getElementById('destinationType');
-
-        // NEW ELEMENTS FOR IMPROVED TRACKING
-        const customerReferences = document.getElementById('customerReferences');
-        const referenceList = document.getElementById('referenceList');
-
-        // NEW ELEMENTS FOR GOOGLE MAPS INTEGRATION
+        const vehicleType = document.getElementById('vehicleType');
+        
+        // Area price management elements
+        const areaName = document.getElementById('areaName');
+        const areaMinDistance = document.getElementById('areaMinDistance');
+        const areaMaxDistance = document.getElementById('areaMaxDistance');
+        const areaPriceValue = document.getElementById('areaPriceValue');
+        const addAreaPriceBtn = document.getElementById('addAreaPriceBtn');
+        const areaPriceList = document.getElementById('areaPriceList');
+        
+        // Google Maps elements
         const useMapBtn = document.getElementById('useMapBtn');
         const useManualBtn = document.getElementById('useManualBtn');
-        const mapContainer = document.getElementById('mapContainer');
-        const mapControls = document.getElementById('mapControls');
-        const locationInfo = document.getElementById('locationInfo');
-        const mapSearchInput = document.getElementById('mapSearchInput');
-        const mapSearchBtn = document.getElementById('mapSearchBtn');
-        const setPickupBtn = document.getElementById('setPickupBtn');
-        const setDestinationBtn = document.getElementById('setDestinationBtn');
-        const clearMarkersBtn = document.getElementById('clearMarkersBtn');
-        const pickupLocationValue = document.getElementById('pickupLocationValue');
-        const destinationLocationValue = document.getElementById('destinationLocationValue');
-        const distanceValue = document.getElementById('distanceValue');
-        const destinationFeeValue = document.getElementById('destinationFeeValue');
-        const manualEntryFields = document.getElementById('manualEntryFields');
-        const areaName = document.getElementById('areaName');
-        const areaDescription = document.getElementById('areaDescription');
-        const areaPrice = document.getElementById('areaPrice');
-        const addAreaBtn = document.getElementById('addAreaBtn');
-        const areaList = document.getElementById('areaList');
+        const mapDeliveryForm = document.getElementById('mapDeliveryForm');
+        const manualDeliveryForm = document.getElementById('manualDeliveryForm');
+        const mapSearch = document.getElementById('mapSearch');
+        const clearMapBtn = document.getElementById('clearMapBtn');
+        const mapPickupLocation = document.getElementById('mapPickupLocation');
+        const mapDestination = document.getElementById('mapDestination');
+        const mapDistance = document.getElementById('mapDistance');
+        const mapDeliveryFee = document.getElementById('mapDeliveryFee');
+        const mapPickupLat = document.getElementById('mapPickupLat');
+        const mapPickupLng = document.getElementById('mapPickupLng');
+        const mapDestLat = document.getElementById('mapDestLat');
+        const mapDestLng = document.getElementById('mapDestLng');
+        const mapDistanceValue = document.getElementById('mapDistanceValue');
 
         // Firebase Database References
         const cargoRef = database.ref('cargoDeliveries');
@@ -4432,429 +4315,15 @@
         const greaterMaleRef = database.ref('greaterMaleDeliveries');
         const cargoPriceRangesRef = database.ref('cargoPriceRanges');
         const boatPriceRangesRef = database.ref('boatPriceRanges');
+        const areaPriceRangesRef = database.ref('areaPriceRanges');
         const pickupLocationsRef = database.ref('pickupLocations');
         const destinationsRef = database.ref('destinations');
         const itemSizesRef = database.ref('itemSizes');
         const vehiclesRef = database.ref('vehicles');
-        const areaPricesRef = database.ref('areaPrices');
         const greaterMaleItemPricesRef = database.ref('greaterMaleItemPrices');
-        const greaterMaleDestinationPricesRef = database.ref('greaterMaleDestinationPrices');
         const greaterMaleVehiclePricesRef = database.ref('greaterMaleVehiclePrices');
         const usersRef = database.ref('users');
         const notificationsRef = database.ref('notifications');
-
-        // Initialize Google Maps
-        function initApp() {
-            // Check if Google Maps API is loaded
-            if (typeof google === 'undefined') {
-                console.error('Google Maps API failed to load');
-                return;
-            }
-            
-            // Initialize map with Male, Maldives as center
-            const maleCenter = { lat: 4.1755, lng: 73.5093 };
-            
-            map = new google.maps.Map(mapContainer, {
-                zoom: 14,
-                center: maleCenter,
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                styles: [
-                    {
-                        "featureType": "administrative",
-                        "elementType": "labels.text.fill",
-                        "stylers": [{"color": "#444444"}]
-                    },
-                    {
-                        "featureType": "landscape",
-                        "elementType": "all",
-                        "stylers": [{"color": "#f2f2f2"}]
-                    },
-                    {
-                        "featureType": "poi",
-                        "elementType": "all",
-                        "stylers": [{"visibility": "off"}]
-                    },
-                    {
-                        "featureType": "road",
-                        "elementType": "all",
-                        "stylers": [{"saturation": -100}, {"lightness": 45}]
-                    },
-                    {
-                        "featureType": "road.highway",
-                        "elementType": "all",
-                        "stylers": [{"visibility": "simplified"}]
-                    },
-                    {
-                        "featureType": "road.arterial",
-                        "elementType": "labels.icon",
-                        "stylers": [{"visibility": "off"}]
-                    },
-                    {
-                        "featureType": "transit",
-                        "elementType": "all",
-                        "stylers": [{"visibility": "off"}]
-                    },
-                    {
-                        "featureType": "water",
-                        "elementType": "all",
-                        "stylers": [{"color": "#4cc9f0"}, {"visibility": "on"}]
-                    }
-                ]
-            });
-            
-            // Initialize services
-            directionsService = new google.maps.DirectionsService();
-            directionsRenderer = new google.maps.DirectionsRenderer({
-                map: map,
-                suppressMarkers: true
-            });
-            
-            geocoder = new google.maps.Geocoder();
-            
-            // Add click listener to map
-            map.addListener('click', function(event) {
-                if (usingMap) {
-                    addMarker(event.latLng);
-                }
-            });
-            
-            // Add area polygons to map
-            addAreaPolygons();
-        }
-
-        // Add area polygons to map
-        function addAreaPolygons() {
-            areaPrices.forEach(area => {
-                // Define polygon coordinates for each area (simplified for demo)
-                let polygonCoords = [];
-                
-                switch(area.name) {
-                    case "Central Male":
-                        polygonCoords = [
-                            { lat: 4.1770, lng: 73.5070 },
-                            { lat: 4.1770, lng: 73.5120 },
-                            { lat: 4.1740, lng: 73.5120 },
-                            { lat: 4.1740, lng: 73.5070 }
-                        ];
-                        break;
-                    case "North Male":
-                        polygonCoords = [
-                            { lat: 4.1800, lng: 73.5070 },
-                            { lat: 4.1800, lng: 73.5120 },
-                            { lat: 4.1770, lng: 73.5120 },
-                            { lat: 4.1770, lng: 73.5070 }
-                        ];
-                        break;
-                    case "South Male":
-                        polygonCoords = [
-                            { lat: 4.1740, lng: 73.5070 },
-                            { lat: 4.1740, lng: 73.5120 },
-                            { lat: 4.1710, lng: 73.5120 },
-                            { lat: 4.1710, lng: 73.5070 }
-                        ];
-                        break;
-                    case "Hulhumale Central":
-                        polygonCoords = [
-                            { lat: 4.2120, lng: 73.5400 },
-                            { lat: 4.2120, lng: 73.5450 },
-                            { lat: 4.2090, lng: 73.5450 },
-                            { lat: 4.2090, lng: 73.5400 }
-                        ];
-                        break;
-                    case "Hulhumale Phase 2":
-                        polygonCoords = [
-                            { lat: 4.2150, lng: 73.5400 },
-                            { lat: 4.2150, lng: 73.5450 },
-                            { lat: 4.2120, lng: 73.5450 },
-                            { lat: 4.2120, lng: 73.5400 }
-                        ];
-                        break;
-                }
-                
-                // Create polygon
-                const polygon = new google.maps.Polygon({
-                    paths: polygonCoords,
-                    strokeColor: '#4cc9f0',
-                    strokeOpacity: 0.8,
-                    strokeWeight: 2,
-                    fillColor: '#4cc9f0',
-                    fillOpacity: 0.15,
-                    map: map
-                });
-                
-                // Add click listener to polygon
-                polygon.addListener('click', function(event) {
-                    if (usingMap) {
-                        selectedArea = area;
-                        showNotification(`Selected area: ${area.name} - ${area.price} MVR`);
-                        updateDestinationFee();
-                    }
-                });
-                
-                // Add info window for polygon
-                const infoWindow = new google.maps.InfoWindow({
-                    content: `<div class="map-marker-info">
-                                <div class="map-marker-title">${area.name}</div>
-                                <div class="map-marker-address">${area.description}</div>
-                                <div class="map-marker-address">Price: ${area.price} MVR</div>
-                                <div class="map-marker-actions">
-                                    <button class="map-marker-btn" onclick="selectArea('${area.name}')">Select</button>
-                                </div>
-                              </div>`
-                });
-                
-                polygon.addListener('mouseover', function() {
-                    infoWindow.open(map);
-                    infoWindow.setPosition(event.latLng);
-                });
-                
-                polygon.addListener('mouseout', function() {
-                    infoWindow.close();
-                });
-            });
-        }
-
-        // Select area from info window
-        function selectArea(areaName) {
-            const area = areaPrices.find(a => a.name === areaName);
-            if (area) {
-                selectedArea = area;
-                showNotification(`Selected area: ${area.name} - ${area.price} MVR`);
-                updateDestinationFee();
-            }
-        }
-
-        // Add marker to map
-        function addMarker(location) {
-            const marker = new google.maps.Marker({
-                position: location,
-                map: map,
-                draggable: true,
-                animation: google.maps.Animation.DROP
-            });
-            
-            // Geocode the location to get address
-            geocoder.geocode({ location: location }, function(results, status) {
-                if (status === 'OK') {
-                    if (results[0]) {
-                        const address = results[0].formatted_address;
-                        
-                        // Create info window
-                        const infoWindow = new google.maps.InfoWindow({
-                            content: `<div class="map-marker-info">
-                                        <div class="map-marker-title">Selected Location</div>
-                                        <div class="map-marker-address">${address}</div>
-                                        <div class="map-marker-actions">
-                                            <button class="map-marker-btn" onclick="setAsPickup('${location.lat()}', '${location.lng()}', '${address}')">Set as Pickup</button>
-                                            <button class="map-marker-btn" onclick="setAsDestination('${location.lat()}', '${location.lng()}', '${address}')">Set as Destination</button>
-                                        </div>
-                                      </div>`
-                        });
-                        
-                        marker.addListener('click', function() {
-                            infoWindow.open(map, marker);
-                        });
-                        
-                        // Auto-open info window
-                        infoWindow.open(map, marker);
-                    }
-                }
-            });
-            
-            return marker;
-        }
-
-        // Set location as pickup
-        function setAsPickup(lat, lng, address) {
-            // Remove existing pickup marker
-            if (pickupMarker) {
-                pickupMarker.setMap(null);
-            }
-            
-            const location = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
-            
-            // Add new pickup marker
-            pickupMarker = new google.maps.Marker({
-                position: location,
-                map: map,
-                draggable: true,
-                animation: google.maps.Animation.BOUNCE,
-                icon: {
-                    url: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
-                }
-            });
-            
-            // Update pickup location value
-            pickupLocationValue.textContent = address;
-            
-            // Update form fields
-            document.getElementById('greaterMalePickupLocation').value = 'Map Location';
-            document.getElementById('greaterMaleAddressName').value = address;
-            
-            // Calculate route if destination is set
-            if (destinationMarker) {
-                calculateRoute();
-            }
-            
-            showNotification('Pickup location set successfully');
-        }
-
-        // Set location as destination
-        function setAsDestination(lat, lng, address) {
-            // Remove existing destination marker
-            if (destinationMarker) {
-                destinationMarker.setMap(null);
-            }
-            
-            const location = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
-            
-            // Add new destination marker
-            destinationMarker = new google.maps.Marker({
-                position: location,
-                map: map,
-                draggable: true,
-                animation: google.maps.Animation.BOUNCE,
-                icon: {
-                    url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
-                }
-            });
-            
-            // Update destination location value
-            destinationLocationValue.textContent = address;
-            
-            // Update form fields
-            document.getElementById('greaterMaleDestination').value = 'Map Location';
-            document.getElementById('destinationAddressName').value = address;
-            
-            // Calculate route if pickup is set
-            if (pickupMarker) {
-                calculateRoute();
-            }
-            
-            // Update destination fee based on area
-            updateDestinationFee();
-            
-            showNotification('Destination set successfully');
-        }
-
-        // Calculate route between pickup and destination
-        function calculateRoute() {
-            if (!pickupMarker || !destinationMarker) return;
-            
-            const request = {
-                origin: pickupMarker.getPosition(),
-                destination: destinationMarker.getPosition(),
-                travelMode: google.maps.TravelMode.DRIVING
-            };
-            
-            directionsService.route(request, function(result, status) {
-                if (status == 'OK') {
-                    directionsRenderer.setDirections(result);
-                    
-                    // Calculate distance
-                    const route = result.routes[0];
-                    let totalDistance = 0;
-                    
-                    for (let i = 0; i < route.legs.length; i++) {
-                        totalDistance += route.legs[i].distance.value;
-                    }
-                    
-                    // Convert to kilometers
-                    const distanceInKm = (totalDistance / 1000).toFixed(2);
-                    distanceValue.textContent = `${distanceInKm} km`;
-                }
-            });
-        }
-
-        // Update destination fee based on selected area
-        function updateDestinationFee() {
-            if (selectedArea) {
-                destinationFeeValue.textContent = `${selectedArea.price} MVR`;
-                destinationPriceValue.textContent = `${selectedArea.price} MVR`;
-                updateGreaterMalePrice();
-            } else {
-                // Default fee if no area selected
-                destinationFeeValue.textContent = '20 MVR';
-                destinationPriceValue.textContent = '20 MVR';
-                updateGreaterMalePrice();
-            }
-        }
-
-        // Clear all markers
-        function clearMarkers() {
-            if (pickupMarker) {
-                pickupMarker.setMap(null);
-                pickupMarker = null;
-            }
-            
-            if (destinationMarker) {
-                destinationMarker.setMap(null);
-                destinationMarker = null;
-            }
-            
-            directionsRenderer.setDirections({ routes: [] });
-            
-            pickupLocationValue.textContent = 'Not set';
-            destinationLocationValue.textContent = 'Not set';
-            distanceValue.textContent = '0 km';
-            destinationFeeValue.textContent = '0 MVR';
-            
-            showNotification('Markers cleared');
-        }
-
-        // Search for address
-        function searchAddress() {
-            const address = mapSearchInput.value;
-            
-            if (!address) {
-                showNotification('Please enter an address to search');
-                return;
-            }
-            
-            geocoder.geocode({ address: address }, function(results, status) {
-                if (status === 'OK') {
-                    map.setCenter(results[0].geometry.location);
-                    map.setZoom(16);
-                    
-                    // Add marker at searched location
-                    addMarker(results[0].geometry.location);
-                } else {
-                    showNotification('Address not found: ' + status);
-                }
-            });
-        }
-
-        // Toggle between map and manual entry
-        function toggleMapUsage(useMap) {
-            usingMap = useMap;
-            
-            if (useMap) {
-                // Show map and controls
-                mapContainer.style.display = 'block';
-                mapControls.style.display = 'flex';
-                locationInfo.style.display = 'block';
-                manualEntryFields.style.display = 'none';
-                
-                // Update buttons
-                useMapBtn.classList.add('active');
-                useManualBtn.classList.remove('active');
-                
-                // Initialize map if not already done
-                if (typeof map === 'undefined') {
-                    initApp();
-                }
-            } else {
-                // Hide map and show manual entry
-                mapContainer.style.display = 'none';
-                mapControls.style.display = 'none';
-                locationInfo.style.display = 'none';
-                manualEntryFields.style.display = 'block';
-                
-                // Update buttons
-                useMapBtn.classList.remove('active');
-                useManualBtn.classList.add('active');
-            }
-        }
 
         // Check if user is already logged in
         function checkLoginStatus() {
@@ -4885,6 +4354,239 @@
                 // Load user's reference numbers
                 loadUserReferences();
             }
+        }
+
+        // Initialize Google Maps
+        function initApp() {
+            // Initialize the map
+            initMap();
+            
+            // Check login status
+            checkLoginStatus();
+        }
+
+        // Initialize Google Maps
+        function initMap() {
+            // Default center (Male, Maldives)
+            const male = { lat: 4.1755, lng: 73.5093 };
+            
+            // Create the map
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 12,
+                center: male,
+                mapTypeControl: true,
+                streetViewControl: true,
+                fullscreenControl: true
+            });
+            
+            // Initialize services
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map);
+            
+            geocoder = new google.maps.Geocoder();
+            
+            // Initialize autocomplete for search
+            autocomplete = new google.maps.places.Autocomplete(mapSearch);
+            autocomplete.bindTo('bounds', map);
+            
+            // Add click listener to map
+            map.addListener('click', function(event) {
+                placeMarker(event.latLng);
+            });
+            
+            // Add search listener
+            autocomplete.addListener('place_changed', function() {
+                const place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    window.alert("No details available for input: '" + place.name + "'");
+                    return;
+                }
+                
+                // If the place has a geometry, then present it on a map.
+                if (place.geometry.viewport) {
+                    map.fitBounds(place.geometry.viewport);
+                } else {
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17);
+                }
+                
+                // Place a marker at the searched location
+                placeMarker(place.geometry.location, place.formatted_address);
+            });
+        }
+
+        // Place a marker on the map
+        function placeMarker(location, address = null) {
+            // If no pickup marker exists, create one
+            if (!pickupMarker) {
+                pickupMarker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    title: 'Pickup Location',
+                    icon: {
+                        url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+                    }
+                });
+                
+                // Update pickup location info
+                if (address) {
+                    mapPickupLocation.textContent = address;
+                } else {
+                    reverseGeocode(location, 'pickup');
+                }
+                
+                mapPickupLat.value = location.lat();
+                mapPickupLng.value = location.lng();
+            } 
+            // If pickup marker exists but no destination marker, create destination marker
+            else if (!destinationMarker) {
+                destinationMarker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    title: 'Destination',
+                    icon: {
+                        url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+                    }
+                });
+                
+                // Update destination info
+                if (address) {
+                    mapDestination.textContent = address;
+                } else {
+                    reverseGeocode(location, 'destination');
+                }
+                
+                mapDestLat.value = location.lat();
+                mapDestLng.value = location.lng();
+                
+                // Calculate route and distance
+                calculateRoute();
+            }
+            // If both markers exist, update the destination marker
+            else {
+                destinationMarker.setPosition(location);
+                
+                // Update destination info
+                if (address) {
+                    mapDestination.textContent = address;
+                } else {
+                    reverseGeocode(location, 'destination');
+                }
+                
+                mapDestLat.value = location.lat();
+                mapDestLng.value = location.lng();
+                
+                // Calculate route and distance
+                calculateRoute();
+            }
+        }
+
+        // Reverse geocode to get address from coordinates
+        function reverseGeocode(location, type) {
+            geocoder.geocode({ 'location': location }, function(results, status) {
+                if (status === 'OK') {
+                    if (results[0]) {
+                        const address = results[0].formatted_address;
+                        if (type === 'pickup') {
+                            mapPickupLocation.textContent = address;
+                        } else {
+                            mapDestination.textContent = address;
+                        }
+                    }
+                } else {
+                    console.error('Geocoder failed due to: ' + status);
+                }
+            });
+        }
+
+        // Calculate route between pickup and destination
+        function calculateRoute() {
+            if (!pickupMarker || !destinationMarker) return;
+            
+            const request = {
+                origin: pickupMarker.getPosition(),
+                destination: destinationMarker.getPosition(),
+                travelMode: google.maps.TravelMode.DRIVING
+            };
+            
+            directionsService.route(request, function(result, status) {
+                if (status === 'OK') {
+                    directionsRenderer.setDirections(result);
+                    
+                    // Get distance
+                    const route = result.routes[0];
+                    let totalDistance = 0;
+                    
+                    for (let i = 0; i < route.legs.length; i++) {
+                        totalDistance += route.legs[i].distance.value;
+                    }
+                    
+                    // Convert to kilometers
+                    const distanceInKm = (totalDistance / 1000).toFixed(2);
+                    mapDistance.textContent = distanceInKm + ' km';
+                    mapDistanceValue.value = distanceInKm;
+                    
+                    // Calculate delivery fee based on distance
+                    calculateDeliveryFee(distanceInKm);
+                } else {
+                    console.error('Directions request failed due to ' + status);
+                }
+            });
+        }
+
+        // Calculate delivery fee based on distance
+        function calculateDeliveryFee(distance) {
+            let fee = 0;
+            
+            // Find the appropriate price range
+            for (let range of areaPriceRanges) {
+                if (distance >= range.min && distance <= range.max) {
+                    fee = range.price;
+                    break;
+                }
+            }
+            
+            // If no range found, use the highest price
+            if (fee === 0 && areaPriceRanges.length > 0) {
+                fee = areaPriceRanges[areaPriceRanges.length - 1].price;
+            }
+            
+            mapDeliveryFee.textContent = fee + ' MVR';
+            deliveryFeeValue.textContent = fee + ' MVR';
+            
+            // Update total price
+            updateGreaterMalePrice();
+        }
+
+        // Clear map markers and route
+        function clearMap() {
+            if (pickupMarker) {
+                pickupMarker.setMap(null);
+                pickupMarker = null;
+            }
+            
+            if (destinationMarker) {
+                destinationMarker.setMap(null);
+                destinationMarker = null;
+            }
+            
+            directionsRenderer.setDirections({routes: []});
+            
+            // Reset map info
+            mapPickupLocation.textContent = 'Not selected';
+            mapDestination.textContent = 'Not selected';
+            mapDistance.textContent = '0 km';
+            mapDeliveryFee.textContent = '0 MVR';
+            mapPickupLat.value = '';
+            mapPickupLng.value = '';
+            mapDestLat.value = '';
+            mapDestLng.value = '';
+            mapDistanceValue.value = '';
+            deliveryFeeValue.textContent = '0 MVR';
+            
+            // Update total price
+            updateGreaterMalePrice();
         }
 
         // Toggle between login and create account forms
@@ -5036,7 +4738,6 @@
             loadUsers();
             loadNotifications();
             loadManagementData();
-            loadAreaPrices();
             
             // Check for new notifications
             checkNewNotifications();
@@ -5201,7 +4902,6 @@
                             // Load price lists when price management section is accessed
                             if (targetSection === 'price-management') {
                                 loadPriceLists();
-                                loadAreaPrices();
                             }
                             
                             // Load management data when management section is accessed
@@ -5242,59 +4942,6 @@
             
             // Initialize management
             initializeManagement();
-            
-            // Initialize Google Maps functionality
-            initializeGoogleMaps();
-        }
-
-        // Initialize Google Maps functionality
-        function initializeGoogleMaps() {
-            // Map usage toggle buttons
-            useMapBtn.addEventListener('click', function() {
-                toggleMapUsage(true);
-            });
-            
-            useManualBtn.addEventListener('click', function() {
-                toggleMapUsage(false);
-            });
-            
-            // Map control buttons
-            mapSearchBtn.addEventListener('click', searchAddress);
-            
-            setPickupBtn.addEventListener('click', function() {
-                if (pickupMarker) {
-                    const position = pickupMarker.getPosition();
-                    geocoder.geocode({ location: position }, function(results, status) {
-                        if (status === 'OK' && results[0]) {
-                            setAsPickup(position.lat(), position.lng(), results[0].formatted_address);
-                        }
-                    });
-                } else {
-                    showNotification('Please select a location on the map first');
-                }
-            });
-            
-            setDestinationBtn.addEventListener('click', function() {
-                if (destinationMarker) {
-                    const position = destinationMarker.getPosition();
-                    geocoder.geocode({ location: position }, function(results, status) {
-                        if (status === 'OK' && results[0]) {
-                            setAsDestination(position.lat(), position.lng(), results[0].formatted_address);
-                        }
-                    });
-                } else {
-                    showNotification('Please select a location on the map first');
-                }
-            });
-            
-            clearMarkersBtn.addEventListener('click', clearMarkers);
-            
-            // Enter key for address search
-            mapSearchInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    searchAddress();
-                }
-            });
         }
 
         // Initialize price tabs functionality
@@ -5320,6 +4967,24 @@
 
         // Initialize Greater Male City form
         function initializeGreaterMaleForm() {
+            // Map vs Manual toggle
+            useMapBtn.addEventListener('click', function() {
+                useMapBtn.classList.add('active');
+                useManualBtn.classList.remove('active');
+                mapDeliveryForm.style.display = 'block';
+                manualDeliveryForm.style.display = 'none';
+            });
+            
+            useManualBtn.addEventListener('click', function() {
+                useManualBtn.classList.add('active');
+                useMapBtn.classList.remove('active');
+                mapDeliveryForm.style.display = 'none';
+                manualDeliveryForm.style.display = 'block';
+            });
+            
+            // Clear map button
+            clearMapBtn.addEventListener('click', clearMap);
+            
             // Pickup location change handler
             greaterMalePickupLocation.addEventListener('change', function() {
                 const selectedLocation = pickupLocations.find(loc => loc.name === this.value);
@@ -5338,58 +5003,11 @@
             greaterMaleDestination.addEventListener('change', function() {
                 const selectedDestination = destinations.find(dest => dest.name === this.value);
                 if (selectedDestination) {
-                    if (selectedDestination.type === 'boat') {
-                        boatNameField.style.display = 'block';
-                        destinationAddressField.style.display = 'none';
+                    if (selectedDestination.type === 'address') {
+                        greaterMaleDestAddressField.style.display = 'block';
                     } else {
-                        boatNameField.style.display = 'none';
-                        destinationAddressField.style.display = 'block';
+                        greaterMaleDestAddressField.style.display = 'none';
                     }
-                    
-                    // Update destination price
-                    destinationPriceValue.textContent = `${selectedDestination.price} MVR`;
-                    updateGreaterMalePrice();
-                }
-            });
-            
-            // Item size selection
-            itemSizeOptions.addEventListener('click', function(e) {
-                if (e.target.classList.contains('item-size-btn') || e.target.closest('.item-size-btn')) {
-                    const btn = e.target.classList.contains('item-size-btn') ? e.target : e.target.closest('.item-size-btn');
-                    
-                    // Remove active class from all buttons
-                    document.querySelectorAll('.item-size-btn').forEach(b => {
-                        b.classList.remove('active');
-                    });
-                    
-                    // Add active class to clicked button
-                    btn.classList.add('active');
-                    
-                    // Update vehicle options based on selected item size
-                    updateVehicleOptions(btn.getAttribute('data-size'));
-                    
-                    // Update price breakdown
-                    updateGreaterMalePrice();
-                }
-            });
-            
-            // Vehicle selection
-            vehicleOptions.addEventListener('click', function(e) {
-                if (e.target.classList.contains('vehicle-btn') || e.target.closest('.vehicle-btn')) {
-                    const btn = e.target.classList.contains('vehicle-btn') ? e.target : e.target.closest('.vehicle-btn');
-                    
-                    if (btn.classList.contains('disabled')) return;
-                    
-                    // Remove active class from all buttons
-                    document.querySelectorAll('.vehicle-btn').forEach(b => {
-                        b.classList.remove('active');
-                    });
-                    
-                    // Add active class to clicked button
-                    btn.classList.add('active');
-                    
-                    // Update price breakdown
-                    updateGreaterMalePrice();
                 }
             });
             
@@ -5424,28 +5042,34 @@
             greaterMaleForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                // Validate based on entry method
-                if (usingMap) {
-                    // Validate map-based entry
+                // Check if using map or manual entry
+                const useMap = useMapBtn.classList.contains('active');
+                
+                if (useMap) {
+                    // Validate map selection
                     if (!pickupMarker || !destinationMarker) {
-                        showNotification('Please set both pickup and destination locations on the map');
+                        showNotification('Please select both pickup location and destination on the map');
                         return;
                     }
                 } else {
                     // Validate manual entry
+                    if (!greaterMalePickupLocation.value || !greaterMaleDestination.value) {
+                        showNotification('Please select both pickup location and destination');
+                        return;
+                    }
+                    
                     const selectedItemSize = document.querySelector('.item-size-btn.active');
                     const selectedVehicle = document.querySelector('.vehicle-btn.active');
                     
-                    if (!selectedItemSize || !selectedVehicle || !greaterMalePickupLocation.value || !greaterMaleDestination.value) {
-                        showNotification('Please complete all required fields');
+                    if (!selectedItemSize || !selectedVehicle) {
+                        showNotification('Please select item size and vehicle');
                         return;
                     }
                 }
                 
                 const referenceNumber = generateReferenceNumber('GMC');
                 
-                // Prepare delivery data
-                const greaterMaleData = {
+                let greaterMaleData = {
                     customerName: document.getElementById('greaterMaleCustomerName').value,
                     customerContact: document.getElementById('greaterMaleCustomerContact').value,
                     itemSize: document.querySelector('.item-size-btn.active')?.getAttribute('data-size') || '',
@@ -5465,25 +5089,84 @@
                 };
                 
                 // Add location data based on entry method
-                if (usingMap) {
-                    greaterMaleData.pickupLocation = 'Map Location';
-                    greaterMaleData.addressName = pickupLocationValue.textContent;
-                    greaterMaleData.destination = 'Map Location';
-                    greaterMaleData.destinationAddress = destinationLocationValue.textContent;
-                    greaterMaleData.distance = distanceValue.textContent;
-                    greaterMaleData.area = selectedArea ? selectedArea.name : 'Unknown Area';
+                if (useMap) {
+                    greaterMaleData.pickupLocation = mapPickupLocation.textContent;
+                    greaterMaleData.destination = mapDestination.textContent;
+                    greaterMaleData.pickupLat = mapPickupLat.value;
+                    greaterMaleData.pickupLng = mapPickupLng.value;
+                    greaterMaleData.destLat = mapDestLat.value;
+                    greaterMaleData.destLng = mapDestLng.value;
+                    greaterMaleData.distance = mapDistanceValue.value;
+                    greaterMaleData.deliveryMethod = 'map';
                 } else {
                     greaterMaleData.pickupLocation = greaterMalePickupLocation.value;
+                    greaterMaleData.destination = greaterMaleDestination.value;
                     greaterMaleData.addressName = greaterMaleAddressName.value;
                     greaterMaleData.packageDetails = greaterMalePackageDetails.value;
-                    greaterMaleData.destination = greaterMaleDestination.value;
-                    greaterMaleData.destinationAddress = destinationAddressName.value;
-                    greaterMaleData.boatName = boatNameInput.value;
+                    greaterMaleData.destAddressName = greaterMaleDestAddressName.value;
+                    greaterMaleData.deliveryMethod = 'manual';
                 }
                 
                 // Show payment modal
                 showPaymentModal(greaterMaleData);
             });
+        }
+
+        // Calculate Greater Male City total price
+        function calculateGreaterMaleTotalPrice() {
+            const selectedItemSize = document.querySelector('.item-size-btn.active');
+            const selectedVehicle = document.querySelector('.vehicle-btn.active');
+            const quantity = parseInt(itemQuantity.value);
+            
+            if (!selectedItemSize || !selectedVehicle) return 0;
+            
+            const itemPrice = parseFloat(selectedItemSize.getAttribute('data-price'));
+            const vehiclePrice = parseFloat(selectedVehicle.getAttribute('data-price'));
+            
+            // Get delivery fee
+            let deliveryFee = 0;
+            if (useMapBtn.classList.contains('active')) {
+                deliveryFee = parseFloat(mapDeliveryFee.textContent) || 0;
+            } else {
+                // For manual entry, use a fixed delivery fee
+                deliveryFee = 30; // Default fee for manual entry
+            }
+            
+            return (itemPrice * quantity) + vehiclePrice + deliveryFee;
+        }
+
+        // Update Greater Male City price breakdown
+        function updateGreaterMalePrice() {
+            const selectedItemSize = document.querySelector('.item-size-btn.active');
+            const selectedVehicle = document.querySelector('.vehicle-btn.active');
+            const quantity = parseInt(itemQuantity.value);
+            
+            if (!selectedItemSize || !selectedVehicle) {
+                itemPriceValue.textContent = '0 MVR';
+                vehiclePriceValue.textContent = '0 MVR';
+                deliveryFeeValue.textContent = '0 MVR';
+                greaterMaleTotalPrice.textContent = '0 MVR';
+                return;
+            }
+            
+            const itemPrice = parseFloat(selectedItemSize.getAttribute('data-price'));
+            const vehiclePrice = parseFloat(selectedVehicle.getAttribute('data-price'));
+            
+            // Get delivery fee
+            let deliveryFee = 0;
+            if (useMapBtn.classList.contains('active')) {
+                deliveryFee = parseFloat(mapDeliveryFee.textContent) || 0;
+            } else {
+                // For manual entry, use a fixed delivery fee
+                deliveryFee = 30; // Default fee for manual entry
+            }
+            
+            const totalPrice = (itemPrice * quantity) + vehiclePrice + deliveryFee;
+            
+            itemPriceValue.textContent = `${itemPrice * quantity} MVR`;
+            vehiclePriceValue.textContent = `${vehiclePrice} MVR`;
+            deliveryFeeValue.textContent = `${deliveryFee} MVR`;
+            greaterMaleTotalPrice.textContent = `${totalPrice} MVR`;
         }
 
         // Initialize management functionality
@@ -5533,42 +5216,6 @@
                 managementPriceField.style.display = 'block';
                 managementPrice.value = '';
                 managementModal.classList.add('active');
-            });
-            
-            // Add area price button
-            addAreaBtn.addEventListener('click', function() {
-                const name = areaName.value.trim();
-                const description = areaDescription.value.trim();
-                const price = parseFloat(areaPrice.value);
-                
-                if (!name || !description || isNaN(price)) {
-                    showNotification('Please fill all fields with valid values');
-                    return;
-                }
-                
-                // Check if area already exists
-                if (areaPrices.find(area => area.name === name)) {
-                    showNotification('Area with this name already exists');
-                    return;
-                }
-                
-                // Add new area
-                areaPrices.push({
-                    id: Date.now(),
-                    name: name,
-                    description: description,
-                    price: price
-                });
-                
-                saveAreaPrices();
-                loadAreaPrices();
-                
-                // Reset form
-                areaName.value = '';
-                areaDescription.value = '';
-                areaPrice.value = '';
-                
-                showNotification('Area price added successfully');
             });
             
             // Cancel management
@@ -5647,12 +5294,6 @@
                         }
                         pickupLocations.push(newItem);
                     } else if (currentManagementType === 'destination') {
-                        // For destinations, we need to determine the type
-                        if (name.toLowerCase().includes('boat')) {
-                            newItem.type = 'boat';
-                        } else {
-                            newItem.type = 'address';
-                        }
                         destinations.push(newItem);
                     } else if (currentManagementType === 'itemSize') {
                         itemSizes.push(newItem);
@@ -5730,7 +5371,7 @@
                 item.innerHTML = `
                     <div class="management-item-details">
                         <div class="management-item-name">${destination.name}</div>
-                        <div class="management-item-description">${destination.description} (${destination.type}) - ${destination.price} MVR</div>
+                        <div class="management-item-description">${destination.description} - ${destination.price} MVR</div>
                     </div>
                     <div class="management-item-actions">
                         <button class="edit-user-btn" onclick="editManagementItem('destination', ${destination.id})">Edit</button>
@@ -5790,33 +5431,6 @@
                     </div>
                 `;
                 vehicleList.appendChild(item);
-            });
-        }
-
-        // Load area prices
-        function loadAreaPrices() {
-            areaList.innerHTML = '';
-            
-            if (areaPrices.length === 0) {
-                areaList.innerHTML = '<div class="empty-message">No area prices defined</div>';
-                return;
-            }
-            
-            areaPrices.forEach((area, index) => {
-                const item = document.createElement('div');
-                item.className = 'area-item';
-                item.innerHTML = `
-                    <div class="area-details">
-                        <div class="area-name">${area.name}</div>
-                        <div class="area-description">${area.description}</div>
-                    </div>
-                    <div class="area-price">${area.price} MVR</div>
-                    <div class="area-actions">
-                        <button class="edit-area-btn" onclick="editAreaPrice(${index})">Edit</button>
-                        <button class="remove-area-btn" onclick="removeAreaPrice(${index})">Remove</button>
-                    </div>
-                `;
-                areaList.appendChild(item);
             });
         }
 
@@ -5882,12 +5496,12 @@
                 itemType.appendChild(option);
             });
             
-            destinationType.innerHTML = '';
-            destinations.forEach(destination => {
+            vehicleType.innerHTML = '';
+            vehicles.forEach(vehicle => {
                 const option = document.createElement('option');
-                option.value = destination.name;
-                option.textContent = destination.name;
-                destinationType.appendChild(option);
+                option.value = vehicle.name;
+                option.textContent = vehicle.name;
+                vehicleType.appendChild(option);
             });
             
             // Add event listeners to the new buttons
@@ -5957,65 +5571,6 @@
                     pickupBtn.classList.remove('disabled');
                 }
             }
-        }
-
-        // Calculate Greater Male City total price
-        function calculateGreaterMaleTotalPrice() {
-            const selectedItemSize = document.querySelector('.item-size-btn.active');
-            const selectedVehicle = document.querySelector('.vehicle-btn.active');
-            const quantity = parseInt(itemQuantity.value);
-            
-            if (!selectedItemSize || !selectedVehicle) return 0;
-            
-            const itemPrice = parseFloat(selectedItemSize.getAttribute('data-price'));
-            const vehiclePrice = parseFloat(selectedVehicle.getAttribute('data-price'));
-            
-            // Get destination price based on entry method
-            let destinationPrice = 0;
-            if (usingMap) {
-                destinationPrice = selectedArea ? selectedArea.price : 20; // Default price
-            } else {
-                const selectedDestination = destinations.find(dest => dest.name === greaterMaleDestination.value);
-                destinationPrice = selectedDestination ? selectedDestination.price : 0;
-            }
-            
-            // FIX: Only multiply item price by quantity, not vehicle and destination fees
-            return (itemPrice * quantity) + vehiclePrice + destinationPrice;
-        }
-
-        // Update Greater Male City price breakdown
-        function updateGreaterMalePrice() {
-            const selectedItemSize = document.querySelector('.item-size-btn.active');
-            const selectedVehicle = document.querySelector('.vehicle-btn.active');
-            const quantity = parseInt(itemQuantity.value);
-            
-            if (!selectedItemSize || !selectedVehicle) {
-                itemPriceValue.textContent = '0 MVR';
-                vehiclePriceValue.textContent = '0 MVR';
-                destinationPriceValue.textContent = '0 MVR';
-                greaterMaleTotalPrice.textContent = '0 MVR';
-                return;
-            }
-            
-            const itemPrice = parseFloat(selectedItemSize.getAttribute('data-price'));
-            const vehiclePrice = parseFloat(selectedVehicle.getAttribute('data-price'));
-            
-            // Get destination price based on entry method
-            let destinationPrice = 0;
-            if (usingMap) {
-                destinationPrice = selectedArea ? selectedArea.price : 20; // Default price
-            } else {
-                const selectedDestination = destinations.find(dest => dest.name === greaterMaleDestination.value);
-                destinationPrice = selectedDestination ? selectedDestination.price : 0;
-            }
-            
-            // FIX: Only multiply item price by quantity, not vehicle and destination fees
-            const totalPrice = (itemPrice * quantity) + vehiclePrice + destinationPrice;
-            
-            itemPriceValue.textContent = `${itemPrice * quantity} MVR`;
-            vehiclePriceValue.textContent = `${vehiclePrice} MVR`;
-            destinationPriceValue.textContent = `${destinationPrice} MVR`;
-            greaterMaleTotalPrice.textContent = `${totalPrice} MVR`;
         }
 
         // Sidebar functionality
@@ -6830,22 +6385,20 @@
             // Reset additional fields
             greaterMaleAddressName.value = '';
             greaterMalePackageDetails.value = '';
-            boatNameInput.value = '';
-            destinationAddressName.value = '';
+            greaterMaleDestAddressName.value = '';
             
             // Hide additional fields
             greaterMaleAddressField.style.display = 'none';
             greaterMalePackageDetailsField.style.display = 'none';
-            boatNameField.style.display = 'none';
-            destinationAddressField.style.display = 'none';
-            
-            // Reset map if using map
-            if (usingMap) {
-                clearMarkers();
-            }
+            greaterMaleDestAddressField.style.display = 'none';
             
             // Reset price breakdown
             updateGreaterMalePrice();
+            
+            // Clear map if using map
+            if (useMapBtn.classList.contains('active')) {
+                clearMap();
+            }
         }
 
         // Reset weight selection
@@ -6888,22 +6441,9 @@
                         </a>
                     </td>
                     <td>${delivery.customerName}</td>
-                    <td>
-                        <a href="tel:${delivery.customerContact}" class="clickable-contact">
-                            ${delivery.customerContact}
-                        </a>
-                    </td>
-                    <td>
-                        ${delivery.pickupLocation === 'Map Location' ? 
-                            `<a class="location-link" onclick="viewLocationOnMap('${delivery.addressName}')">${delivery.pickupLocation}</a>` : 
-                            delivery.pickupLocation}
-                        ${delivery.packageDetails ? ` (${delivery.packageDetails})` : delivery.addressName ? ` (${delivery.addressName})` : ''}
-                    </td>
-                    <td>
-                        ${delivery.deliveryLocation === 'Map Location' ? 
-                            `<a class="location-link" onclick="viewLocationOnMap('${delivery.destinationAddress}')">${delivery.deliveryLocation}</a>` : 
-                            delivery.deliveryLocation}
-                    </td>
+                    <td><a href="tel:${delivery.customerContact}" class="clickable-phone">${delivery.customerContact}</a></td>
+                    <td>${delivery.pickupLocation}${delivery.packageDetails ? ` (${delivery.packageDetails})` : delivery.addressName ? ` (${delivery.addressName})` : ''}</td>
+                    <td>${delivery.deliveryLocation}</td>
                     <td>${delivery.packageWeight}</td>
                     <td>${delivery.deliveryPrice} MVR</td>
                     <td>${formatDate(delivery.deliveryDate)}</td>
@@ -6979,11 +6519,7 @@
                         </a>
                     </td>
                     <td>${delivery.customerName}</td>
-                    <td>
-                        <a href="tel:${delivery.customerContact}" class="clickable-contact">
-                            ${delivery.customerContact}
-                        </a>
-                    </td>
+                    <td><a href="tel:${delivery.customerContact}" class="clickable-phone">${delivery.customerContact}</a></td>
                     <td>${delivery.boatName}</td>
                     <td>${delivery.island}</td>
                     <td>${delivery.packageLabel}</td>
@@ -7054,6 +6590,20 @@
                 const paymentClass = getPaymentStatusClass(delivery.paymentStatus);
                 const paymentText = getPaymentStatusText(delivery.paymentStatus);
                 
+                // Create location links for map-based deliveries
+                let pickupLocationDisplay = delivery.pickupLocation;
+                let destinationDisplay = delivery.destination;
+                
+                if (delivery.deliveryMethod === 'map' && delivery.pickupLat && delivery.pickupLng) {
+                    const mapUrl = `https://www.google.com/maps?q=${delivery.pickupLat},${delivery.pickupLng}`;
+                    pickupLocationDisplay = `<a href="${mapUrl}" target="_blank" class="map-link">${delivery.pickupLocation}</a>`;
+                }
+                
+                if (delivery.deliveryMethod === 'map' && delivery.destLat && delivery.destLng) {
+                    const mapUrl = `https://www.google.com/maps?q=${delivery.destLat},${delivery.destLng}`;
+                    destinationDisplay = `<a href="${mapUrl}" target="_blank" class="map-link">${delivery.destination}</a>`;
+                }
+                
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>
@@ -7062,23 +6612,9 @@
                         </a>
                     </td>
                     <td>${delivery.customerName}</td>
-                    <td>
-                        <a href="tel:${delivery.customerContact}" class="clickable-contact">
-                            ${delivery.customerContact}
-                        </a>
-                    </td>
-                    <td>
-                        ${delivery.pickupLocation === 'Map Location' ? 
-                            `<a class="location-link" onclick="viewLocationOnMap('${delivery.addressName}')">${delivery.pickupLocation}</a>` : 
-                            delivery.pickupLocation}
-                        ${delivery.addressName ? ` (${delivery.addressName})` : delivery.packageDetails ? ` (${delivery.packageDetails})` : ''}
-                    </td>
-                    <td>
-                        ${delivery.destination === 'Map Location' ? 
-                            `<a class="location-link" onclick="viewLocationOnMap('${delivery.destinationAddress}')">${delivery.destination}</a>` : 
-                            delivery.destination}
-                        ${delivery.boatName ? ` (${delivery.boatName})` : delivery.destinationAddress ? ` (${delivery.destinationAddress})` : ''}
-                    </td>
+                    <td><a href="tel:${delivery.customerContact}" class="clickable-phone">${delivery.customerContact}</a></td>
+                    <td>${pickupLocationDisplay}${delivery.addressName ? ` (${delivery.addressName})` : delivery.packageDetails ? ` (${delivery.packageDetails})` : ''}</td>
+                    <td>${destinationDisplay}${delivery.destAddressName ? ` (${delivery.destAddressName})` : ''}</td>
                     <td>${delivery.itemSizeDisplay}</td>
                     <td>${delivery.quantity}</td>
                     <td>${delivery.vehicleDisplay}</td>
@@ -7258,27 +6794,6 @@
             } else {
                 showNotification('Delivery not found with this reference number');
             }
-        }
-
-        // View location on map
-        function viewLocationOnMap(address) {
-            // Switch to Greater Male City section
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            document.querySelector('[data-section="greater-male-delivery"]').classList.add('active');
-            
-            dashboardSections.forEach(section => {
-                section.classList.remove('active');
-                if (section.id === 'greater-male-delivery') {
-                    section.classList.add('active');
-                }
-            });
-            
-            // Use map for location viewing
-            toggleMapUsage(true);
-            
-            // Search for the address on the map
-            mapSearchInput.value = address;
-            searchAddress();
         }
 
         // Approve payment
@@ -7518,28 +7033,15 @@
                     </div>
                     <div class="info-item">
                         <div class="info-label">Contact</div>
-                        <div class="info-value">
-                            <a href="tel:${delivery.customerContact}" class="clickable-contact">
-                                ${delivery.customerContact}
-                            </a>
-                        </div>
+                        <div class="info-value"><a href="tel:${delivery.customerContact}" class="clickable-phone">${delivery.customerContact}</a></div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Pickup Location</div>
-                        <div class="info-value">
-                            ${delivery.pickupLocation === 'Map Location' ? 
-                                `<a class="location-link" onclick="viewLocationOnMap('${delivery.addressName}')">${delivery.pickupLocation}</a>` : 
-                                delivery.pickupLocation}
-                            ${delivery.packageDetails ? ` (${delivery.packageDetails})` : delivery.addressName ? ` (${delivery.addressName})` : ''}
-                        </div>
+                        <div class="info-value">${delivery.pickupLocation}${delivery.packageDetails ? ` (${delivery.packageDetails})` : delivery.addressName ? ` (${delivery.addressName})` : ''}</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Delivery Location</div>
-                        <div class="info-value">
-                            ${delivery.deliveryLocation === 'Map Location' ? 
-                                `<a class="location-link" onclick="viewLocationOnMap('${delivery.destinationAddress}')">${delivery.deliveryLocation}</a>` : 
-                                delivery.deliveryLocation}
-                        </div>
+                        <div class="info-value">${delivery.deliveryLocation}</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Weight</div>
@@ -7574,11 +7076,7 @@
                     </div>
                     <div class="info-item">
                         <div class="info-label">Contact</div>
-                        <div class="info-value">
-                            <a href="tel:${delivery.customerContact}" class="clickable-contact">
-                                ${delivery.customerContact}
-                            </a>
-                        </div>
+                        <div class="info-value"><a href="tel:${delivery.customerContact}" class="clickable-phone">${delivery.customerContact}</a></div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Pickup Message</div>
@@ -7618,6 +7116,20 @@
                     </div>
                 `;
             } else if (delivery.type === 'greater-male') {
+                // Create location links for map-based deliveries
+                let pickupLocationDisplay = delivery.pickupLocation;
+                let destinationDisplay = delivery.destination;
+                
+                if (delivery.deliveryMethod === 'map' && delivery.pickupLat && delivery.pickupLng) {
+                    const mapUrl = `https://www.google.com/maps?q=${delivery.pickupLat},${delivery.pickupLng}`;
+                    pickupLocationDisplay = `<a href="${mapUrl}" target="_blank" class="map-link">${delivery.pickupLocation}</a>`;
+                }
+                
+                if (delivery.deliveryMethod === 'map' && delivery.destLat && delivery.destLng) {
+                    const mapUrl = `https://www.google.com/maps?q=${delivery.destLat},${delivery.destLng}`;
+                    destinationDisplay = `<a href="${mapUrl}" target="_blank" class="map-link">${delivery.destination}</a>`;
+                }
+                
                 detailsHTML = `
                     <div class="info-item">
                         <div class="info-label">Reference Number</div>
@@ -7629,29 +7141,15 @@
                     </div>
                     <div class="info-item">
                         <div class="info-label">Contact</div>
-                        <div class="info-value">
-                            <a href="tel:${delivery.customerContact}" class="clickable-contact">
-                                ${delivery.customerContact}
-                            </a>
-                        </div>
+                        <div class="info-value"><a href="tel:${delivery.customerContact}" class="clickable-phone">${delivery.customerContact}</a></div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Pickup Location</div>
-                        <div class="info-value">
-                            ${delivery.pickupLocation === 'Map Location' ? 
-                                `<a class="location-link" onclick="viewLocationOnMap('${delivery.addressName}')">${delivery.pickupLocation}</a>` : 
-                                delivery.pickupLocation}
-                            ${delivery.addressName ? ` (${delivery.addressName})` : delivery.packageDetails ? ` (${delivery.packageDetails})` : ''}
-                        </div>
+                        <div class="info-value">${pickupLocationDisplay}${delivery.addressName ? ` (${delivery.addressName})` : delivery.packageDetails ? ` (${delivery.packageDetails})` : ''}</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Destination</div>
-                        <div class="info-value">
-                            ${delivery.destination === 'Map Location' ? 
-                                `<a class="location-link" onclick="viewLocationOnMap('${delivery.destinationAddress}')">${delivery.destination}</a>` : 
-                                delivery.destination}
-                            ${delivery.boatName ? ` (${delivery.boatName})` : delivery.destinationAddress ? ` (${delivery.destinationAddress})` : ''}
-                        </div>
+                        <div class="info-value">${destinationDisplay}${delivery.destAddressName ? ` (${delivery.destAddressName})` : ''}</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Item Size</div>
@@ -7861,24 +7359,65 @@
             showNotification('Item price updated successfully');
         });
 
-        addDestinationPriceBtn.addEventListener('click', function() {
-            const destinationType = document.getElementById('destinationType').value;
-            const price = parseFloat(document.getElementById('destinationPrice').value);
+        addVehiclePriceBtn.addEventListener('click', function() {
+            const vehicleType = document.getElementById('vehicleType').value;
+            const price = parseFloat(document.getElementById('vehiclePrice').value);
             
             if (isNaN(price)) {
                 showNotification('Please enter a valid price');
                 return;
             }
             
-            // Update destination price
-            greaterMaleDestinationPrices[destinationType] = price;
-            saveGreaterMaleDestinationPrices();
-            loadDestinationPriceList();
+            // Update vehicle price
+            greaterMaleVehiclePrices[vehicleType] = price;
+            saveGreaterMaleVehiclePrices();
+            loadVehiclePriceList();
             
             // Reset form
-            document.getElementById('destinationPrice').value = '';
+            document.getElementById('vehiclePrice').value = '';
             
-            showNotification('Destination price updated successfully');
+            showNotification('Vehicle price updated successfully');
+        });
+
+        // Area price management
+        addAreaPriceBtn.addEventListener('click', function() {
+            const name = areaName.value.trim();
+            const minDistance = parseFloat(areaMinDistance.value);
+            const maxDistance = parseFloat(areaMaxDistance.value);
+            const price = parseFloat(areaPriceValue.value);
+            
+            if (!name || isNaN(minDistance) || isNaN(maxDistance) || isNaN(price)) {
+                showNotification('Please enter valid values for all fields');
+                return;
+            }
+            
+            if (minDistance >= maxDistance) {
+                showNotification('Minimum distance must be less than maximum distance');
+                return;
+            }
+            
+            // Check for overlapping ranges
+            for (let range of areaPriceRanges) {
+                if ((minDistance >= range.min && minDistance <= range.max) || 
+                    (maxDistance >= range.min && maxDistance <= range.max) ||
+                    (minDistance <= range.min && maxDistance >= range.max)) {
+                    showNotification('Distance range overlaps with existing range');
+                    return;
+                }
+            }
+            
+            // Add new price range
+            areaPriceRanges.push({ name: name, min: minDistance, max: maxDistance, price: price });
+            saveAreaPriceRanges();
+            loadAreaPriceList();
+            
+            // Reset form
+            areaName.value = '';
+            areaMinDistance.value = '';
+            areaMaxDistance.value = '';
+            areaPriceValue.value = '';
+            
+            showNotification('Area price range added successfully');
         });
 
         // Load price lists
@@ -7954,23 +7493,50 @@
             });
         }
 
-        function loadDestinationPriceList() {
-            destinationPriceList.innerHTML = '';
+        function loadVehiclePriceList() {
+            vehiclePriceList.innerHTML = '';
             
-            if (Object.keys(greaterMaleDestinationPrices).length === 0) {
-                destinationPriceList.innerHTML = '<div class="empty-message">No destination prices defined</div>';
+            if (Object.keys(greaterMaleVehiclePrices).length === 0) {
+                vehiclePriceList.innerHTML = '<div class="empty-message">No vehicle prices defined</div>';
                 return;
             }
             
-            Object.entries(greaterMaleDestinationPrices).forEach(([destinationType, price]) => {
+            Object.entries(greaterMaleVehiclePrices).forEach(([vehicleType, price]) => {
                 const item = document.createElement('div');
                 item.className = 'price-item';
                 
                 item.innerHTML = `
-                    <div class="price-range">${destinationType}</div>
+                    <div class="price-range">${vehicleType}</div>
                     <div class="price-amount">${price} MVR</div>
                 `;
-                destinationPriceList.appendChild(item);
+                itemPriceList.appendChild(item);
+            });
+        }
+
+        function loadAreaPriceList() {
+            areaPriceList.innerHTML = '';
+            
+            if (areaPriceRanges.length === 0) {
+                areaPriceList.innerHTML = '<div class="empty-message">No area price ranges defined</div>';
+                return;
+            }
+            
+            // Sort price ranges by min distance
+            areaPriceRanges.sort((a, b) => a.min - b.min);
+            
+            areaPriceRanges.forEach((range, index) => {
+                const item = document.createElement('div');
+                item.className = 'area-price-item';
+                item.innerHTML = `
+                    <div class="area-price-name">${range.name}</div>
+                    <div class="area-price-range">${range.min}-${range.max} km</div>
+                    <div class="area-price-amount">${range.price} MVR</div>
+                    <div class="area-price-actions">
+                        <button class="edit-area-price-btn" onclick="editAreaPriceRange(${index})">Edit</button>
+                        <button class="remove-area-price-btn" onclick="removeAreaPriceRange(${index})">Remove</button>
+                    </div>
+                `;
+                areaPriceList.appendChild(item);
             });
         }
 
@@ -7979,7 +7545,8 @@
             loadCargoPriceList();
             loadBoatPriceList();
             loadItemPriceList();
-            loadDestinationPriceList();
+            loadVehiclePriceList();
+            loadAreaPriceList();
         }
 
         // Edit price range
@@ -8009,6 +7576,19 @@
             loadWeightOptions();
         }
 
+        function editAreaPriceRange(index) {
+            const range = areaPriceRanges[index];
+            areaName.value = range.name;
+            areaMinDistance.value = range.min;
+            areaMaxDistance.value = range.max;
+            areaPriceValue.value = range.price;
+            
+            // Remove the range being edited
+            areaPriceRanges.splice(index, 1);
+            saveAreaPriceRanges();
+            loadAreaPriceList();
+        }
+
         // Remove price range
         function removeCargoPriceRange(index) {
             if (confirm('Are you sure you want to remove this price range?')) {
@@ -8030,26 +7610,12 @@
             }
         }
 
-        // Edit area price
-        function editAreaPrice(index) {
-            const area = areaPrices[index];
-            areaName.value = area.name;
-            areaDescription.value = area.description;
-            areaPrice.value = area.price;
-            
-            // Remove the area being edited
-            areaPrices.splice(index, 1);
-            saveAreaPrices();
-            loadAreaPrices();
-        }
-
-        // Remove area price
-        function removeAreaPrice(index) {
-            if (confirm('Are you sure you want to remove this area price?')) {
-                areaPrices.splice(index, 1);
-                saveAreaPrices();
-                loadAreaPrices();
-                showNotification('Area price removed successfully');
+        function removeAreaPriceRange(index) {
+            if (confirm('Are you sure you want to remove this price range?')) {
+                areaPriceRanges.splice(index, 1);
+                saveAreaPriceRanges();
+                loadAreaPriceList();
+                showNotification('Area price range removed successfully');
             }
         }
 
@@ -8334,6 +7900,19 @@
             loadWeightOptions();
         };
 
+        window.editAreaPriceRange = function(index) {
+            const range = areaPriceRanges[index];
+            areaName.value = range.name;
+            areaMinDistance.value = range.min;
+            areaMaxDistance.value = range.max;
+            areaPriceValue.value = range.price;
+            
+            // Remove the range being edited
+            areaPriceRanges.splice(index, 1);
+            saveAreaPriceRanges();
+            loadAreaPriceList();
+        };
+
         window.removeCargoPriceRange = function(index) {
             if (confirm('Are you sure you want to remove this price range?')) {
                 cargoPriceRanges.splice(index, 1);
@@ -8351,6 +7930,15 @@
                 loadBoatPriceList();
                 loadWeightOptions();
                 showNotification('Boat price range removed successfully');
+            }
+        };
+
+        window.removeAreaPriceRange = function(index) {
+            if (confirm('Are you sure you want to remove this price range?')) {
+                areaPriceRanges.splice(index, 1);
+                saveAreaPriceRanges();
+                loadAreaPriceList();
+                showNotification('Area price range removed successfully');
             }
         };
 
@@ -8424,35 +8012,6 @@
             }
         };
 
-        window.editAreaPrice = function(index) {
-            const area = areaPrices[index];
-            areaName.value = area.name;
-            areaDescription.value = area.description;
-            areaPrice.value = area.price;
-            
-            // Remove the area being edited
-            areaPrices.splice(index, 1);
-            saveAreaPrices();
-            loadAreaPrices();
-        };
-
-        window.removeAreaPrice = function(index) {
-            if (confirm('Are you sure you want to remove this area price?')) {
-                areaPrices.splice(index, 1);
-                saveAreaPrices();
-                loadAreaPrices();
-                showNotification('Area price removed successfully');
-            }
-        };
-
-        window.viewLocationOnMap = function(address) {
-            viewLocationOnMap(address);
-        };
-
-        window.selectArea = function(areaName) {
-            selectArea(areaName);
-        };
-
         // Firebase Data Management Functions
         function saveCargoData() {
             if (cargoRef) {
@@ -8505,13 +8064,13 @@
             }
         }
 
-        function saveAreaPrices() {
-            if (areaPricesRef) {
-                areaPricesRef.set(areaPrices)
-                    .then(() => console.log('Area prices saved to Firebase'))
-                    .catch(error => console.error('Error saving area prices:', error));
+        function saveAreaPriceRanges() {
+            if (areaPriceRangesRef) {
+                areaPriceRangesRef.set(areaPriceRanges)
+                    .then(() => console.log('Area price ranges saved to Firebase'))
+                    .catch(error => console.error('Error saving area price ranges:', error));
             } else {
-                localStorage.setItem('areaPrices', JSON.stringify(areaPrices));
+                localStorage.setItem('areaPriceRanges', JSON.stringify(areaPriceRanges));
             }
         }
 
@@ -8566,16 +8125,6 @@
             }
         }
 
-        function saveGreaterMaleDestinationPrices() {
-            if (greaterMaleDestinationPricesRef) {
-                greaterMaleDestinationPricesRef.set(greaterMaleDestinationPrices)
-                    .then(() => console.log('Greater Male City destination prices saved to Firebase'))
-                    .catch(error => console.error('Error saving Greater Male City destination prices:', error));
-            } else {
-                localStorage.setItem('greaterMaleDestinationPrices', JSON.stringify(greaterMaleDestinationPrices));
-            }
-        }
-
         function saveGreaterMaleVehiclePrices() {
             if (greaterMaleVehiclePricesRef) {
                 greaterMaleVehiclePricesRef.set(greaterMaleVehiclePrices)
@@ -8606,703 +8155,244 @@
             }
         }
 
-      // Continue from the loadStoredData function
-function loadStoredData() {
-    // Try Firebase first, then fallback to localStorage
-    if (cargoRef) {
-        // Load cargo deliveries
-        cargoRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                cargoDeliveries = data;
+        // Load data from Firebase or localStorage
+        function loadStoredData() {
+            // Try Firebase first, then fallback to localStorage
+            if (cargoRef) {
+                // Load cargo deliveries
+                cargoRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        cargoDeliveries = data;
+                        loadCargoData();
+                    }
+                });
+                
+                // Load boat deliveries
+                boatRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        boatDeliveries = data;
+                        loadBoatData();
+                    }
+                });
+                
+                // Load Greater Male City deliveries
+                greaterMaleRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        greaterMaleDeliveries = data;
+                        loadGreaterMaleData();
+                    }
+                });
+                
+                // Load cargo price ranges
+                cargoPriceRangesRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        cargoPriceRanges = data;
+                        loadCargoPriceList();
+                        loadWeightOptions();
+                    }
+                });
+                
+                // Load boat price ranges
+                boatPriceRangesRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        boatPriceRanges = data;
+                        loadBoatPriceList();
+                        loadWeightOptions();
+                    }
+                });
+                
+                // Load area price ranges
+                areaPriceRangesRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        areaPriceRanges = data;
+                        loadAreaPriceList();
+                    }
+                });
+                
+                // Load pickup locations
+                pickupLocationsRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        pickupLocations = data;
+                        loadManagementData();
+                    }
+                });
+                
+                // Load destinations
+                destinationsRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        destinations = data;
+                        loadManagementData();
+                    }
+                });
+                
+                // Load item sizes
+                itemSizesRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        itemSizes = data;
+                        loadManagementData();
+                    }
+                });
+                
+                // Load vehicles
+                vehiclesRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        vehicles = data;
+                        loadManagementData();
+                    }
+                });
+                
+                // Load Greater Male City item prices
+                greaterMaleItemPricesRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        greaterMaleItemPrices = data;
+                        loadItemPriceList();
+                    }
+                });
+                
+                // Load Greater Male City vehicle prices
+                greaterMaleVehiclePricesRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        greaterMaleVehiclePrices = data;
+                        loadVehiclePriceList();
+                    }
+                });
+                
+                // Load users
+                usersRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        users = data;
+                    }
+                });
+                
+                // Load notifications
+                notificationsRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        notifications = data;
+                        loadNotifications();
+                        updateNotificationBadge();
+                    }
+                });
+            } else {
+                // Fallback to localStorage
+                const savedCargo = localStorage.getItem('cargoDeliveries');
+                const savedBoat = localStorage.getItem('boatDeliveries');
+                const savedGreaterMale = localStorage.getItem('greaterMaleDeliveries');
+                const savedCargoPrices = localStorage.getItem('cargoPriceRanges');
+                const savedBoatPrices = localStorage.getItem('boatPriceRanges');
+                const savedAreaPrices = localStorage.getItem('areaPriceRanges');
+                const savedPickupLocations = localStorage.getItem('pickupLocations');
+                const savedDestinations = localStorage.getItem('destinations');
+                const savedItemSizes = localStorage.getItem('itemSizes');
+                const savedVehicles = localStorage.getItem('vehicles');
+                const savedGreaterMaleItemPrices = localStorage.getItem('greaterMaleItemPrices');
+                const savedGreaterMaleVehiclePrices = localStorage.getItem('greaterMaleVehiclePrices');
+                const savedUsers = localStorage.getItem('users');
+                const savedNotifications = localStorage.getItem('notifications');
+                
+                if (savedCargo) cargoDeliveries = JSON.parse(savedCargo);
+                if (savedBoat) boatDeliveries = JSON.parse(savedBoat);
+                if (savedGreaterMale) greaterMaleDeliveries = JSON.parse(savedGreaterMale);
+                if (savedCargoPrices) cargoPriceRanges = JSON.parse(savedCargoPrices);
+                if (savedBoatPrices) boatPriceRanges = JSON.parse(savedBoatPrices);
+                if (savedAreaPrices) areaPriceRanges = JSON.parse(savedAreaPrices);
+                if (savedPickupLocations) pickupLocations = JSON.parse(savedPickupLocations);
+                if (savedDestinations) destinations = JSON.parse(savedDestinations);
+                if (savedItemSizes) itemSizes = JSON.parse(savedItemSizes);
+                if (savedVehicles) vehicles = JSON.parse(savedVehicles);
+                if (savedGreaterMaleItemPrices) greaterMaleItemPrices = JSON.parse(savedGreaterMaleItemPrices);
+                if (savedGreaterMaleVehiclePrices) greaterMaleVehiclePrices = JSON.parse(savedGreaterMaleVehiclePrices);
+                if (savedUsers) users = JSON.parse(savedUsers);
+                if (savedNotifications) notifications = JSON.parse(savedNotifications);
+                
                 loadCargoData();
-            }
-        });
-        
-        // Load boat deliveries
-        boatRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                boatDeliveries = data;
                 loadBoatData();
-            }
-        });
-        
-        // Load Greater Male City deliveries
-        greaterMaleRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                greaterMaleDeliveries = data;
                 loadGreaterMaleData();
-            }
-        });
-        
-        // Load cargo price ranges
-        cargoPriceRangesRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                cargoPriceRanges = data;
-                loadWeightOptions();
                 loadCargoPriceList();
-            }
-        });
-        
-        // Load boat price ranges
-        boatPriceRangesRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                boatPriceRanges = data;
-                loadWeightOptions();
                 loadBoatPriceList();
-            }
-        });
-        
-        // Load pickup locations
-        pickupLocationsRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                pickupLocations = data;
+                loadAreaPriceList();
+                loadItemPriceList();
+                loadVehiclePriceList();
+                loadWeightOptions();
                 loadManagementData();
-            }
-        });
-        
-        // Load destinations
-        destinationsRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                destinations = data;
-                loadManagementData();
-            }
-        });
-        
-        // Load item sizes
-        itemSizesRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                itemSizes = data;
-                loadManagementData();
-            }
-        });
-        
-        // Load vehicles
-        vehiclesRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                vehicles = data;
-                loadManagementData();
-            }
-        });
-        
-        // Load area prices
-        areaPricesRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                areaPrices = data;
-                loadAreaPrices();
-            }
-        });
-        
-        // Load Greater Male City item prices
-        greaterMaleItemPricesRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                greaterMaleItemPrices = data;
-                loadPriceLists();
-            }
-        });
-        
-        // Load Greater Male City destination prices
-        greaterMaleDestinationPricesRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                greaterMaleDestinationPrices = data;
-                loadPriceLists();
-            }
-        });
-        
-        // Load Greater Male City vehicle prices
-        greaterMaleVehiclePricesRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                greaterMaleVehiclePrices = data;
-                loadPriceLists();
-            }
-        });
-        
-        // Load users
-        usersRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                users = data;
-                loadUsers();
-            }
-        });
-        
-        // Load notifications
-        notificationsRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                notifications = data;
                 loadNotifications();
                 updateNotificationBadge();
             }
-        });
-        
-    } else {
-        // Fallback to localStorage
-        const storedCargo = localStorage.getItem('cargoDeliveries');
-        if (storedCargo) cargoDeliveries = JSON.parse(storedCargo);
-        
-        const storedBoat = localStorage.getItem('boatDeliveries');
-        if (storedBoat) boatDeliveries = JSON.parse(storedBoat);
-        
-        const storedGreaterMale = localStorage.getItem('greaterMaleDeliveries');
-        if (storedGreaterMale) greaterMaleDeliveries = JSON.parse(storedGreaterMale);
-        
-        const storedCargoPrices = localStorage.getItem('cargoPriceRanges');
-        if (storedCargoPrices) cargoPriceRanges = JSON.parse(storedCargoPrices);
-        
-        const storedBoatPrices = localStorage.getItem('boatPriceRanges');
-        if (storedBoatPrices) boatPriceRanges = JSON.parse(storedBoatPrices);
-        
-        const storedPickupLocations = localStorage.getItem('pickupLocations');
-        if (storedPickupLocations) pickupLocations = JSON.parse(storedPickupLocations);
-        
-        const storedDestinations = localStorage.getItem('destinations');
-        if (storedDestinations) destinations = JSON.parse(storedDestinations);
-        
-        const storedItemSizes = localStorage.getItem('itemSizes');
-        if (storedItemSizes) itemSizes = JSON.parse(storedItemSizes);
-        
-        const storedVehicles = localStorage.getItem('vehicles');
-        if (storedVehicles) vehicles = JSON.parse(storedVehicles);
-        
-        const storedAreaPrices = localStorage.getItem('areaPrices');
-        if (storedAreaPrices) areaPrices = JSON.parse(storedAreaPrices);
-        
-        const storedGreaterMaleItemPrices = localStorage.getItem('greaterMaleItemPrices');
-        if (storedGreaterMaleItemPrices) greaterMaleItemPrices = JSON.parse(storedGreaterMaleItemPrices);
-        
-        const storedGreaterMaleDestinationPrices = localStorage.getItem('greaterMaleDestinationPrices');
-        if (storedGreaterMaleDestinationPrices) greaterMaleDestinationPrices = JSON.parse(storedGreaterMaleDestinationPrices);
-        
-        const storedGreaterMaleVehiclePrices = localStorage.getItem('greaterMaleVehiclePrices');
-        if (storedGreaterMaleVehiclePrices) greaterMaleVehiclePrices = JSON.parse(storedGreaterMaleVehiclePrices);
-        
-        const storedUsers = localStorage.getItem('users');
-        if (storedUsers) users = JSON.parse(storedUsers);
-        
-        const storedNotifications = localStorage.getItem('notifications');
-        if (storedNotifications) notifications = JSON.parse(storedNotifications);
-        
-        // Load UI components
-        loadCargoData();
-        loadBoatData();
-        loadGreaterMaleData();
-        loadWeightOptions();
-        loadPriceLists();
-        loadUsers();
-        loadNotifications();
-        loadManagementData();
-        loadAreaPrices();
-        updateNotificationBadge();
-    }
-}
+        }
 
-// Format date for display
-function formatDate(dateString) {
-    if (!dateString) return 'Not set';
-    
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return 'Invalid date';
-    
-    return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    });
-}
-
-// Show notification toast
-function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    
-    // Add type-based styling
-    if (type === 'error') {
-        notification.style.background = 'rgba(244, 67, 54, 0.9)';
-    } else if (type === 'success') {
-        notification.style.background = 'rgba(76, 175, 80, 0.9)';
-    } else if (type === 'warning') {
-        notification.style.background = 'rgba(255, 152, 0, 0.9)';
-    }
-    
-    notification.innerHTML = `
-        <div class="notification-content">${message}</div>
-        <button class="notification-close">&times;</button>
-    `;
-    
-    // Add to body
-    document.body.appendChild(notification);
-    
-    // Add close event
-    const closeBtn = notification.querySelector('.notification-close');
-    closeBtn.addEventListener('click', function() {
-        notification.classList.add('notification-slide-out');
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
+        // Format date for display
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            try {
+                const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                return new Date(dateString).toLocaleDateString(undefined, options);
+            } catch (e) {
+                return 'Invalid Date';
             }
-        }, 300);
-    });
-    
-    // Auto remove after 5 seconds
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.classList.add('notification-slide-out');
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas fa-check-circle" style="margin-right: 8px;"></i>
+                    ${message}
+                </div>
+                <button class="notification-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Add event listener to close button
+            const closeBtn = notification.querySelector('.notification-close');
+            closeBtn.addEventListener('click', function() {
+                notification.classList.add('notification-slide-out');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            });
+            
+            // Auto remove after 5 seconds
             setTimeout(() => {
                 if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 300);
-        }
-    }, 5000);
-}
-
-// Initialize the application when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Check login status
-    checkLoginStatus();
-    
-    // Initialize date inputs with today's date
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('deliveryDate').value = today;
-    document.getElementById('boatDeliveryDate').value = today;
-    
-    // Initialize date filters with current month
-    const firstDay = new Date();
-    firstDay.setDate(1);
-    startDate.value = firstDay.toISOString().split('T')[0];
-    endDate.value = new Date().toISOString().split('T')[0];
-    
-    // Apply filter button event
-    applyFilter.addEventListener('click', function() {
-        loadRevenueData();
-    });
-    
-    // Reset filter button event
-    resetFilter.addEventListener('click', function() {
-        const firstDay = new Date();
-        firstDay.setDate(1);
-        startDate.value = firstDay.toISOString().split('T')[0];
-        endDate.value = new Date().toISOString().split('T')[0];
-        loadRevenueData();
-    });
-    
-    // Initialize revenue chart
-    initializeRevenueChart();
-});
-
-// Initialize revenue chart
-function initializeRevenueChart() {
-    const ctx = document.getElementById('revenueChart').getContext('2d');
-    
-    // Sample data for the chart
-    const revenueData = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        datasets: [{
-            label: 'Revenue (MVR)',
-            data: [12000, 19000, 15000, 25000, 22000, 30000],
-            backgroundColor: 'rgba(76, 201, 240, 0.2)',
-            borderColor: 'rgba(76, 201, 240, 1)',
-            borderWidth: 2,
-            tension: 0.4,
-            fill: true
-        }]
-    };
-    
-    const config = {
-        type: 'line',
-        data: revenueData,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                title: {
-                    display: true,
-                    text: 'Monthly Revenue Trend'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            return value + ' MVR';
+                    notification.classList.add('notification-slide-out');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            document.body.removeChild(notification);
                         }
-                    }
+                    }, 300);
                 }
-            }
-        },
-    };
-    
-    // Create chart
-    new Chart(ctx, config);
-}
-
-// Export data functionality
-function exportData(type) {
-    let data, filename;
-    
-    switch(type) {
-        case 'cargo':
-            data = cargoDeliveries;
-            filename = 'cargo_deliveries.json';
-            break;
-        case 'boat':
-            data = boatDeliveries;
-            filename = 'boat_deliveries.json';
-            break;
-        case 'greater-male':
-            data = greaterMaleDeliveries;
-            filename = 'greater_male_deliveries.json';
-            break;
-        case 'all':
-            data = {
-                cargo: cargoDeliveries,
-                boat: boatDeliveries,
-                greaterMale: greaterMaleDeliveries,
-                revenue: calculateTotalRevenue()
-            };
-            filename = 'all_delivery_data.json';
-            break;
-    }
-    
-    const dataStr = JSON.stringify(data, null, 2);
-    const dataBlob = new Blob([dataStr], {type: 'application/json'});
-    
-    // Create download link
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(dataBlob);
-    link.download = filename;
-    link.click();
-    
-    showNotification(`Data exported successfully as ${filename}`);
-}
-
-// Calculate total revenue
-function calculateTotalRevenue() {
-    let total = 0;
-    
-    // Add revenue from cargo deliveries
-    cargoDeliveries.forEach(delivery => {
-        if (delivery.paymentStatus === 'paid') {
-            total += delivery.deliveryPrice || delivery.totalPrice || 0;
+            }, 5000);
         }
-    });
-    
-    // Add revenue from boat deliveries
-    boatDeliveries.forEach(delivery => {
-        if (delivery.paymentStatus === 'paid') {
-            total += delivery.deliveryPrice || delivery.totalPrice || 0;
+
+        // Initialize the application
+        function init() {
+            // Check if user is already logged in
+            checkLoginStatus();
+            loadStoredData();
         }
-    });
-    
-    // Add revenue from Greater Male City deliveries
-    greaterMaleDeliveries.forEach(delivery => {
-        if (delivery.paymentStatus === 'paid') {
-            total += delivery.deliveryPrice || delivery.totalPrice || 0;
-        }
-    });
-    
-    return total;
-}
 
-// Search functionality for records
-function searchRecords(type, query) {
-    let results = [];
-    
-    switch(type) {
-        case 'cargo':
-            results = cargoDeliveries.filter(d => 
-                d.customerName.toLowerCase().includes(query.toLowerCase()) ||
-                d.customerContact.includes(query) ||
-                d.referenceNumber.includes(query)
-            );
-            break;
-        case 'boat':
-            results = boatDeliveries.filter(d => 
-                d.customerName.toLowerCase().includes(query.toLowerCase()) ||
-                d.customerContact.includes(query) ||
-                d.referenceNumber.includes(query)
-            );
-            break;
-        case 'greater-male':
-            results = greaterMaleDeliveries.filter(d => 
-                d.customerName.toLowerCase().includes(query.toLowerCase()) ||
-                d.customerContact.includes(query) ||
-                d.referenceNumber.includes(query)
-            );
-            break;
-    }
-    
-    return results;
-}
-
-// Print delivery receipt
-function printReceipt(referenceNumber) {
-    // Find delivery
-    let delivery = cargoDeliveries.find(d => d.referenceNumber === referenceNumber);
-    let type = 'cargo';
-    
-    if (!delivery) {
-        delivery = boatDeliveries.find(d => d.referenceNumber === referenceNumber);
-        type = 'boat';
-    }
-    
-    if (!delivery) {
-        delivery = greaterMaleDeliveries.find(d => d.referenceNumber === referenceNumber);
-        type = 'greater-male';
-    }
-    
-    if (!delivery) {
-        showNotification('Delivery not found');
-        return;
-    }
-    
-    // Create receipt HTML
-    const receiptWindow = window.open('', '_blank');
-    receiptWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Delivery Receipt - ${delivery.referenceNumber}</title>
-            <style>
-                body { font-family: Arial, sans-serif; margin: 20px; }
-                .header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
-                .details { margin-bottom: 20px; }
-                .detail-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
-                .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #666; }
-                @media print { body { margin: 0; } }
-            </style>
-        </head>
-        <body>
-            <div class="header">
-                <h1>EasyCargo Delivery Receipt</h1>
-                <p>Reference: ${delivery.referenceNumber}</p>
-            </div>
-            <div class="details">
-                <div class="detail-row">
-                    <strong>Customer Name:</strong>
-                    <span>${delivery.customerName}</span>
-                </div>
-                <div class="detail-row">
-                    <strong>Contact:</strong>
-                    <span>${delivery.customerContact}</span>
-                </div>
-                <div class="detail-row">
-                    <strong>Type:</strong>
-                    <span>${type.charAt(0).toUpperCase() + type.slice(1)} Delivery</span>
-                </div>
-                <div class="detail-row">
-                    <strong>Status:</strong>
-                    <span>${delivery.status}</span>
-                </div>
-                <div class="detail-row">
-                    <strong>Payment Status:</strong>
-                    <span>${delivery.paymentStatus}</span>
-                </div>
-                <div class="detail-row">
-                    <strong>Total Amount:</strong>
-                    <span>${delivery.deliveryPrice || delivery.totalPrice} MVR</span>
-                </div>
-                <div class="detail-row">
-                    <strong>Created Date:</strong>
-                    <span>${formatDate(delivery.createdAt)}</span>
-                </div>
-                ${delivery.completedAt ? `
-                <div class="detail-row">
-                    <strong>Completed Date:</strong>
-                    <span>${formatDate(delivery.completedAt)}</span>
-                </div>
-                ` : ''}
-            </div>
-            <div class="footer">
-                <p>Thank you for choosing EasyCargo!</p>
-                <p>For inquiries, contact: Cargoconnect@gmail.com</p>
-            </div>
-        </body>
-        </html>
-    `);
-    
-    receiptWindow.document.close();
-    receiptWindow.print();
-}
-
-// Add sample data for demonstration
-function addSampleData() {
-    if (cargoDeliveries.length === 0) {
-        const sampleCargo = {
-            id: Date.now(),
-            customerName: "Ahmed Ali",
-            customerContact: "1234567",
-            pickupLocation: "Post Office",
-            packageDetails: "Electronics",
-            deliveryLocation: "Addu",
-            packageWeight: "2-3 kg",
-            weightMin: 2,
-            weightMax: 3,
-            deliveryPrice: 75,
-            deliveryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-            status: "Order Placed",
-            progress: 1,
-            referenceNumber: "CARGO-" + Date.now().toString().slice(-6),
-            type: "cargo",
-            createdAt: new Date().toISOString(),
-            paymentStatus: "paid",
-            createdBy: "admin@easycargo.com"
-        };
-        cargoDeliveries.push(sampleCargo);
-        saveCargoData();
-    }
-    
-    if (boatDeliveries.length === 0) {
-        const sampleBoat = {
-            id: Date.now() + 1,
-            customerName: "Aishath Mohamed",
-            customerContact: "7654321",
-            pickupMessage: "Call before pickup",
-            boatName: "Sea Explorer",
-            island: "Fuvamulak",
-            packageLabel: "Fragile Items",
-            packageWeight: "4-6 kg",
-            weightMin: 4,
-            weightMax: 6,
-            deliveryPrice: 90,
-            deliveryDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-            status: "Processing",
-            progress: 2,
-            referenceNumber: "BOAT-" + Date.now().toString().slice(-6),
-            type: "boat",
-            createdAt: new Date().toISOString(),
-            paymentStatus: "paid",
-            createdBy: "admin@easycargo.com"
-        };
-        boatDeliveries.push(sampleBoat);
-        saveBoatData();
-    }
-    
-    if (greaterMaleDeliveries.length === 0) {
-        const sampleGreaterMale = {
-            id: Date.now() + 2,
-            customerName: "Mohamed Hussain",
-            customerContact: "9876543",
-            pickupLocation: "Male",
-            addressName: "Marine Drive, Male",
-            destination: "Male to Hulhumale",
-            itemSize: "Large Package",
-            itemSizeDisplay: "Large Package",
-            quantity: 1,
-            vehicle: "Motorcycle",
-            vehicleDisplay: "Motorcycle",
-            totalPrice: 70,
-            status: "In Transit",
-            progress: 3,
-            referenceNumber: "GMC-" + Date.now().toString().slice(-6),
-            type: "greater-male",
-            createdAt: new Date().toISOString(),
-            paymentStatus: "paid",
-            createdBy: "admin@easycargo.com"
-        };
-        greaterMaleDeliveries.push(sampleGreaterMale);
-        saveGreaterMaleData();
-    }
-    
-    showNotification("Sample data added successfully");
-    loadCargoData();
-    loadBoatData();
-    loadGreaterMaleData();
-    loadUserReferences();
-}
-
-// Auto-save functionality
-setInterval(() => {
-    if (currentUser) {
-        saveCargoData();
-        saveBoatData();
-        saveGreaterMaleData();
-        console.log('Data auto-saved at', new Date().toLocaleTimeString());
-    }
-}, 30000); // Auto-save every 30 seconds
-
-// Keyboard shortcuts
-document.addEventListener('keydown', function(e) {
-    // Ctrl+S to save
-    if (e.ctrlKey && e.key === 's') {
-        e.preventDefault();
-        if (currentUser) {
-            saveCargoData();
-            saveBoatData();
-            saveGreaterMaleData();
-            showNotification('All data saved successfully');
-        }
-    }
-    
-    // Ctrl+F to focus search
-    if (e.ctrlKey && e.key === 'f') {
-        e.preventDefault();
-        const searchInput = document.getElementById('searchContact');
-        if (searchInput) {
-            searchInput.focus();
-        }
-    }
-    
-    // Escape to close modals
-    if (e.key === 'Escape') {
-        const activeModals = document.querySelectorAll('.modal-overlay.active');
-        activeModals.forEach(modal => {
-            modal.classList.remove('active');
-        });
-        
-        // Also close panels
-        notificationsPanel.classList.remove('active');
-        referencesPanel.classList.remove('active');
-        sidebar.classList.remove('active');
-        sidebarOverlay.classList.remove('active');
-    }
-});
-
-// Responsive adjustments
-window.addEventListener('resize', function() {
-    // Close sidebar on mobile when switching to desktop
-    if (window.innerWidth >= 769) {
-        sidebar.classList.remove('active');
-        sidebarOverlay.classList.remove('active');
-    }
-});
-
-// Service Worker registration for PWA functionality
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js')
-            .then(function(registration) {
-                console.log('ServiceWorker registration successful');
-            })
-            .catch(function(error) {
-                console.log('ServiceWorker registration failed: ', error);
-            });
-    });
-}
-
-// Export functions to global scope
-window.exportData = exportData;
-window.printReceipt = printReceipt;
-window.addSampleData = addSampleData;
-window.editUser = editUser;
-window.removeUser = removeUser;
+        // Run initialization when page loads
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
