@@ -12,9 +12,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <!-- Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_huqokZn3o6D1a5XenNO0FQmQuOKF8pw&libraries=places,drawing,geometry&callback=initApp" async defer></script>
-    
     <style>
-        @font-face {
+     @font-face {
             font-family: 'Faruma';
             src: url('fonts/Mv_MAG_Round_XBold.otf');
         }
@@ -3239,6 +3238,9 @@
                                         <input type="text" id="mapSearch" placeholder="Search for a location...">
                                     </div>
                                     <button type="button" class="map-btn" id="clearMapBtn">Clear Map</button>
+                                    <button type="button" class="map-btn" id="currentLocationBtn">
+                                        <i class="fas fa-location-arrow"></i> Current Location
+                                    </button>
                                 </div>
                             </div>
                             
@@ -3717,30 +3719,51 @@
                 
                 <!-- Area Price Management -->
                 <div class="price-content" id="area-prices">
-                    <div class="area-price-management">
-                        <h3 class="form-title"><i class="fas fa-map-marked-alt"></i> Set Area Delivery Prices</h3>
+                    <div class="map-price-management">
+                        <h3 class="form-title"><i class="fas fa-map-marked-alt"></i> Set Area Delivery Prices Using Map</h3>
+                        
+                        <div class="form-group">
+                            <label>Select Area on Map</label>
+                            <div class="map-controls">
+                                <div class="map-search">
+                                    <input type="text" id="areaMapSearch" placeholder="Search for an area...">
+                                </div>
+                                <button type="button" class="map-btn" id="clearAreaMapBtn">Clear Map</button>
+                                <button type="button" class="map-btn" id="drawAreaBtn">Draw Area</button>
+                                <button type="button" class="map-btn" id="clearAreaBtn">Clear Area</button>
+                            </div>
+                        </div>
+                        
+                        <div class="map-container" id="areaMap"></div>
+                        
+                        <div class="map-info">
+                            <div class="map-info-item">
+                                <span class="map-info-label">Area Name:</span>
+                                <span class="map-info-value" id="areaMapName">Not selected</span>
+                            </div>
+                            <div class="map-info-item">
+                                <span class="map-info-label">Area Size:</span>
+                                <span class="map-info-distance" id="areaMapSize">0 km²</span>
+                            </div>
+                            <div class="map-info-item">
+                                <span class="map-info-label">Delivery Price:</span>
+                                <span class="map-info-price" id="areaMapPrice">0 MVR</span>
+                            </div>
+                        </div>
                         
                         <div class="area-price-form">
                             <div class="area-price-input-group">
                                 <div class="form-field area-price-input">
-                                    <label for="areaName">Area Name</label>
-                                    <input type="text" id="areaName" placeholder="Enter area name">
+                                    <label for="areaMapNameInput">Area Name</label>
+                                    <input type="text" id="areaMapNameInput" placeholder="Enter area name">
                                 </div>
                                 <div class="form-field area-price-input">
-                                    <label for="areaMinDistance">Minimum Distance (km)</label>
-                                    <input type="number" id="areaMinDistance" placeholder="Min distance" min="0" step="0.1">
-                                </div>
-                                <div class="form-field area-price-input">
-                                    <label for="areaMaxDistance">Maximum Distance (km)</label>
-                                    <input type="number" id="areaMaxDistance" placeholder="Max distance" min="0" step="0.1">
-                                </div>
-                                <div class="form-field area-price-input">
-                                    <label for="areaPriceValue">Price (MVR)</label>
-                                    <input type="number" id="areaPriceValue" placeholder="Price in MVR" min="0" step="0.01">
+                                    <label for="areaMapPriceInput">Price (MVR)</label>
+                                    <input type="number" id="areaMapPriceInput" placeholder="Price in MVR" min="0" step="0.01">
                                 </div>
                             </div>
                             
-                            <button class="add-area-price-btn" id="addAreaPriceBtn">
+                            <button class="add-area-price-btn" id="addAreaMapPriceBtn">
                                 <i class="fas fa-plus"></i> Add Area Price
                             </button>
                         </div>
@@ -4133,6 +4156,13 @@
         let geocoder;
         let autocomplete;
 
+        // Area Map variables
+        let areaMap;
+        let areaAutocomplete;
+        let drawingManager;
+        let selectedArea = null;
+        let areaPolygon = null;
+
         // DOM elements
         const loginContainer = document.getElementById('loginContainer');
         const dashboardContainer = document.getElementById('dashboardContainer');
@@ -4299,6 +4329,7 @@
         const manualDeliveryForm = document.getElementById('manualDeliveryForm');
         const mapSearch = document.getElementById('mapSearch');
         const clearMapBtn = document.getElementById('clearMapBtn');
+        const currentLocationBtn = document.getElementById('currentLocationBtn');
         const mapPickupLocation = document.getElementById('mapPickupLocation');
         const mapDestination = document.getElementById('mapDestination');
         const mapDistance = document.getElementById('mapDistance');
@@ -4308,6 +4339,18 @@
         const mapDestLat = document.getElementById('mapDestLat');
         const mapDestLng = document.getElementById('mapDestLng');
         const mapDistanceValue = document.getElementById('mapDistanceValue');
+
+        // Area Map elements
+        const areaMapSearch = document.getElementById('areaMapSearch');
+        const clearAreaMapBtn = document.getElementById('clearAreaMapBtn');
+        const drawAreaBtn = document.getElementById('drawAreaBtn');
+        const clearAreaBtn = document.getElementById('clearAreaBtn');
+        const areaMapName = document.getElementById('areaMapName');
+        const areaMapSize = document.getElementById('areaMapSize');
+        const areaMapPrice = document.getElementById('areaMapPrice');
+        const areaMapNameInput = document.getElementById('areaMapNameInput');
+        const areaMapPriceInput = document.getElementById('areaMapPriceInput');
+        const addAreaMapPriceBtn = document.getElementById('addAreaMapPriceBtn');
 
         // Firebase Database References
         const cargoRef = database.ref('cargoDeliveries');
@@ -4360,6 +4403,7 @@
         function initApp() {
             // Initialize the map
             initMap();
+            initAreaMap();
             
             // Check login status
             checkLoginStatus();
@@ -4413,6 +4457,108 @@
                 
                 // Place a marker at the searched location
                 placeMarker(place.geometry.location, place.formatted_address);
+            });
+        }
+
+        // Initialize Area Map for Price Management
+        function initAreaMap() {
+            // Default center (Male, Maldives)
+            const male = { lat: 4.1755, lng: 73.5093 };
+            
+            // Create the area map
+            areaMap = new google.maps.Map(document.getElementById('areaMap'), {
+                zoom: 12,
+                center: male,
+                mapTypeControl: true,
+                streetViewControl: true,
+                fullscreenControl: true
+            });
+            
+            // Initialize autocomplete for area search
+            areaAutocomplete = new google.maps.places.Autocomplete(areaMapSearch);
+            areaAutocomplete.bindTo('bounds', areaMap);
+            
+            // Add search listener
+            areaAutocomplete.addListener('place_changed', function() {
+                const place = areaAutocomplete.getPlace();
+                if (!place.geometry) {
+                    window.alert("No details available for input: '" + place.name + "'");
+                    return;
+                }
+                
+                // If the place has a geometry, then present it on a map.
+                if (place.geometry.viewport) {
+                    areaMap.fitBounds(place.geometry.viewport);
+                } else {
+                    areaMap.setCenter(place.geometry.location);
+                    areaMap.setZoom(17);
+                }
+            });
+            
+            // Initialize drawing manager
+            drawingManager = new google.maps.drawing.DrawingManager({
+                drawingMode: null,
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: [
+                        google.maps.drawing.OverlayType.POLYGON
+                    ]
+                },
+                polygonOptions: {
+                    fillColor: '#4cc9f0',
+                    fillOpacity: 0.3,
+                    strokeWeight: 2,
+                    strokeColor: '#1a2a6c',
+                    clickable: true,
+                    editable: true,
+                    zIndex: 1
+                }
+            });
+            
+            drawingManager.setMap(areaMap);
+            
+            // Add event listener for polygon completion
+            google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
+                // Clear any existing polygon
+                if (areaPolygon) {
+                    areaPolygon.setMap(null);
+                }
+                
+                areaPolygon = polygon;
+                selectedArea = polygon;
+                
+                // Calculate area size
+                const area = google.maps.geometry.spherical.computeArea(polygon.getPath());
+                const areaInKm2 = (area / 1000000).toFixed(2);
+                
+                areaMapSize.textContent = areaInKm2 + ' km²';
+                
+                // Get center of polygon for naming
+                const bounds = new google.maps.LatLngBounds();
+                polygon.getPath().forEach(function(latLng) {
+                    bounds.extend(latLng);
+                });
+                
+                const center = bounds.getCenter();
+                
+                // Reverse geocode to get area name
+                geocoder.geocode({ 'location': center }, function(results, status) {
+                    if (status === 'OK') {
+                        if (results[0]) {
+                            const address = results[0].formatted_address;
+                            areaMapName.textContent = address;
+                            areaMapNameInput.value = address;
+                        }
+                    } else {
+                        console.error('Geocoder failed due to: ' + status);
+                        areaMapName.textContent = 'Custom Area';
+                        areaMapNameInput.value = 'Custom Area';
+                    }
+                });
+                
+                // Disable drawing mode
+                drawingManager.setDrawingMode(null);
             });
         }
 
@@ -4479,6 +4625,33 @@
                 
                 // Calculate route and distance
                 calculateRoute();
+            }
+        }
+
+        // Get current location
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const currentLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        
+                        // Place marker at current location
+                        placeMarker(currentLocation, 'Current Location');
+                        
+                        // Center map on current location
+                        map.setCenter(currentLocation);
+                        map.setZoom(15);
+                    },
+                    function(error) {
+                        console.error('Error getting current location:', error);
+                        showNotification('Unable to get current location');
+                    }
+                );
+            } else {
+                showNotification('Geolocation is not supported by this browser');
             }
         }
 
@@ -4587,6 +4760,26 @@
             
             // Update total price
             updateGreaterMalePrice();
+        }
+
+        // Clear area map
+        function clearAreaMap() {
+            if (areaPolygon) {
+                areaPolygon.setMap(null);
+                areaPolygon = null;
+            }
+            
+            selectedArea = null;
+            
+            // Reset area info
+            areaMapName.textContent = 'Not selected';
+            areaMapSize.textContent = '0 km²';
+            areaMapPrice.textContent = '0 MVR';
+            areaMapNameInput.value = '';
+            areaMapPriceInput.value = '';
+            
+            // Disable drawing mode
+            drawingManager.setDrawingMode(null);
         }
 
         // Toggle between login and create account forms
@@ -4942,6 +5135,9 @@
             
             // Initialize management
             initializeManagement();
+            
+            // Initialize area map controls
+            initializeAreaMapControls();
         }
 
         // Initialize price tabs functionality
@@ -4984,6 +5180,9 @@
             
             // Clear map button
             clearMapBtn.addEventListener('click', clearMap);
+            
+            // Current location button
+            currentLocationBtn.addEventListener('click', getCurrentLocation);
             
             // Pickup location change handler
             greaterMalePickupLocation.addEventListener('change', function() {
@@ -5109,6 +5308,74 @@
                 
                 // Show payment modal
                 showPaymentModal(greaterMaleData);
+            });
+        }
+
+        // Initialize area map controls
+        function initializeAreaMapControls() {
+            // Draw area button
+            drawAreaBtn.addEventListener('click', function() {
+                drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+            });
+            
+            // Clear area button
+            clearAreaBtn.addEventListener('click', clearAreaMap);
+            
+            // Clear area map button
+            clearAreaMapBtn.addEventListener('click', clearAreaMap);
+            
+            // Add area price button
+            addAreaMapPriceBtn.addEventListener('click', function() {
+                const name = areaMapNameInput.value.trim();
+                const price = parseFloat(areaMapPriceInput.value);
+                
+                if (!name) {
+                    showNotification('Please enter an area name');
+                    return;
+                }
+                
+                if (isNaN(price) || price <= 0) {
+                    showNotification('Please enter a valid price');
+                    return;
+                }
+                
+                if (!selectedArea) {
+                    showNotification('Please select an area on the map');
+                    return;
+                }
+                
+                // Get area bounds
+                const bounds = new google.maps.LatLngBounds();
+                selectedArea.getPath().forEach(function(latLng) {
+                    bounds.extend(latLng);
+                });
+                
+                // Calculate area size
+                const area = google.maps.geometry.spherical.computeArea(selectedArea.getPath());
+                const areaInKm2 = (area / 1000000).toFixed(2);
+                
+                // Add area price
+                const areaPrice = {
+                    id: Date.now(),
+                    name: name,
+                    bounds: {
+                        north: bounds.getNorthEast().lat(),
+                        south: bounds.getSouthWest().lat(),
+                        east: bounds.getNorthEast().lng(),
+                        west: bounds.getSouthWest().lng()
+                    },
+                    area: areaInKm2,
+                    price: price
+                };
+                
+                areaPriceRanges.push(areaPrice);
+                saveAreaPriceRanges();
+                loadAreaPriceList();
+                
+                // Reset form
+                clearAreaMap();
+                
+                showNotification('Area price added successfully');
             });
         }
 
@@ -7509,7 +7776,7 @@
                     <div class="price-range">${vehicleType}</div>
                     <div class="price-amount">${price} MVR</div>
                 `;
-                itemPriceList.appendChild(item);
+                vehiclePriceList.appendChild(item);
             });
         }
 
