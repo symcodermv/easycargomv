@@ -63,6 +63,109 @@
             overflow-x: hidden;
             display: none;
         }
+        .cargo-type-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .cargo-type-option {
+            flex: 1;
+        }
+        
+        .cargo-type-btn {
+            width: 100%;
+            padding: 12px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .cargo-type-btn:hover {
+            background: #e9e9e9;
+        }
+        
+        .cargo-type-btn.active {
+            background: #4cc9f0;
+            color: white;
+            border-color: #4cc9f0;
+        }
+        
+        .cargo-type-icon {
+            font-size: 20px;
+        }
+        
+        .delivery-time-info {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4cc9f0;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .delivery-time-info.active {
+            display: block;
+        }
+        
+        .delivery-time-label {
+            font-weight: 600;
+            color: #1a2a6c;
+        }
+        
+        .delivery-time-value {
+            color: #4caf50;
+            font-weight: 600;
+        }
+        
+        /* Price management for cargo types */
+        .cargo-type-price-management {
+            display: none;
+        }
+        
+        .cargo-type-price-management.active {
+            display: block;
+        }
+        
+        .price-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        
+        .price-tab {
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .price-tab.active {
+            background: #4cc9f0;
+            color: white;
+        }
+        
+        .price-content {
+            display: none;
+        }
+        
+        .price-content.active {
+            display: block;
+        }
 
         /* Rest of CSS styles would be here */
         /* For brevity, I've omitted the full CSS but included the essential parts */
@@ -3714,85 +3817,108 @@
         
         <!-- Dashboard Content -->
         <div class="dashboard-content">
-            <!-- Cargo Delivery Section -->
-            <div class="dashboard-section active" id="cargo-delivery">
-                <h2 class="section-title">Cargo Delivery Management</h2>
-                
-                <div class="form-container">
-                    <h3 class="form-title"><i class="fas fa-truck"></i> Cargo Delivery Form</h3>
-                    <form id="cargoForm">
-                        <div class="form-group">
-                            <label for="customerName">Customer Name</label>
-                            <input type="text" id="customerName" placeholder="Enter customer name" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="customerContact">Contact Number</label>
-                            <input type="tel" id="customerContact" placeholder="Enter contact number" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="pickupLocation">Pickup Location</label>
-                            <select id="pickupLocation" required>
-                                <option value="">Select Pickup Location</option>
-                                <option value="Post Office">Post Office</option>
-                                <option value="Pickpost">Pickpost</option>
-                                <option value="Redbox">Redbox</option>
-                                <option value="Male">Male</option>
-                                <option value="Hulhumale">Hulhumale</option>
-                                <option value="Phase2">Phase 2</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Package Details Field (for Post Office, Pickpost, Redbox) -->
-                        <div class="location-specific" id="packageDetailsField">
-                            <div class="form-group">
-                                <label for="packageDetails">Package Details</label>
-                                <textarea id="packageDetails" placeholder="Enter package details" rows="3"></textarea>
-                            </div>
-                        </div>
-                        
-                        <!-- Address Field (for Male, Hulhumale, Phase2) -->
-                        <div class="location-specific" id="addressField">
-                            <div class="form-group">
-                                <label for="addressName">Address Name</label>
-                                <input type="text" id="addressName" placeholder="Enter full address">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="deliveryLocation">Delivery Location</label>
-                            <select id="deliveryLocation" required>
-                                <option value="">Select Delivery Location</option>
-                                <option value="Addu">Addu</option>
-                                <option value="Fuvamulak">Fuvamulak</option>
-                                <option value="Laam Gan">Laam Gan</option>
-                                <option value="Kulhudhufushi">Kulhudhufushi</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Package Weight Range (kg)</label>
-                            <div class="weight-options" id="weightOptions">
-                                <!-- Weight options will be populated here -->
-                            </div>
-                        </div>
-                        
-                        <div class="price-display" id="priceDisplay">
-                            <div class="price-label">Delivery Price</div>
-                            <div class="price-value"><span class="currency">MVR</span> <span id="deliveryPrice">0</span></div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="deliveryDate">Expected Delivery Date</label>
-                            <input type="date" id="deliveryDate" required>
-                        </div>
-                        
-                        <button type="submit" class="submit-btn">
-                            <i class="fas fa-save"></i> Save Cargo Delivery
-                        </button>
-                    </form>
+              <!-- Cargo Delivery Section -->
+    <div class="dashboard-section active" id="cargo-delivery">
+        <h2 class="section-title">Cargo Delivery Management</h2>
+        
+        <div class="form-container">
+            <h3 class="form-title"><i class="fas fa-truck"></i> Cargo Delivery Form</h3>
+            <form id="cargoForm">
+                <div class="form-group">
+                    <label for="customerName">Customer Name</label>
+                    <input type="text" id="customerName" placeholder="Enter customer name" required>
                 </div>
+                
+                <div class="form-group">
+                    <label for="customerContact">Contact Number</label>
+                    <input type="tel" id="customerContact" placeholder="Enter contact number" required>
+                </div>
+                
+                <!-- NEW: Cargo Type Selection -->
+                <div class="form-group">
+                    <label>Select Cargo Type</label>
+                    <div class="cargo-type-options" id="cargoTypeOptions">
+                        <div class="cargo-type-option">
+                            <button type="button" class="cargo-type-btn" data-type="normal">
+                                <i class="fas fa-box cargo-type-icon"></i>
+                                <span>Normal Cargo</span>
+                            </button>
+                        </div>
+                        <div class="cargo-type-option">
+                            <button type="button" class="cargo-type-btn" data-type="express">
+                                <i class="fas fa-shipping-fast cargo-type-icon"></i>
+                                <span>Express Cargo</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Delivery Time Information -->
+                <div class="delivery-time-info" id="deliveryTimeInfo">
+                    <span class="delivery-time-label">Estimated Delivery Time:</span>
+                    <span class="delivery-time-value" id="deliveryTimeValue">3-5 business days</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="pickupLocation">Pickup Location</label>
+                    <select id="pickupLocation" required>
+                        <option value="">Select Pickup Location</option>
+                        <option value="Post Office">Post Office</option>
+                        <option value="Pickpost">Pickpost</option>
+                        <option value="Redbox">Redbox</option>
+                        <option value="Male">Male</option>
+                        <option value="Hulhumale">Hulhumale</option>
+                        <option value="Phase2">Phase 2</option>
+                    </select>
+                </div>
+                
+                <!-- Package Details Field (for Post Office, Pickpost, Redbox) -->
+                <div class="location-specific" id="packageDetailsField">
+                    <div class="form-group">
+                        <label for="packageDetails">Package Details</label>
+                        <textarea id="packageDetails" placeholder="Enter package details" rows="3"></textarea>
+                    </div>
+                </div>
+                
+                <!-- Address Field (for Male, Hulhumale, Phase2) -->
+                <div class="location-specific" id="addressField">
+                    <div class="form-group">
+                        <label for="addressName">Address Name</label>
+                        <input type="text" id="addressName" placeholder="Enter full address">
+                    </div>
+                </div>
+                
+                <!-- Dynamic Delivery Locations -->
+                <div class="form-group">
+                    <label for="deliveryLocation">Delivery Location</label>
+                    <select id="deliveryLocation" required>
+                        <option value="">Select Delivery Location</option>
+                        <!-- Delivery locations will be populated dynamically based on cargo type -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Package Weight Range (kg)</label>
+                    <div class="weight-options" id="weightOptions">
+                        <!-- Weight options will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="price-display" id="priceDisplay">
+                    <div class="price-label">Delivery Price</div>
+                    <div class="price-value"><span class="currency">MVR</span> <span id="deliveryPrice">0</span></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="deliveryDate">Expected Delivery Date</label>
+                    <input type="date" id="deliveryDate" required>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-save"></i> Save Cargo Delivery
+                </button>
+            </form>
+        </div>
 
                 <!-- User's Cargo Reference Numbers -->
                 <div class="data-container">
@@ -4258,48 +4384,86 @@
                 <h2 class="section-title">Price Management</h2>
                 
                 <div class="price-tabs">
-                    <button class="price-tab active" data-tab="cargo-prices">Cargo Prices</button>
-                    <button class="price-tab" data-tab="boat-prices">Boat Prices</button>
-                    <button class="price-tab" data-tab="greater-male-prices">Greater Male Prices</button>
-                    <button class="price-tab" data-tab="area-prices">Area Prices</button>
-                </div>
+            <button class="price-tab active" data-tab="normal-cargo-prices">Normal Cargo Prices</button>
+            <button class="price-tab" data-tab="express-cargo-prices">Express Cargo Prices</button>
+            <button class="price-tab" data-tab="boat-prices">Boat Prices</button>
+            <button class="price-tab" data-tab="greater-male-prices">Greater Male Prices</button>
+            <button class="price-tab" data-tab="area-prices">Area Prices</button>
+        </div>
                 
-                <!-- Cargo Price Management -->
-                <div class="price-content active" id="cargo-prices">
-                    <div class="price-management">
-                        <h3 class="form-title"><i class="fas fa-money-bill-wave"></i> Set Cargo Delivery Prices by Weight Range</h3>
-                        
-                        <div class="price-form">
-                            <div class="price-input-group">
-                                <div class="form-field price-input">
-                                    <label for="cargoMinWeight">Minimum Weight (kg)</label>
-                                    <input type="number" id="cargoMinWeight" placeholder="Min weight" min="0" step="0.1">
-                                </div>
-                                <div class="form-field price-input">
-                                    <label for="cargoMaxWeight">Maximum Weight (kg)</label>
-                                    <input type="number" id="cargoMaxWeight" placeholder="Max weight" min="0" step="0.1">
-                                </div>
-                                <div class="form-field price-input">
-                                    <label for="cargoPriceValue">Price (MVR)</label>
-                                    <input type="number" id="cargoPriceValue" placeholder="Price in MVR" min="0" step="0.01">
-                                </div>
-                            </div>
-                            
-                            <!-- Price range validation messages -->
-                            <div class="price-range-validation" id="cargoPriceValidation">
-                                <div class="validation-message" id="cargoValidationMessage"></div>
-                            </div>
-                            
-                            <button class="add-price-btn" id="addCargoPriceBtn">
-                                <i class="fas fa-plus"></i> Add Cargo Price
-                            </button>
+               <!-- Normal Cargo Price Management -->
+        <div class="price-content active" id="normal-cargo-prices">
+            <div class="price-management">
+                <h3 class="form-title"><i class="fas fa-money-bill-wave"></i> Set Normal Cargo Delivery Prices by Weight Range</h3>
+                
+                <div class="price-form">
+                    <div class="price-input-group">
+                        <div class="form-field price-input">
+                            <label for="normalCargoMinWeight">Minimum Weight (kg)</label>
+                            <input type="number" id="normalCargoMinWeight" placeholder="Min weight" min="0" step="0.1">
                         </div>
-                        
-                        <div class="price-list" id="cargoPriceList">
-                            <!-- Cargo price list will be populated here -->
+                        <div class="form-field price-input">
+                            <label for="normalCargoMaxWeight">Maximum Weight (kg)</label>
+                            <input type="number" id="normalCargoMaxWeight" placeholder="Max weight" min="0" step="0.1">
+                        </div>
+                        <div class="form-field price-input">
+                            <label for="normalCargoPriceValue">Price (MVR)</label>
+                            <input type="number" id="normalCargoPriceValue" placeholder="Price in MVR" min="0" step="0.01">
                         </div>
                     </div>
+                    
+                    <!-- Price range validation messages -->
+                    <div class="price-range-validation" id="normalCargoPriceValidation">
+                        <div class="validation-message" id="normalCargoValidationMessage"></div>
+                    </div>
+                    
+                    <button class="add-price-btn" id="addNormalCargoPriceBtn">
+                        <i class="fas fa-plus"></i> Add Normal Cargo Price
+                    </button>
                 </div>
+                
+                <div class="price-list" id="normalCargoPriceList">
+                    <!-- Normal cargo price list will be populated here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Express Cargo Price Management -->
+        <div class="price-content" id="express-cargo-prices">
+            <div class="price-management">
+                <h3 class="form-title"><i class="fas fa-money-bill-wave"></i> Set Express Cargo Delivery Prices by Weight Range</h3>
+                
+                <div class="price-form">
+                    <div class="price-input-group">
+                        <div class="form-field price-input">
+                            <label for="expressCargoMinWeight">Minimum Weight (kg)</label>
+                            <input type="number" id="expressCargoMinWeight" placeholder="Min weight" min="0" step="0.1">
+                        </div>
+                        <div class="form-field price-input">
+                            <label for="expressCargoMaxWeight">Maximum Weight (kg)</label>
+                            <input type="number" id="expressCargoMaxWeight" placeholder="Max weight" min="0" step="0.1">
+                        </div>
+                        <div class="form-field price-input">
+                            <label for="expressCargoPriceValue">Price (MVR)</label>
+                            <input type="number" id="expressCargoPriceValue" placeholder="Price in MVR" min="0" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <!-- Price range validation messages -->
+                    <div class="price-range-validation" id="expressCargoPriceValidation">
+                        <div class="validation-message" id="expressCargoValidationMessage"></div>
+                    </div>
+                    
+                    <button class="add-price-btn" id="addExpressCargoPriceBtn">
+                        <i class="fas fa-plus"></i> Add Express Cargo Price
+                    </button>
+                </div>
+                
+                <div class="price-list" id="expressCargoPriceList">
+                    <!-- Express cargo price list will be populated here -->
+                </div>
+            </div>
+        </div>
                 
                 <!-- Boat Price Management -->
                 <div class="price-content" id="boat-prices">
@@ -4748,6 +4912,20 @@
         let currentDelivery = null;
         let currentDeliveryType = null;
         let currentDeliveryId = null;
+        // Data storage for cargo types
+        let normalCargoPriceRanges = [
+            { min: 0, max: 1, price: 50 },
+            { min: 2, max: 3, price: 75 },
+            { min: 4, max: 6, price: 100 },
+            { min: 7, max: 10, price: 150 }
+        ];
+        
+        let expressCargoPriceRanges = [
+            { min: 0, max: 1, price: 80 },
+            { min: 2, max: 3, price: 120 },
+            { min: 4, max: 6, price: 160 },
+            { min: 7, max: 10, price: 220 }
+        ];
         
         // Separate price ranges for cargo and boat deliveries
         let cargoPriceRanges = [
@@ -4763,6 +4941,7 @@
             { min: 4, max: 6, price: 90 },
             { min: 7, max: 10, price: 130 }
         ];
+
         
         // Greater Male City management data
         let pickupLocations = [
@@ -4838,6 +5017,25 @@
         let circleMarkers = [];
         let lineBetweenCircles = null;
         let circleDrawingMode = false;
+          // Delivery locations for different cargo types
+        let normalCargoLocations = [
+            { name: "Addu", deliveryTime: "3-5 business days" },
+            { name: "Fuvamulak", deliveryTime: "3-5 business days" },
+            { name: "Laam Gan", deliveryTime: "3-5 business days" },
+            { name: "Kulhudhufushi", deliveryTime: "3-5 business days" }
+        ];
+        
+        let expressCargoLocations = [
+            { name: "Addu", deliveryTime: "1-2 business days" },
+            { name: "Fuvamulak", deliveryTime: "1-2 business days" },
+            { name: "Laam Gan", deliveryTime: "1-2 business days" },
+            { name: "Kulhudhufushi", deliveryTime: "1-2 business days" },
+            { name: "Male International Airport", deliveryTime: "Same day" },
+            { name: "Gan International Airport", deliveryTime: "Same day" }
+        ];
+        
+        // Current selected cargo type
+        let currentCargoType = "normal";
 
         // DOM elements
         const loginContainer = document.getElementById('loginContainer');
@@ -4989,6 +5187,22 @@
         const confirmManagement = document.getElementById('confirmManagement');
         const itemType = document.getElementById('itemType');
         const vehicleType = document.getElementById('vehicleType');
+         const cargoTypeOptions = document.getElementById('cargoTypeOptions');
+        const deliveryTimeInfo = document.getElementById('deliveryTimeInfo');
+        const deliveryTimeValue = document.getElementById('deliveryTimeValue');
+        
+        const addNormalCargoPriceBtn = document.getElementById('addNormalCargoPriceBtn');
+        const addExpressCargoPriceBtn = document.getElementById('addExpressCargoPriceBtn');
+        const normalCargoPriceList = document.getElementById('normalCargoPriceList');
+        const expressCargoPriceList = document.getElementById('expressCargoPriceList');
+        const normalCargoMinWeight = document.getElementById('normalCargoMinWeight');
+        const normalCargoMaxWeight = document.getElementById('normalCargoMaxWeight');
+        const normalCargoPriceValue = document.getElementById('normalCargoPriceValue');
+        const expressCargoMinWeight = document.getElementById('expressCargoMinWeight');
+        const expressCargoMaxWeight = document.getElementById('expressCargoMaxWeight');
+        const expressCargoPriceValue = document.getElementById('expressCargoPriceValue');
+        const normalCargoValidationMessage = document.getElementById('normalCargoValidationMessage');
+        const expressCargoValidationMessage = document.getElementById('expressCargoValidationMessage');
         
         // Google Maps elements
         const useMapBtn = document.getElementById('useMapBtn');
@@ -9883,6 +10097,831 @@
         // Run initialization when page loads
         document.addEventListener('DOMContentLoaded', init);
     </script>
+    <script>
+        // Initialize cargo type functionality
+        function initializeCargoTypeFunctionality() {
+            // Add event listeners to cargo type buttons
+            document.querySelectorAll('.cargo-type-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.cargo-type-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Set current cargo type
+                    currentCargoType = this.getAttribute('data-type');
+                    
+                    // Update delivery locations based on cargo type
+                    updateDeliveryLocations();
+                    
+                    // Update delivery time information
+                    updateDeliveryTimeInfo();
+                    
+                    // Update weight options and price display
+                    updateWeightOptions();
+                });
+            });
+            
+            // Set default cargo type
+            document.querySelector('.cargo-type-btn[data-type="normal"]').classList.add('active');
+            updateDeliveryLocations();
+            updateDeliveryTimeInfo();
+            
+            // Add event listeners for price management buttons
+            addNormalCargoPriceBtn.addEventListener('click', addNormalCargoPrice);
+            addExpressCargoPriceBtn.addEventListener('click', addExpressCargoPrice);
+            
+            // Load cargo price lists
+            loadNormalCargoPriceList();
+            loadExpressCargoPriceList();
+        }
+        
+        // Update delivery locations based on cargo type
+        function updateDeliveryLocations() {
+            // Clear existing options
+            deliveryLocation.innerHTML = '<option value="">Select Delivery Location</option>';
+            
+            // Get locations based on cargo type
+            const locations = currentCargoType === "normal" ? normalCargoLocations : expressCargoLocations;
+            
+            // Add new options
+            locations.forEach(location => {
+                const option = document.createElement('option');
+                option.value = location.name;
+                option.textContent = location.name;
+                deliveryLocation.appendChild(option);
+            });
+        }
+        
+        // Update delivery time information
+        function updateDeliveryTimeInfo() {
+            if (currentCargoType === "normal") {
+                deliveryTimeValue.textContent = "3-5 business days";
+                deliveryTimeInfo.classList.add('active');
+            } else if (currentCargoType === "express") {
+                deliveryTimeValue.textContent = "1-2 business days";
+                deliveryTimeInfo.classList.add('active');
+            }
+        }
+        
+        // Update weight options based on cargo type
+        function updateWeightOptions() {
+            weightOptions.innerHTML = '';
+            
+            // Get price ranges based on cargo type
+            const priceRanges = currentCargoType === "normal" ? normalCargoPriceRanges : expressCargoPriceRanges;
+            
+            // Create weight options
+            priceRanges.forEach(range => {
+                const option = document.createElement('div');
+                option.className = 'weight-option';
+                option.innerHTML = `
+                    <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
+                        ${range.min}-${range.max} kg
+                    </button>
+                `;
+                weightOptions.appendChild(option);
+            });
+            
+            // Add event listeners to weight buttons
+            document.querySelectorAll('.weight-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons in the same container
+                    this.parentElement.parentElement.querySelectorAll('.weight-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Update price display
+                    const price = this.getAttribute('data-price');
+                    const priceDisplay = document.getElementById('deliveryPrice');
+                    priceDisplay.textContent = price;
+                });
+            });
+        }
+        
+        // Add normal cargo price
+        function addNormalCargoPrice() {
+            const minWeight = parseFloat(normalCargoMinWeight.value);
+            const maxWeight = parseFloat(normalCargoMaxWeight.value);
+            const price = parseFloat(normalCargoPriceValue.value);
+            
+            if (isNaN(minWeight) || isNaN(maxWeight) || isNaN(price)) {
+                showNotification('Please enter valid values for all fields');
+                return;
+            }
+            
+            if (minWeight >= maxWeight) {
+                showNotification('Minimum weight must be less than maximum weight');
+                return;
+            }
+            
+            // Check for overlapping ranges
+            for (let range of normalCargoPriceRanges) {
+                if ((minWeight >= range.min && minWeight <= range.max) || 
+                    (maxWeight >= range.min && maxWeight <= range.max) ||
+                    (minWeight <= range.min && maxWeight >= range.max)) {
+                    showNotification('Weight range overlaps with existing range');
+                    return;
+                }
+            }
+            
+            // Add new price range
+            normalCargoPriceRanges.push({ min: minWeight, max: maxWeight, price: price });
+            saveNormalCargoPriceRanges();
+            loadNormalCargoPriceList();
+            
+            // Update weight options if normal cargo is selected
+            if (currentCargoType === "normal") {
+                updateWeightOptions();
+            }
+            
+            // Reset form
+            normalCargoMinWeight.value = '';
+            normalCargoMaxWeight.value = '';
+            normalCargoPriceValue.value = '';
+            
+            showNotification('Normal cargo price range added successfully');
+        }
+        
+        // Add express cargo price
+        function addExpressCargoPrice() {
+            const minWeight = parseFloat(expressCargoMinWeight.value);
+            const maxWeight = parseFloat(expressCargoMaxWeight.value);
+            const price = parseFloat(expressCargoPriceValue.value);
+            
+            if (isNaN(minWeight) || isNaN(maxWeight) || isNaN(price)) {
+                showNotification('Please enter valid values for all fields');
+                return;
+            }
+            
+            if (minWeight >= maxWeight) {
+                showNotification('Minimum weight must be less than maximum weight');
+                return;
+            }
+            
+            // Check for overlapping ranges
+            for (let range of expressCargoPriceRanges) {
+                if ((minWeight >= range.min && minWeight <= range.max) || 
+                    (maxWeight >= range.min && maxWeight <= range.max) ||
+                    (minWeight <= range.min && maxWeight >= range.max)) {
+                    showNotification('Weight range overlaps with existing range');
+                    return;
+                }
+            }
+            
+            // Add new price range
+            expressCargoPriceRanges.push({ min: minWeight, max: maxWeight, price: price });
+            saveExpressCargoPriceRanges();
+            loadExpressCargoPriceList();
+            
+            // Update weight options if express cargo is selected
+            if (currentCargoType === "express") {
+                updateWeightOptions();
+            }
+            
+            // Reset form
+            expressCargoMinWeight.value = '';
+            expressCargoMaxWeight.value = '';
+            expressCargoPriceValue.value = '';
+            
+            showNotification('Express cargo price range added successfully');
+        }
+        
+        // Load normal cargo price list
+        function loadNormalCargoPriceList() {
+            normalCargoPriceList.innerHTML = '';
+            
+            if (normalCargoPriceRanges.length === 0) {
+                normalCargoPriceList.innerHTML = '<div class="empty-message">No normal cargo price ranges defined</div>';
+                return;
+            }
+            
+            // Sort price ranges by min weight
+            normalCargoPriceRanges.sort((a, b) => a.min - b.min);
+            
+            normalCargoPriceRanges.forEach((range, index) => {
+                const item = document.createElement('div');
+                item.className = 'price-item';
+                item.innerHTML = `
+                    <div class="price-range">${range.min}-${range.max} kg</div>
+                    <div class="price-amount">${range.price} MVR</div>
+                    <div class="price-actions">
+                        <button class="edit-price-btn" onclick="editNormalCargoPriceRange(${index})">Edit</button>
+                        <button class="remove-price-btn" onclick="removeNormalCargoPriceRange(${index})">Remove</button>
+                    </div>
+                `;
+                normalCargoPriceList.appendChild(item);
+            });
+        }
+        
+        // Load express cargo price list
+        function loadExpressCargoPriceList() {
+            expressCargoPriceList.innerHTML = '';
+            
+            if (expressCargoPriceRanges.length === 0) {
+                expressCargoPriceList.innerHTML = '<div class="empty-message">No express cargo price ranges defined</div>';
+                return;
+            }
+            
+            // Sort price ranges by min weight
+            expressCargoPriceRanges.sort((a, b) => a.min - b.min);
+            
+            expressCargoPriceRanges.forEach((range, index) => {
+                const item = document.createElement('div');
+                item.className = 'price-item';
+                item.innerHTML = `
+                    <div class="price-range">${range.min}-${range.max} kg</div>
+                    <div class="price-amount">${range.price} MVR</div>
+                    <div class="price-actions">
+                        <button class="edit-price-btn" onclick="editExpressCargoPriceRange(${index})">Edit</button>
+                        <button class="remove-price-btn" onclick="removeExpressCargoPriceRange(${index})">Remove</button>
+                    </div>
+                `;
+                expressCargoPriceList.appendChild(item);
+            });
+        }
+        
+        // Edit normal cargo price range
+        function editNormalCargoPriceRange(index) {
+            const range = normalCargoPriceRanges[index];
+            normalCargoMinWeight.value = range.min;
+            normalCargoMaxWeight.value = range.max;
+            normalCargoPriceValue.value = range.price;
+            
+            // Remove the range being edited
+            normalCargoPriceRanges.splice(index, 1);
+            saveNormalCargoPriceRanges();
+            loadNormalCargoPriceList();
+            
+            // Update weight options if normal cargo is selected
+            if (currentCargoType === "normal") {
+                updateWeightOptions();
+            }
+            
+            showNotification('Normal cargo price range loaded for editing');
+        }
+        
+        // Edit express cargo price range
+        function editExpressCargoPriceRange(index) {
+            const range = expressCargoPriceRanges[index];
+            expressCargoMinWeight.value = range.min;
+            expressCargoMaxWeight.value = range.max;
+            expressCargoPriceValue.value = range.price;
+            
+            // Remove the range being edited
+            expressCargoPriceRanges.splice(index, 1);
+            saveExpressCargoPriceRanges();
+            loadExpressCargoPriceList();
+            
+            // Update weight options if express cargo is selected
+            if (currentCargoType === "express") {
+                updateWeightOptions();
+            }
+            
+            showNotification('Express cargo price range loaded for editing');
+        }
+        
+        // Remove normal cargo price range
+        function removeNormalCargoPriceRange(index) {
+            if (confirm('Are you sure you want to remove this price range?')) {
+                normalCargoPriceRanges.splice(index, 1);
+                saveNormalCargoPriceRanges();
+                loadNormalCargoPriceList();
+                
+                // Update weight options if normal cargo is selected
+                if (currentCargoType === "normal") {
+                    updateWeightOptions();
+                }
+                
+                showNotification('Normal cargo price range removed successfully');
+            }
+        }
+        
+        // Remove express cargo price range
+        function removeExpressCargoPriceRange(index) {
+            if (confirm('Are you sure you want to remove this price range?')) {
+                expressCargoPriceRanges.splice(index, 1);
+                saveExpressCargoPriceRanges();
+                loadExpressCargoPriceList();
+                
+                // Update weight options if express cargo is selected
+                if (currentCargoType === "express") {
+                    updateWeightOptions();
+                }
+                
+                showNotification('Express cargo price range removed successfully');
+            }
+        }
+        
+        // Save normal cargo price ranges to Firebase
+        function saveNormalCargoPriceRanges() {
+            // Implementation depends on your Firebase setup
+            // For now, we'll use localStorage as a fallback
+            localStorage.setItem('normalCargoPriceRanges', JSON.stringify(normalCargoPriceRanges));
+        }
+        
+        // Save express cargo price ranges to Firebase
+        function saveExpressCargoPriceRanges() {
+            // Implementation depends on your Firebase setup
+            // For now, we'll use localStorage as a fallback
+            localStorage.setItem('expressCargoPriceRanges', JSON.stringify(expressCargoPriceRanges));
+        }
+        
+        // Load cargo price ranges from storage
+        function loadCargoPriceRanges() {
+            const savedNormalCargoPrices = localStorage.getItem('normalCargoPriceRanges');
+            const savedExpressCargoPrices = localStorage.getItem('expressCargoPriceRanges');
+            
+            if (savedNormalCargoPrices) normalCargoPriceRanges = JSON.parse(savedNormalCargoPrices);
+            if (savedExpressCargoPrices) expressCargoPriceRanges = JSON.parse(savedExpressCargoPrices);
+            
+            loadNormalCargoPriceList();
+            loadExpressCargoPriceList();
+        }
+        
+        // Update cargo form submission to include cargo type
+        cargoForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const selectedWeight = weightOptions.querySelector('.weight-btn.active');
+            if (!selectedWeight) {
+                showNotification('Please select a weight range');
+                return;
+            }
+            
+            const referenceNumber = generateReferenceNumber('CARGO');
+            
+            const cargoData = {
+                customerName: document.getElementById('customerName').value,
+                customerContact: document.getElementById('customerContact').value,
+                cargoType: currentCargoType, // NEW: Include cargo type
+                pickupLocation: document.getElementById('pickupLocation').value,
+                packageDetails: document.getElementById('packageDetails').value,
+                addressName: document.getElementById('addressName').value,
+                deliveryLocation: document.getElementById('deliveryLocation').value,
+                packageWeight: `${selectedWeight.getAttribute('data-min')}-${selectedWeight.getAttribute('data-max')} kg`,
+                weightMin: parseInt(selectedWeight.getAttribute('data-min')),
+                weightMax: parseInt(selectedWeight.getAttribute('data-max')),
+                deliveryPrice: parseInt(selectedWeight.getAttribute('data-price')),
+                deliveryDate: document.getElementById('deliveryDate').value,
+                status: 'Order Placed',
+                progress: 1,
+                id: Date.now(),
+                referenceNumber: referenceNumber,
+                type: 'cargo',
+                createdAt: new Date().toISOString(),
+                paymentStatus: 'under_review',
+                createdBy: currentUser.email
+            };
+            
+            // Show payment modal
+            showPaymentModal(cargoData);
+        });
+        
+        // Update cargo data display to show cargo type
+        function loadCargoData() {
+            cargoTableBody.innerHTML = '';
+            
+            // Filter data based on user role
+            let displayCargoDeliveries = cargoDeliveries;
+            if (currentUser.role !== 'admin') {
+                displayCargoDeliveries = cargoDeliveries.filter(d => d.createdBy === currentUser.email);
+            }
+            
+            if (displayCargoDeliveries.length === 0) {
+                cargoEmptyMessage.style.display = 'block';
+                return;
+            }
+            
+            cargoEmptyMessage.style.display = 'none';
+            
+            displayCargoDeliveries.forEach(delivery => {
+                const statusClass = getStatusClass(delivery.status);
+                const paymentClass = getPaymentStatusClass(delivery.paymentStatus);
+                const paymentText = getPaymentStatusText(delivery.paymentStatus);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <a class="reference-link ${delivery.status === 'Delivered' ? 'reference-completed' : 'reference-pending'}" onclick="trackDeliveryByReference('${delivery.referenceNumber}')">
+                            ${delivery.referenceNumber}
+                        </a>
+                    </td>
+                    <td>${delivery.customerName}</td>
+                    <td><a href="tel:${delivery.customerContact}" class="clickable-phone">${delivery.customerContact}</a></td>
+                    <td>${delivery.cargoType === 'express' ? 'Express' : 'Normal'}</td> <!-- NEW: Show cargo type -->
+                    <td>${delivery.pickupLocation}${delivery.packageDetails ? ` (${delivery.packageDetails})` : delivery.addressName ? ` (${delivery.addressName})` : ''}</td>
+                    <td>${delivery.deliveryLocation}</td>
+                    <td>${delivery.packageWeight}</td>
+                    <td>${delivery.deliveryPrice} MVR</td>
+                    <td>${formatDate(delivery.deliveryDate)}</td>
+                    <td>
+                        <div class="countdown-timer" id="countdown-${delivery.id}">
+                            <div class="countdown-label">Time Remaining</div>
+                            <div class="countdown-display">
+                                <div class="countdown-unit">
+                                    <span class="countdown-value" id="days-${delivery.id}">00</span>
+                                    <span class="countdown-label-small">Days</span>
+                                </div>
+                                <div class="countdown-unit">
+                                    <span class="countdown-value" id="hours-${delivery.id}">00</span>
+                                    <span class="countdown-label-small">Hours</span>
+                                </div>
+                                <div class="countdown-unit">
+                                    <span class="countdown-value" id="minutes-${delivery.id}">00</span>
+                                    <span class="countdown-label-small">Minutes</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="status-badge ${statusClass}">${delivery.status}</span>
+                    </td>
+                    <td>
+                        <span class="status-badge ${paymentClass}">${paymentText}</span>
+                        ${delivery.paymentSlip ? `<br><button class="action-btn view-btn" onclick="viewPaymentSlip('${delivery.paymentSlip}')">View Slip</button>` : ''}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn update-btn" onclick="openStatusModal('cargo', ${delivery.id})">Update</button>
+                            ${currentUser.role === 'admin' && delivery.paymentStatus === 'under_review' ? 
+                                `<button class="action-btn review-btn" onclick="approvePayment('cargo', ${delivery.id})">Approve</button>` : ''}
+                            <button class="action-btn delete-btn" onclick="deleteDelivery('cargo', ${delivery.id})">Delete</button>
+                        </div>
+                    </td>
+                `;
+                cargoTableBody.appendChild(row);
+                
+                // Start countdown timer for this delivery
+                startCountdownTimer(delivery.id, delivery.deliveryDate);
+            });
+        }
+        
+        // Initialize the cargo type functionality when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCargoTypeFunctionality();
+            loadCargoPriceRanges();
+        });
+        
+        // Make functions globally available for onclick attributes
+        window.editNormalCargoPriceRange = editNormalCargoPriceRange;
+        window.editExpressCargoPriceRange = editExpressCargoPriceRange;
+        window.removeNormalCargoPriceRange = removeNormalCargoPriceRange;
+        window.removeExpressCargoPriceRange = removeExpressCargoPriceRange;
+    </script>
+    <script>
+
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+// Firebase Database References for cargo types
+const normalCargoPriceRangesRef = database.ref('normalCargoPriceRanges');
+const expressCargoPriceRangesRef = database.ref('expressCargoPriceRanges');
+
+// Save normal cargo price ranges to Firebase
+function saveNormalCargoPriceRanges() {
+    if (normalCargoPriceRangesRef) {
+        normalCargoPriceRangesRef.set(normalCargoPriceRanges)
+            .then(() => {
+                console.log('Normal cargo price ranges saved to Firebase');
+                showNotification('Normal cargo prices saved successfully');
+            })
+            .catch(error => {
+                console.error('Error saving normal cargo price ranges:', error);
+                showNotification('Error saving normal cargo prices');
+                // Fallback to localStorage
+                localStorage.setItem('normalCargoPriceRanges', JSON.stringify(normalCargoPriceRanges));
+            });
+    } else {
+        // Fallback to localStorage if Firebase not available
+        localStorage.setItem('normalCargoPriceRanges', JSON.stringify(normalCargoPriceRanges));
+        showNotification('Normal cargo prices saved locally');
+    }
+}
+
+// Save express cargo price ranges to Firebase
+function saveExpressCargoPriceRanges() {
+    if (expressCargoPriceRangesRef) {
+        expressCargoPriceRangesRef.set(expressCargoPriceRanges)
+            .then(() => {
+                console.log('Express cargo price ranges saved to Firebase');
+                showNotification('Express cargo prices saved successfully');
+            })
+            .catch(error => {
+                console.error('Error saving express cargo price ranges:', error);
+                showNotification('Error saving express cargo prices');
+                // Fallback to localStorage
+                localStorage.setItem('expressCargoPriceRanges', JSON.stringify(expressCargoPriceRanges));
+            });
+    } else {
+        // Fallback to localStorage if Firebase not available
+        localStorage.setItem('expressCargoPriceRanges', JSON.stringify(expressCargoPriceRanges));
+        showNotification('Express cargo prices saved locally');
+    }
+}
+
+// Load normal cargo price ranges from Firebase
+function loadNormalCargoPriceRanges() {
+    if (normalCargoPriceRangesRef) {
+        normalCargoPriceRangesRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                normalCargoPriceRanges = data;
+                console.log('Normal cargo price ranges loaded from Firebase');
+                loadNormalCargoPriceList();
+                
+                // Update weight options if normal cargo is selected
+                if (currentCargoType === "normal") {
+                    updateWeightOptions();
+                }
+            } else {
+                // If no data in Firebase, try localStorage
+                const savedNormalCargoPrices = localStorage.getItem('normalCargoPriceRanges');
+                if (savedNormalCargoPrices) {
+                    normalCargoPriceRanges = JSON.parse(savedNormalCargoPrices);
+                    loadNormalCargoPriceList();
+                }
+            }
+        }, (error) => {
+            console.error('Error loading normal cargo price ranges from Firebase:', error);
+            // Fallback to localStorage
+            const savedNormalCargoPrices = localStorage.getItem('normalCargoPriceRanges');
+            if (savedNormalCargoPrices) {
+                normalCargoPriceRanges = JSON.parse(savedNormalCargoPrices);
+                loadNormalCargoPriceList();
+            }
+        });
+    } else {
+        // Fallback to localStorage
+        const savedNormalCargoPrices = localStorage.getItem('normalCargoPriceRanges');
+        if (savedNormalCargoPrices) {
+            normalCargoPriceRanges = JSON.parse(savedNormalCargoPrices);
+            loadNormalCargoPriceList();
+        }
+    }
+}
+
+// Load express cargo price ranges from Firebase
+function loadExpressCargoPriceRanges() {
+    if (expressCargoPriceRangesRef) {
+        expressCargoPriceRangesRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                expressCargoPriceRanges = data;
+                console.log('Express cargo price ranges loaded from Firebase');
+                loadExpressCargoPriceList();
+                
+                // Update weight options if express cargo is selected
+                if (currentCargoType === "express") {
+                    updateWeightOptions();
+                }
+            } else {
+                // If no data in Firebase, try localStorage
+                const savedExpressCargoPrices = localStorage.getItem('expressCargoPriceRanges');
+                if (savedExpressCargoPrices) {
+                    expressCargoPriceRanges = JSON.parse(savedExpressCargoPrices);
+                    loadExpressCargoPriceList();
+                }
+            }
+        }, (error) => {
+            console.error('Error loading express cargo price ranges from Firebase:', error);
+            // Fallback to localStorage
+            const savedExpressCargoPrices = localStorage.getItem('expressCargoPriceRanges');
+            if (savedExpressCargoPrices) {
+                expressCargoPriceRanges = JSON.parse(savedExpressCargoPrices);
+                loadExpressCargoPriceList();
+            }
+        });
+    } else {
+        // Fallback to localStorage
+        const savedExpressCargoPrices = localStorage.getItem('expressCargoPriceRanges');
+        if (savedExpressCargoPrices) {
+            expressCargoPriceRanges = JSON.parse(savedExpressCargoPrices);
+            loadExpressCargoPriceList();
+        }
+    }
+}
+
+// Enhanced add normal cargo price function with Firebase
+function addNormalCargoPrice() {
+    const minWeight = parseFloat(normalCargoMinWeight.value);
+    const maxWeight = parseFloat(normalCargoMaxWeight.value);
+    const price = parseFloat(normalCargoPriceValue.value);
+    
+    if (isNaN(minWeight) || isNaN(maxWeight) || isNaN(price)) {
+        showNotification('Please enter valid values for all fields');
+        return;
+    }
+    
+    if (minWeight >= maxWeight) {
+        showNotification('Minimum weight must be less than maximum weight');
+        return;
+    }
+    
+    if (minWeight < 0 || maxWeight < 0 || price < 0) {
+        showNotification('Values cannot be negative');
+        return;
+    }
+    
+    // Check for overlapping ranges
+    for (let range of normalCargoPriceRanges) {
+        if ((minWeight >= range.min && minWeight <= range.max) || 
+            (maxWeight >= range.min && maxWeight <= range.max) ||
+            (minWeight <= range.min && maxWeight >= range.max)) {
+            showNotification('Weight range overlaps with existing range');
+            return;
+        }
+    }
+    
+    // Add new price range
+    normalCargoPriceRanges.push({ min: minWeight, max: maxWeight, price: price });
+    
+    // Save to Firebase
+    saveNormalCargoPriceRanges();
+    
+    // Update UI
+    loadNormalCargoPriceList();
+    
+    // Update weight options if normal cargo is selected
+    if (currentCargoType === "normal") {
+        updateWeightOptions();
+    }
+    
+    // Reset form
+    normalCargoMinWeight.value = '';
+    normalCargoMaxWeight.value = '';
+    normalCargoPriceValue.value = '';
+}
+
+// Enhanced add express cargo price function with Firebase
+function addExpressCargoPrice() {
+    const minWeight = parseFloat(expressCargoMinWeight.value);
+    const maxWeight = parseFloat(expressCargoMaxWeight.value);
+    const price = parseFloat(expressCargoPriceValue.value);
+    
+    if (isNaN(minWeight) || isNaN(maxWeight) || isNaN(price)) {
+        showNotification('Please enter valid values for all fields');
+        return;
+    }
+    
+    if (minWeight >= maxWeight) {
+        showNotification('Minimum weight must be less than maximum weight');
+        return;
+    }
+    
+    if (minWeight < 0 || maxWeight < 0 || price < 0) {
+        showNotification('Values cannot be negative');
+        return;
+    }
+    
+    // Check for overlapping ranges
+    for (let range of expressCargoPriceRanges) {
+        if ((minWeight >= range.min && minWeight <= range.max) || 
+            (maxWeight >= range.min && maxWeight <= range.max) ||
+            (minWeight <= range.min && maxWeight >= range.max)) {
+            showNotification('Weight range overlaps with existing range');
+            return;
+        }
+    }
+    
+    // Add new price range
+    expressCargoPriceRanges.push({ min: minWeight, max: maxWeight, price: price });
+    
+    // Save to Firebase
+    saveExpressCargoPriceRanges();
+    
+    // Update UI
+    loadExpressCargoPriceList();
+    
+    // Update weight options if express cargo is selected
+    if (currentCargoType === "express") {
+        updateWeightOptions();
+    }
+    
+    // Reset form
+    expressCargoMinWeight.value = '';
+    expressCargoMaxWeight.value = '';
+    expressCargoPriceValue.value = '';
+}
+
+// Enhanced remove functions with Firebase
+function removeNormalCargoPriceRange(index) {
+    if (confirm('Are you sure you want to remove this price range?')) {
+        normalCargoPriceRanges.splice(index, 1);
+        
+        // Save to Firebase
+        saveNormalCargoPriceRanges();
+        
+        // Update UI
+        loadNormalCargoPriceList();
+        
+        // Update weight options if normal cargo is selected
+        if (currentCargoType === "normal") {
+            updateWeightOptions();
+        }
+    }
+}
+
+function removeExpressCargoPriceRange(index) {
+    if (confirm('Are you sure you want to remove this price range?')) {
+        expressCargoPriceRanges.splice(index, 1);
+        
+        // Save to Firebase
+        saveExpressCargoPriceRanges();
+        
+        // Update UI
+        loadExpressCargoPriceList();
+        
+        // Update weight options if express cargo is selected
+        if (currentCargoType === "express") {
+            updateWeightOptions();
+        }
+    }
+}
+
+// Enhanced edit functions with Firebase
+function editNormalCargoPriceRange(index) {
+    const range = normalCargoPriceRanges[index];
+    normalCargoMinWeight.value = range.min;
+    normalCargoMaxWeight.value = range.max;
+    normalCargoPriceValue.value = range.price;
+    
+    // Remove the range being edited
+    normalCargoPriceRanges.splice(index, 1);
+    
+    // Save to Firebase
+    saveNormalCargoPriceRanges();
+    
+    // Update UI
+    loadNormalCargoPriceList();
+    
+    // Update weight options if normal cargo is selected
+    if (currentCargoType === "normal") {
+        updateWeightOptions();
+    }
+    
+    showNotification('Normal cargo price range loaded for editing');
+}
+
+function editExpressCargoPriceRange(index) {
+    const range = expressCargoPriceRanges[index];
+    expressCargoMinWeight.value = range.min;
+    expressCargoMaxWeight.value = range.max;
+    expressCargoPriceValue.value = range.price;
+    
+    // Remove the range being edited
+    expressCargoPriceRanges.splice(index, 1);
+    
+    // Save to Firebase
+    saveExpressCargoPriceRanges();
+    
+    // Update UI
+    loadExpressCargoPriceList();
+    
+    // Update weight options if express cargo is selected
+    if (currentCargoType === "express") {
+        updateWeightOptions();
+    }
+    
+    showNotification('Express cargo price range loaded for editing');
+}
+
+// Initialize cargo price management when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCargoTypeFunctionality();
+    loadNormalCargoPriceRanges();
+    loadExpressCargoPriceRanges();
+});
+
+// Also update the setupDashboard function to load cargo prices
+function setupDashboard() {
+    // ... existing setupDashboard code ...
+    
+    // Load cargo prices when dashboard is set up
+    if (currentUser.role === 'admin') {
+        loadNormalCargoPriceRanges();
+        loadExpressCargoPriceRanges();
+    }
+}
+
+// Update the loadStoredData function to include cargo prices
+function loadStoredData() {
+    // ... existing loadStoredData code ...
+    
+    // Load cargo price ranges
+    loadNormalCargoPriceRanges();
+    loadExpressCargoPriceRanges();
+}
+    </script>
+    
    
 </body>
 </html>
