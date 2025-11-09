@@ -9344,138 +9344,7 @@
             }
         }
 
-        // User management
-        addUserBtn.addEventListener('click', function() {
-            const username = document.getElementById('newUsername').value;
-            const email = document.getElementById('newUserEmail').value;
-            const contact = document.getElementById('newUserContact').value;
-            const password = document.getElementById('newUserPassword').value;
-            
-            if (!username || !email || !contact || !password) {
-                showNotification('Please fill all fields');
-                return;
-            }
-            
-            // Check if user already exists
-            if (users.find(user => user.email === email)) {
-                showNotification('User with this email already exists');
-                return;
-            }
-            
-            // Add new user with staff role
-            users.push({
-                id: Date.now(),
-                username: username,
-                email: email,
-                contact: contact,
-                password: password,
-                role: 'staff'
-            });
-            
-            saveUsers();
-            loadUsers();
-            
-            // Reset form
-            document.getElementById('newUsername').value = '';
-            document.getElementById('newUserEmail').value = '';
-            document.getElementById('newUserContact').value = '';
-            document.getElementById('newUserPassword').value = '';
-            
-            showNotification('User added successfully');
-        });
-
-        // Load users
-        function loadUsers() {
-            userList.innerHTML = '';
-            
-            if (users.length === 0) {
-                userList.innerHTML = '<div class="empty-message">No users found</div>';
-                return;
-            }
-            
-            users.forEach((user, index) => {
-                // Don't show current user in the list
-                if (user.email === currentUser.email) return;
-                
-                const item = document.createElement('div');
-                item.className = 'user-item';
-                item.innerHTML = `
-                    <div class="user-details">
-                        <div class="user-name">${user.username}</div>
-                        <div class="user-email">${user.email} • ${user.contact}</div>
-                    </div>
-                    <div>
-                        <span class="user-role ${user.role}">${user.role}</span>
-                    </div>
-                    <div class="user-actions">
-                        <button class="edit-user-btn" onclick="editUser(${index})">Edit</button>
-                        <button class="remove-user-btn" onclick="removeUser(${index})">Remove</button>
-                    </div>
-                `;
-                userList.appendChild(item);
-            });
-        }
-
-        // Edit user
-        function editUser(index) {
-            const user = users[index];
-            editUsername.value = user.username;
-            editUserEmail.value = user.email;
-            editUserContact.value = user.contact;
-            editUserPassword.value = '';
-            editUserRole.value = user.role;
-            
-            editingUserId = index;
-            userEditModal.classList.add('active');
-        }
-
-        // Cancel user edit
-        cancelUserEdit.addEventListener('click', function() {
-            userEditModal.classList.remove('active');
-            editingUserId = null;
-        });
-
-        // Confirm user edit
-        confirmUserEdit.addEventListener('click', function() {
-            if (editingUserId === null) return;
-            
-            const user = users[editingUserId];
-            if (!user) {
-                showNotification('User not found');
-                return;
-            }
-            
-            user.username = editUsername.value;
-            user.email = editUserEmail.value;
-            user.contact = editUserContact.value;
-            user.role = editUserRole.value;
-            
-            // Update password if provided
-            if (editUserPassword.value) {
-                user.password = editUserPassword.value;
-            }
-            
-            saveUsers();
-            loadUsers();
-            userEditModal.classList.remove('active');
-            editingUserId = null;
-            
-            showNotification('User updated successfully');
-        });
-
-        // Remove user
-        function removeUser(index) {
-            if (confirm('Are you sure you want to remove this user?')) {
-                if (index >= 0 && index < users.length) {
-                    users.splice(index, 1);
-                    saveUsers();
-                    loadUsers();
-                    showNotification('User removed successfully');
-                } else {
-                    showNotification('Invalid user index');
-                }
-            }
-        }
+      
 
         // Global functions that are called from HTML onclick attributes
         window.trackDeliveryByReference = function(referenceNumber) {
@@ -10439,7 +10308,140 @@ function loadStoredData() {
     loadExpressCargoPriceRanges();
 }
     </script>
-    
+    <script>
+          // User management
+        addUserBtn.addEventListener('click', function() {
+            const username = document.getElementById('newUsername').value;
+            const email = document.getElementById('newUserEmail').value;
+            const contact = document.getElementById('newUserContact').value;
+            const password = document.getElementById('newUserPassword').value;
+            
+            if (!username || !email || !contact || !password) {
+                showNotification('Please fill all fields');
+                return;
+            }
+            
+            // Check if user already exists
+            if (users.find(user => user.email === email)) {
+                showNotification('User with this email already exists');
+                return;
+            }
+            
+            // Add new user with staff role
+            users.push({
+                id: Date.now(),
+                username: username,
+                email: email,
+                contact: contact,
+                password: password,
+                role: 'staff'
+            });
+            
+            saveUsers();
+            loadUsers();
+            
+            // Reset form
+            document.getElementById('newUsername').value = '';
+            document.getElementById('newUserEmail').value = '';
+            document.getElementById('newUserContact').value = '';
+            document.getElementById('newUserPassword').value = '';
+            
+            showNotification('User added successfully');
+        });
+
+        // Load users
+        function loadUsers() {
+            userList.innerHTML = '';
+            
+            if (users.length === 0) {
+                userList.innerHTML = '<div class="empty-message">No users found</div>';
+                return;
+            }
+            
+            users.forEach((user, index) => {
+                // Don't show current user in the list
+                if (user.email === currentUser.email) return;
+                
+                const item = document.createElement('div');
+                item.className = 'user-item';
+                item.innerHTML = `
+                    <div class="user-details">
+                        <div class="user-name">${user.username}</div>
+                        <div class="user-email">${user.email} • ${user.contact}</div>
+                    </div>
+                    <div>
+                        <span class="user-role ${user.role}">${user.role}</span>
+                    </div>
+                    <div class="user-actions">
+                        <button class="edit-user-btn" onclick="editUser(${index})">Edit</button>
+                        <button class="remove-user-btn" onclick="removeUser(${index})">Remove</button>
+                    </div>
+                `;
+                userList.appendChild(item);
+            });
+        }
+
+        // Edit user
+        function editUser(index) {
+            const user = users[index];
+            editUsername.value = user.username;
+            editUserEmail.value = user.email;
+            editUserContact.value = user.contact;
+            editUserPassword.value = '';
+            editUserRole.value = user.role;
+            
+            editingUserId = index;
+            userEditModal.classList.add('active');
+        }
+
+        // Cancel user edit
+        cancelUserEdit.addEventListener('click', function() {
+            userEditModal.classList.remove('active');
+            editingUserId = null;
+        });
+
+        // Confirm user edit
+        confirmUserEdit.addEventListener('click', function() {
+            if (editingUserId === null) return;
+            
+            const user = users[editingUserId];
+            if (!user) {
+                showNotification('User not found');
+                return;
+            }
+            
+            user.username = editUsername.value;
+            user.email = editUserEmail.value;
+            user.contact = editUserContact.value;
+            user.role = editUserRole.value;
+            
+            // Update password if provided
+            if (editUserPassword.value) {
+                user.password = editUserPassword.value;
+            }
+            
+            saveUsers();
+            loadUsers();
+            userEditModal.classList.remove('active');
+            editingUserId = null;
+            
+            showNotification('User updated successfully');
+        });
+
+        // Remove user
+        function removeUser(index) {
+            if (confirm('Are you sure you want to remove this user?')) {
+                if (index >= 0 && index < users.length) {
+                    users.splice(index, 1);
+                    saveUsers();
+                    loadUsers();
+                    showNotification('User removed successfully');
+                } else {
+                    showNotification('Invalid user index');
+                }
+            }
+        }
+    </script>
   
 </body>
 </html>
