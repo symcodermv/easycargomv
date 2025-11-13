@@ -3460,7 +3460,20 @@
             color: #666;
             font-size: 0.9em;
         }
-        
+        #cargoType {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 100%;
+    background: #fff;
+}
+
+#cargoType:focus {
+    border-color: #4cc9f0;
+    box-shadow: 0 0 0 2px rgba(76, 201, 240, 0.2);
+    outline: none;
+}
         .empty-message {
             text-align: center;
             padding: 20px;
@@ -3730,7 +3743,14 @@
                             <label for="customerContact">Contact Number</label>
                             <input type="tel" id="customerContact" placeholder="Enter contact number" required>
                         </div>
-                        
+                        <div class="form-group">
+    <label for="cargoType">Cargo Type</label>
+    <select id="cargoType" required>
+        <option value="">Select Cargo Type</option>
+        <option value="normal">Normal Cargo</option>
+        <option value="express">Express Cargo</option>
+    </select>
+</div>
                         <div class="form-group">
                             <label for="pickupLocation">Pickup Location</label>
                             <select id="pickupLocation" required>
@@ -4051,36 +4071,37 @@
                     <button class="records-tab" data-tab="greater-male-records">Greater Male Records</button>
                 </div>
                 
-                <!-- Cargo Records -->
-                <div class="records-content active" id="cargo-records">
-                    <div class="data-container">
-                        <h3 class="form-title"><i class="fas fa-list"></i> Cargo Delivery Records</h3>
-                        <div id="cargoData">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Reference</th>
-                                        <th>Customer</th>
-                                        <th>Contact</th>
-                                        <th>Pickup</th>
-                                        <th>Delivery</th>
-                                        <th>Weight</th>
-                                        <th>Price</th>
-                                        <th>Expected Delivery</th>
-                                        <th>Countdown</th>
-                                        <th>Status</th>
-                                        <th>Payment</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="cargoTableBody">
-                                    <!-- Cargo data will be populated here -->
-                                </tbody>
-                            </table>
-                            <div class="empty-message" id="cargoEmptyMessage">No cargo delivery records found</div>
-                        </div>
-                    </div>
-                </div>
+               <!-- Cargo Records -->
+<div class="records-content active" id="cargo-records">
+    <div class="data-container">
+        <h3 class="form-title"><i class="fas fa-list"></i> Cargo Delivery Records</h3>
+        <div id="cargoData">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Reference</th>
+                        <th>Customer</th>
+                        <th>Contact</th>
+                        <th>Cargo Type</th>
+                        <th>Pickup</th>
+                        <th>Delivery</th>
+                        <th>Weight</th>
+                        <th>Price</th>
+                        <th>Expected Delivery</th>
+                        <th>Countdown</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="cargoTableBody">
+                    <!-- Cargo data will be populated here -->
+                </tbody>
+            </table>
+            <div class="empty-message" id="cargoEmptyMessage">No cargo delivery records found</div>
+        </div>
+    </div>
+</div>
                 
                 <!-- Boat Records -->
                 <div class="records-content" id="boat-records">
@@ -4300,6 +4321,49 @@
                         </div>
                     </div>
                 </div>
+                <!-- Add this section to the Price Management section in your HTML -->
+<div class="price-content" id="cargo-type-prices">
+    <div class="price-management">
+        <h3 class="form-title"><i class="fas fa-boxes"></i> Cargo Type Price Management</h3>
+        
+        <div class="price-form">
+            <div class="price-input-group">
+                <div class="form-field price-input">
+                    <label for="cargoTypePrice">Cargo Type</label>
+                    <select id="cargoTypePrice">
+                        <option value="normal">Normal Cargo</option>
+                        <option value="express">Express Cargo</option>
+                    </select>
+                </div>
+                <div class="form-field price-input">
+                    <label for="cargoTypeMinWeight">Minimum Weight (kg)</label>
+                    <input type="number" id="cargoTypeMinWeight" placeholder="Min weight" min="0" step="0.1">
+                </div>
+                <div class="form-field price-input">
+                    <label for="cargoTypeMaxWeight">Maximum Weight (kg)</label>
+                    <input type="number" id="cargoTypeMaxWeight" placeholder="Max weight" min="0" step="0.1">
+                </div>
+                <div class="form-field price-input">
+                    <label for="cargoTypePriceValue">Price (MVR)</label>
+                    <input type="number" id="cargoTypePriceValue" placeholder="Price in MVR" min="0" step="0.01">
+                </div>
+            </div>
+            
+            <!-- Price range validation messages -->
+            <div class="price-range-validation" id="cargoTypePriceValidation">
+                <div class="validation-message" id="cargoTypeValidationMessage"></div>
+            </div>
+            
+            <button class="add-price-btn" id="addCargoTypePriceBtn">
+                <i class="fas fa-plus"></i> Add Cargo Type Price
+            </button>
+        </div>
+        
+        <div class="price-list" id="cargoTypePriceList">
+            <!-- Cargo type price list will be populated here -->
+        </div>
+    </div>
+</div>
                 
                 <!-- Boat Price Management -->
                 <div class="price-content" id="boat-prices">
@@ -4742,20 +4806,14 @@
         const database = firebase.database();
 
         // Data storage
-        let cargoDeliveries = [];
+    
         let boatDeliveries = [];
         let greaterMaleDeliveries = [];
         let currentDelivery = null;
         let currentDeliveryType = null;
         let currentDeliveryId = null;
         
-        // Separate price ranges for cargo and boat deliveries
-        let cargoPriceRanges = [
-            { min: 0, max: 1, price: 50 },
-            { min: 2, max: 3, price: 75 },
-            { min: 4, max: 6, price: 100 },
-            { min: 7, max: 10, price: 150 }
-        ];
+     
         
         let boatPriceRanges = [
             { min: 0, max: 1, price: 40 },
@@ -4894,7 +4952,7 @@
         const boatDeliveryPrice = document.getElementById('boatDeliveryPrice');
         const addCargoPriceBtn = document.getElementById('addCargoPriceBtn');
         const addBoatPriceBtn = document.getElementById('addBoatPriceBtn');
-        const cargoPriceList = document.getElementById('cargoPriceList');
+   
         const boatPriceList = document.getElementById('boatPriceList');
         const copyAccountBtn = document.getElementById('copyAccountBtn');
         const accountNumber = document.getElementById('accountNumber');
@@ -7776,6 +7834,7 @@
             const cargoData = {
                 customerName: document.getElementById('customerName').value,
                 customerContact: document.getElementById('customerContact').value,
+                cargoType: document.getElementById('cargoType').value, // Add this line
                 pickupLocation: document.getElementById('pickupLocation').value,
                 packageDetails: document.getElementById('packageDetails').value,
                 addressName: document.getElementById('addressName').value,
@@ -8012,162 +8071,92 @@
             });
         }
 
-        // Load cargo data into table
-        function loadCargoData() {
-            cargoTableBody.innerHTML = '';
-            
-            // Filter data based on user role
-            let displayCargoDeliveries = cargoDeliveries;
-            if (currentUser.role !== 'admin') {
-                displayCargoDeliveries = cargoDeliveries.filter(d => d.createdBy === currentUser.email);
-            }
-            
-            if (displayCargoDeliveries.length === 0) {
-                cargoEmptyMessage.style.display = 'block';
-                return;
-            }
-            
-            cargoEmptyMessage.style.display = 'none';
-            
-            displayCargoDeliveries.forEach(delivery => {
-                const statusClass = getStatusClass(delivery.status);
-                const paymentClass = getPaymentStatusClass(delivery.paymentStatus);
-                const paymentText = getPaymentStatusText(delivery.paymentStatus);
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <a class="reference-link ${delivery.status === 'Delivered' ? 'reference-completed' : 'reference-pending'}" onclick="trackDeliveryByReference('${delivery.referenceNumber}')">
-                            ${delivery.referenceNumber}
-                        </a>
-                    </td>
-                    <td>${delivery.customerName}</td>
-                    <td><a href="tel:${delivery.customerContact}" class="clickable-phone">${delivery.customerContact}</a></td>
-                    <td>${delivery.pickupLocation}${delivery.packageDetails ? ` (${delivery.packageDetails})` : delivery.addressName ? ` (${delivery.addressName})` : ''}</td>
-                    <td>${delivery.deliveryLocation}</td>
-                    <td>${delivery.packageWeight}</td>
-                    <td>${delivery.deliveryPrice} MVR</td>
-                    <td>${formatDate(delivery.deliveryDate)}</td>
-                    <td>
-                        <div class="countdown-timer" id="countdown-${delivery.id}">
-                            <div class="countdown-label">Time Remaining</div>
-                            <div class="countdown-display">
-                                <div class="countdown-unit">
-                                    <span class="countdown-value" id="days-${delivery.id}">00</span>
-                                    <span class="countdown-label-small">Days</span>
-                                </div>
-                                <div class="countdown-unit">
-                                    <span class="countdown-value" id="hours-${delivery.id}">00</span>
-                                    <span class="countdown-label-small">Hours</span>
-                                </div>
-                                <div class="countdown-unit">
-                                    <span class="countdown-value" id="minutes-${delivery.id}">00</span>
-                                    <span class="countdown-label-small">Minutes</span>
-                                </div>
-                            </div>
+      // Load cargo data into table
+function loadCargoData() {
+    cargoTableBody.innerHTML = '';
+    
+    // Filter data based on user role
+    let displayCargoDeliveries = cargoDeliveries;
+    if (currentUser.role !== 'admin') {
+        displayCargoDeliveries = cargoDeliveries.filter(d => d.createdBy === currentUser.email);
+    }
+    
+    if (displayCargoDeliveries.length === 0) {
+        cargoEmptyMessage.style.display = 'block';
+        return;
+    }
+    
+    cargoEmptyMessage.style.display = 'none';
+    
+    displayCargoDeliveries.forEach(delivery => {
+        const statusClass = getStatusClass(delivery.status);
+        const paymentClass = getPaymentStatusClass(delivery.paymentStatus);
+        const paymentText = getPaymentStatusText(delivery.paymentStatus);
+        
+        // Get cargo type display text
+        const cargoType = delivery.cargoType || 'normal';
+        const cargoTypeDisplay = cargoType === 'express' ? 'Express' : 'Normal';
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>
+                <a class="reference-link ${delivery.status === 'Delivered' ? 'reference-completed' : 'reference-pending'}" onclick="trackDeliveryByReference('${delivery.referenceNumber}')">
+                    ${delivery.referenceNumber}
+                </a>
+            </td>
+            <td>${delivery.customerName}</td>
+            <td><a href="tel:${delivery.customerContact}" class="clickable-phone">${delivery.customerContact}</a></td>
+            <td>
+                <span class="status-badge ${cargoType === 'express' ? 'status-processing' : 'status-placed'}">
+                    ${cargoTypeDisplay}
+                </span>
+            </td>
+            <td>${delivery.pickupLocation}${delivery.packageDetails ? ` (${delivery.packageDetails})` : delivery.addressName ? ` (${delivery.addressName})` : ''}</td>
+            <td>${delivery.deliveryLocation}</td>
+            <td>${delivery.packageWeight}</td>
+            <td>${delivery.deliveryPrice} MVR</td>
+            <td>${formatDate(delivery.deliveryDate)}</td>
+            <td>
+                <div class="countdown-timer" id="countdown-${delivery.id}">
+                    <div class="countdown-label">Time Remaining</div>
+                    <div class="countdown-display">
+                        <div class="countdown-unit">
+                            <span class="countdown-value" id="days-${delivery.id}">00</span>
+                            <span class="countdown-label-small">Days</span>
                         </div>
-                    </td>
-                    <td>
-                        <span class="status-badge ${statusClass}">${delivery.status}</span>
-                    </td>
-                    <td>
-                        <span class="status-badge ${paymentClass}">${paymentText}</span>
-                        ${delivery.paymentSlip ? `<br><button class="action-btn view-btn" onclick="viewPaymentSlip('${delivery.paymentSlip}')">View Slip</button>` : ''}
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="action-btn update-btn" onclick="openStatusModal('cargo', ${delivery.id})">Update</button>
-                            ${currentUser.role === 'admin' && delivery.paymentStatus === 'under_review' ? 
-                                `<button class="action-btn review-btn" onclick="approvePayment('cargo', ${delivery.id})">Approve</button>` : ''}
-                            <button class="action-btn delete-btn" onclick="deleteDelivery('cargo', ${delivery.id})">Delete</button>
+                        <div class="countdown-unit">
+                            <span class="countdown-value" id="hours-${delivery.id}">00</span>
+                            <span class="countdown-label-small">Hours</span>
                         </div>
-                    </td>
-                `;
-                cargoTableBody.appendChild(row);
-                
-                // Start countdown timer for this delivery
-                startCountdownTimer(delivery.id, delivery.deliveryDate);
-            });
-        }
-
-        // Load boat data into table
-        function loadBoatData() {
-            boatTableBody.innerHTML = '';
-            
-            // Filter data based on user role
-            let displayBoatDeliveries = boatDeliveries;
-            if (currentUser.role !== 'admin') {
-                displayBoatDeliveries = boatDeliveries.filter(d => d.createdBy === currentUser.email);
-            }
-            
-            if (displayBoatDeliveries.length === 0) {
-                boatEmptyMessage.style.display = 'block';
-                return;
-            }
-            
-            boatEmptyMessage.style.display = 'none';
-            
-            displayBoatDeliveries.forEach(delivery => {
-                const statusClass = getStatusClass(delivery.status);
-                const paymentClass = getPaymentStatusClass(delivery.paymentStatus);
-                const paymentText = getPaymentStatusText(delivery.paymentStatus);
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <a class="reference-link ${delivery.status === 'Delivered' ? 'reference-completed' : 'reference-pending'}" onclick="trackDeliveryByReference('${delivery.referenceNumber}')">
-                            ${delivery.referenceNumber}
-                        </a>
-                    </td>
-                    <td>${delivery.customerName}</td>
-                    <td><a href="tel:${delivery.customerContact}" class="clickable-phone">${delivery.customerContact}</a></td>
-                    <td>${delivery.boatName}</td>
-                    <td>${delivery.island}</td>
-                    <td>${delivery.packageLabel}</td>
-                    <td>${delivery.packageWeight}</td>
-                    <td>${delivery.deliveryPrice} MVR</td>
-                    <td>${formatDate(delivery.deliveryDate)}</td>
-                    <td>
-                        <div class="countdown-timer" id="countdown-${delivery.id}">
-                            <div class="countdown-label">Time Remaining</div>
-                            <div class="countdown-display">
-                                <div class="countdown-unit">
-                                    <span class="countdown-value" id="days-${delivery.id}">00</span>
-                                    <span class="countdown-label-small">Days</span>
-                                </div>
-                                <div class="countdown-unit">
-                                    <span class="countdown-value" id="hours-${delivery.id}">00</span>
-                                    <span class="countdown-label-small">Hours</span>
-                                </div>
-                                <div class="countdown-unit">
-                                    <span class="countdown-value" id="minutes-${delivery.id}">00</span>
-                                    <span class="countdown-label-small">Minutes</span>
-                                </div>
-                            </div>
+                        <div class="countdown-unit">
+                            <span class="countdown-value" id="minutes-${delivery.id}">00</span>
+                            <span class="countdown-label-small">Minutes</span>
                         </div>
-                    </td>
-                    <td>
-                        <span class="status-badge ${statusClass}">${delivery.status}</span>
-                    </td>
-                    <td>
-                        <span class="status-badge ${paymentClass}">${paymentText}</span>
-                        ${delivery.paymentSlip ? `<br><button class="action-btn view-btn" onclick="viewPaymentSlip('${delivery.paymentSlip}')">View Slip</button>` : ''}
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="action-btn update-btn" onclick="openStatusModal('boat', ${delivery.id})">Update</button>
-                            ${currentUser.role === 'admin' && delivery.paymentStatus === 'under_review' ? 
-                                `<button class="action-btn review-btn" onclick="approvePayment('boat', ${delivery.id})">Approve</button>` : ''}
-                            <button class="action-btn delete-btn" onclick="deleteDelivery('boat', ${delivery.id})">Delete</button>
-                        </div>
-                    </td>
-                `;
-                boatTableBody.appendChild(row);
-                
-                // Start countdown timer for this delivery
-                startCountdownTimer(delivery.id, delivery.deliveryDate);
-            });
-        }
+                    </div>
+                </div>
+            </td>
+            <td>
+                <span class="status-badge ${statusClass}">${delivery.status}</span>
+            </td>
+            <td>
+                <span class="status-badge ${paymentClass}">${paymentText}</span>
+                ${delivery.paymentSlip ? `<br><button class="action-btn view-btn" onclick="viewPaymentSlip('${delivery.paymentSlip}')">View Slip</button>` : ''}
+            </td>
+            <td>
+                <div class="action-buttons">
+                    <button class="action-btn update-btn" onclick="openStatusModal('cargo', ${delivery.id})">Update</button>
+                    ${currentUser.role === 'admin' && delivery.paymentStatus === 'under_review' ? 
+                        `<button class="action-btn review-btn" onclick="approvePayment('cargo', ${delivery.id})">Approve</button>` : ''}
+                    <button class="action-btn delete-btn" onclick="deleteDelivery('cargo', ${delivery.id})">Delete</button>
+                </div>
+            </td>
+        `;
+        cargoTableBody.appendChild(row);
+        
+        // Start countdown timer for this delivery
+        startCountdownTimer(delivery.id, delivery.deliveryDate);
+    });
+}
 
         // Load Greater Male City data into table
         function loadGreaterMaleData() {
@@ -9883,6 +9872,327 @@
         // Run initialization when page loads
         document.addEventListener('DOMContentLoaded', init);
     </script>
-   
+ <script>
+// Cargo type price ranges storage
+let cargoTypePriceRanges = {
+    normal: [
+        { min: 0, max: 1, price: 50 },
+        { min: 2, max: 3, price: 75 },
+        { min: 4, max: 6, price: 100 },
+        { min: 7, max: 10, price: 150 }
+    ],
+    express: [
+        { min: 0, max: 1, price: 75 },
+        { min: 2, max: 3, price: 100 },
+        { min: 4, max: 6, price: 125 },
+        { min: 7, max: 10, price: 175 }
+    ]
+};
+
+// Firebase reference for cargo type prices
+const cargoTypePriceRangesRef = database.ref('cargoTypePriceRanges');
+
+// DOM elements for cargo type price management
+const cargoTypePrice = document.getElementById('cargoTypePrice');
+const cargoTypeMinWeight = document.getElementById('cargoTypeMinWeight');
+const cargoTypeMaxWeight = document.getElementById('cargoTypeMaxWeight');
+const cargoTypePriceValue = document.getElementById('cargoTypePriceValue');
+const addCargoTypePriceBtn = document.getElementById('addCargoTypePriceBtn');
+const cargoTypePriceList = document.getElementById('cargoTypePriceList');
+const cargoTypeValidationMessage = document.getElementById('cargoTypeValidationMessage');
+
+// Add cargo type price tab to the price tabs
+function initializeCargoTypePriceTab() {
+    // Add cargo type price tab to the price tabs
+    const priceTabsContainer = document.querySelector('.price-tabs');
+    const cargoTypeTab = document.createElement('button');
+    cargoTypeTab.className = 'price-tab';
+    cargoTypeTab.setAttribute('data-tab', 'cargo-type-prices');
+    cargoTypeTab.textContent = 'Cargo Type Prices';
+    priceTabsContainer.appendChild(cargoTypeTab);
+    
+    // Add event listener for the new tab
+    cargoTypeTab.addEventListener('click', function() {
+        const targetTab = this.getAttribute('data-tab');
+        
+        // Update active tab
+        document.querySelectorAll('.price-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Show target content
+        document.querySelectorAll('.price-content').forEach(content => {
+            content.classList.remove('active');
+            if (content.id === targetTab) {
+                content.classList.add('active');
+            }
+        });
+    });
+}
+
+// Load cargo type price ranges
+function loadCargoTypePriceRanges() {
+    if (cargoTypePriceRangesRef) {
+        cargoTypePriceRangesRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                cargoTypePriceRanges = data;
+                loadCargoTypePriceList();
+                // Update cargo form weight options when data loads
+                updateCargoFormWeightOptions();
+            }
+        });
+    } else {
+        // Fallback to localStorage
+        const savedCargoTypePrices = localStorage.getItem('cargoTypePriceRanges');
+        if (savedCargoTypePrices) {
+            cargoTypePriceRanges = JSON.parse(savedCargoTypePrices);
+            loadCargoTypePriceList();
+            updateCargoFormWeightOptions();
+        }
+    }
+}
+
+// Save cargo type price ranges to Firebase
+function saveCargoTypePriceRanges() {
+    if (cargoTypePriceRangesRef) {
+        cargoTypePriceRangesRef.set(cargoTypePriceRanges)
+            .then(() => console.log('Cargo type price ranges saved to Firebase'))
+            .catch(error => console.error('Error saving cargo type price ranges:', error));
+    } else {
+        localStorage.setItem('cargoTypePriceRanges', JSON.stringify(cargoTypePriceRanges));
+    }
+}
+
+// Load cargo type price list
+function loadCargoTypePriceList() {
+    if (!cargoTypePriceList) return;
+    
+    cargoTypePriceList.innerHTML = '';
+    
+    const selectedType = cargoTypePrice ? cargoTypePrice.value : 'normal';
+    const priceRanges = cargoTypePriceRanges[selectedType] || [];
+    
+    if (priceRanges.length === 0) {
+        cargoTypePriceList.innerHTML = '<div class="empty-message">No price ranges defined for this cargo type</div>';
+        return;
+    }
+    
+    // Sort price ranges by min weight
+    priceRanges.sort((a, b) => a.min - b.min);
+    
+    priceRanges.forEach((range, index) => {
+        const item = document.createElement('div');
+        item.className = 'price-item';
+        item.innerHTML = `
+            <div class="price-range">${range.min}-${range.max} kg</div>
+            <div class="price-amount">${range.price} MVR</div>
+            <div class="price-actions">
+                <button class="edit-price-btn" onclick="editCargoTypePriceRange(${index})">Edit</button>
+                <button class="remove-price-btn" onclick="removeCargoTypePriceRange(${index})">Remove</button>
+            </div>
+        `;
+        cargoTypePriceList.appendChild(item);
+    });
+}
+
+// Add cargo type price range
+if (addCargoTypePriceBtn) {
+    addCargoTypePriceBtn.addEventListener('click', function() {
+        const selectedType = cargoTypePrice.value;
+        const minWeight = parseFloat(cargoTypeMinWeight.value);
+        const maxWeight = parseFloat(cargoTypeMaxWeight.value);
+        const price = parseFloat(cargoTypePriceValue.value);
+        
+        if (isNaN(minWeight) || isNaN(maxWeight) || isNaN(price)) {
+            showNotification('Please enter valid values for all fields');
+            return;
+        }
+        
+        if (minWeight >= maxWeight) {
+            showNotification('Minimum weight must be less than maximum weight');
+            return;
+        }
+        
+        // Check for overlapping ranges
+        const priceRanges = cargoTypePriceRanges[selectedType] || [];
+        for (let range of priceRanges) {
+            if ((minWeight >= range.min && minWeight <= range.max) || 
+                (maxWeight >= range.min && maxWeight <= range.max) ||
+                (minWeight <= range.min && maxWeight >= range.max)) {
+                showNotification('Weight range overlaps with existing range');
+                return;
+            }
+        }
+        
+        // Add new price range
+        if (!cargoTypePriceRanges[selectedType]) {
+            cargoTypePriceRanges[selectedType] = [];
+        }
+        
+        cargoTypePriceRanges[selectedType].push({ min: minWeight, max: maxWeight, price: price });
+        saveCargoTypePriceRanges();
+        loadCargoTypePriceList();
+        updateCargoFormWeightOptions();
+        
+        // Reset form
+        cargoTypeMinWeight.value = '';
+        cargoTypeMaxWeight.value = '';
+        cargoTypePriceValue.value = '';
+        
+        showNotification('Cargo type price range added successfully');
+    });
+}
+
+// Edit cargo type price range
+window.editCargoTypePriceRange = function(index) {
+    const selectedType = cargoTypePrice.value;
+    const priceRanges = cargoTypePriceRanges[selectedType] || [];
+    const range = priceRanges[index];
+    
+    if (!range) return;
+    
+    cargoTypeMinWeight.value = range.min;
+    cargoTypeMaxWeight.value = range.max;
+    cargoTypePriceValue.value = range.price;
+    
+    // Remove the range being edited
+    priceRanges.splice(index, 1);
+    saveCargoTypePriceRanges();
+    loadCargoTypePriceList();
+    updateCargoFormWeightOptions();
+};
+
+// Remove cargo type price range
+window.removeCargoTypePriceRange = function(index) {
+    if (confirm('Are you sure you want to remove this price range?')) {
+        const selectedType = cargoTypePrice.value;
+        const priceRanges = cargoTypePriceRanges[selectedType] || [];
+        
+        priceRanges.splice(index, 1);
+        saveCargoTypePriceRanges();
+        loadCargoTypePriceList();
+        updateCargoFormWeightOptions();
+        showNotification('Cargo type price range removed successfully');
+    }
+};
+
+// Update cargo type price list when cargo type changes
+if (cargoTypePrice) {
+    cargoTypePrice.addEventListener('change', function() {
+        loadCargoTypePriceList();
+    });
+}
+
+// Update the cargo form weight options based on selected cargo type
+function updateCargoFormWeightOptions() {
+    const weightOptions = document.getElementById('weightOptions');
+    if (!weightOptions) return;
+    
+    // Clear existing weight options
+    weightOptions.innerHTML = '';
+    
+    // Get selected cargo type from the cargo form
+    const cargoTypeSelect = document.getElementById('cargoType');
+    const selectedCargoType = cargoTypeSelect ? cargoTypeSelect.value : 'normal';
+    
+    const priceRanges = cargoTypePriceRanges[selectedCargoType] || cargoTypePriceRanges.normal;
+    
+    // Load the appropriate weight options
+    priceRanges.forEach(range => {
+        const option = document.createElement('div');
+        option.className = 'weight-option';
+        option.innerHTML = `
+            <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
+                ${range.min}-${range.max} kg
+            </button>
+        `;
+        weightOptions.appendChild(option);
+    });
+    
+    // Add event listeners to the new weight buttons
+    document.querySelectorAll('#weightOptions .weight-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active class from all buttons
+            document.querySelectorAll('#weightOptions .weight-btn').forEach(b => {
+                b.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Update price display
+            const price = this.getAttribute('data-price');
+            const deliveryPrice = document.getElementById('deliveryPrice');
+            if (deliveryPrice) {
+                deliveryPrice.textContent = price;
+            }
+        });
+    });
+    
+    // Reset price display
+    const deliveryPrice = document.getElementById('deliveryPrice');
+    if (deliveryPrice) {
+        deliveryPrice.textContent = '0';
+    }
+    
+    // Clear any active selection
+    document.querySelectorAll('#weightOptions .weight-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+}
+
+// Update weight options when cargo type changes in the form
+document.addEventListener('DOMContentLoaded', function() {
+    const cargoTypeSelect = document.getElementById('cargoType');
+    if (cargoTypeSelect) {
+        cargoTypeSelect.addEventListener('change', function() {
+            updateCargoFormWeightOptions();
+        });
+    }
+});
+
+// Initialize cargo type price management
+function initializeCargoTypePriceManagement() {
+    initializeCargoTypePriceTab();
+    loadCargoTypePriceRanges();
+    
+    // Set default cargo type
+    if (cargoTypePrice) {
+        cargoTypePrice.value = 'normal';
+        loadCargoTypePriceList();
+    }
+    
+    // Initialize cargo form with default weight options
+    updateCargoFormWeightOptions();
+}
+
+// Call this function during your app initialization
+// Add this to your existing initialization code
+initializeCargoTypePriceManagement();
+
+// Also call updateCargoFormWeightOptions when the cargo delivery section becomes active
+document.addEventListener('DOMContentLoaded', function() {
+    // Watch for section changes to update weight options
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                const target = mutation.target;
+                if (target.id === 'cargo-delivery' && target.classList.contains('active')) {
+                    // Cargo delivery section is now active, update weight options
+                    setTimeout(updateCargoFormWeightOptions, 100);
+                }
+            }
+        });
+    });
+    
+    const cargoSection = document.getElementById('cargo-delivery');
+    if (cargoSection) {
+        observer.observe(cargoSection, { attributes: true });
+    }
+});
+</script>
+<script>
+    
+</script>
 </body>
 </html>
