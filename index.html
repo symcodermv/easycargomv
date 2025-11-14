@@ -15,6 +15,41 @@
     <!-- Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_huqokZn3o6D1a5XenNO0FQmQuOKF8pw&libraries=places,drawing,geometry&callback=initApp" async defer></script>
     <style>
+        /* Delivery Time Information Styles */
+.delivery-time-info {
+    background: #f0f8ff;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #d0e8ff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delivery-time-label {
+    font-weight: 500;
+    color: #1a2a6c;
+    font-size: 14px;
+}
+
+.delivery-time-value {
+    font-weight: 600;
+    color: #4caf50;
+    font-size: 14px;
+}
+
+/* Highlight for express delivery */
+.delivery-time-info.express {
+    background: #fff8e1;
+    border-color: #ffecb3;
+}
+
+.delivery-time-info.express .delivery-time-value {
+    color: #ff9800;
+}
+    </style>
+    <style>
         /* All the CSS styles from the original file would go here */
         /* For brevity, I've included only the essential styles for this solution */
         
@@ -3751,6 +3786,12 @@
         <option value="express">Express Cargo</option>
     </select>
 </div>
+ <!-- Delivery Time Information -->
+            <div class="delivery-time-info" id="deliveryTimeInfo">
+                <span class="delivery-time-label">Estimated Delivery Time:</span>
+                <span class="delivery-time-value" id="deliveryTimeValue">3-5 business days</span>
+            </div>
+            
                         <div class="form-group">
                             <label for="pickupLocation">Pickup Location</label>
                             <select id="pickupLocation" required>
@@ -10192,7 +10233,33 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script>
+    // Update delivery time based on cargo type selection
+document.addEventListener('DOMContentLoaded', function() {
+    const cargoTypeSelect = document.getElementById('cargoType');
+    const deliveryTimeValue = document.getElementById('deliveryTimeValue');
+    const deliveryTimeInfo = document.getElementById('deliveryTimeInfo');
     
+    if (cargoTypeSelect && deliveryTimeValue && deliveryTimeInfo) {
+        cargoTypeSelect.addEventListener('change', function() {
+            const selectedType = this.value;
+            
+            switch(selectedType) {
+                case 'express':
+                    deliveryTimeValue.textContent = '1-2 business days';
+                    deliveryTimeInfo.classList.add('express');
+                    break;
+                case 'normal':
+                default:
+                    deliveryTimeValue.textContent = '3-5 business days';
+                    deliveryTimeInfo.classList.remove('express');
+                    break;
+            }
+        });
+        
+        // Initialize with default value
+        deliveryTimeValue.textContent = '3-5 business days';
+    }
+});
 </script>
 </body>
 </html>
