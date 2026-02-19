@@ -15,38 +15,130 @@
     <!-- Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_huqokZn3o6D1a5XenNO0FQmQuOKF8pw&libraries=places,drawing,geometry&callback=initApp" async defer></script>
     <style>
-        /* Delivery Time Information Styles */
-.delivery-time-info {
-    background: #f0f8ff;
-    padding: 12px 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    border: 1px solid #d0e8ff;
+       /* Mobile Bottom Navigation - Hidden by default */
+.mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    display: none; /* Hidden by default */
+    justify-content: space-around;
+    padding: 8px 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.mobile-bottom-nav.show {
+    display: flex; /* Show when signed in */
+}
+
+.mobile-nav-item {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
+    text-decoration: none;
+    color: #666;
+    font-size: 12px;
+    padding: 5px 10px;
+    cursor: pointer;
 }
 
-.delivery-time-label {
-    font-weight: 500;
+.mobile-nav-item.active {
     color: #1a2a6c;
-    font-size: 14px;
 }
 
-.delivery-time-value {
-    font-weight: 600;
-    color: #4caf50;
-    font-size: 14px;
+.mobile-nav-item i {
+    font-size: 20px;
+    margin-bottom: 3px;
 }
 
-/* Highlight for express delivery */
-.delivery-time-info.express {
-    background: #fff8e1;
-    border-color: #ffecb3;
+/* Adjust main content for bottom nav */
+.dashboard-content {
+    padding-bottom: 70px;
 }
 
-.delivery-time-info.express .delivery-time-value {
-    color: #ff9800;
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+    /* Make tables scrollable horizontally */
+    .data-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    /* Stack form elements vertically */
+    .form-row {
+        flex-direction: column;
+    }
+    
+    .price-input-group {
+        flex-direction: column;
+    }
+    
+    /* Make buttons full width on mobile */
+    .map-controls {
+        flex-wrap: wrap;
+    }
+    
+    .map-btn {
+        flex: 1 1 calc(50% - 5px);
+        font-size: 14px;
+        padding: 8px;
+    }
+    
+    /* Adjust modal for mobile */
+    .modal {
+        width: 95%;
+        padding: 15px;
+    }
+    
+    /* Hide sidebar on mobile by default */
+    .sidebar {
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    /* Adjust notifications panel for mobile */
+    .notifications-panel,
+    .references-panel {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+    .dashboard-header {
+        padding: 10px;
+    }
+    
+    .user-details {
+        display: none; /* Hide on very small screens */
+    }
+    
+    .section-title {
+        font-size: 18px;
+    }
+    
+    .form-container,
+    .data-container {
+        padding: 12px;
+    }
+    
+    .map-container {
+        height: 300px;
+    }
+    
+    .item-size-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .cargo-type-options {
+        grid-template-columns: 1fr;
+    }
 }
     </style>
     <style>
@@ -3628,6 +3720,25 @@
     </style>
 </head>
 <body>
+    <!-- Mobile Bottom Navigation -->
+<div class="mobile-bottom-nav" style="display: none;">
+    <a href="#" class="mobile-nav-item active" data-section="cargo-delivery">
+        <i class="fas fa-truck"></i>
+        <span>Cargo</span>
+    </a>
+    <a href="#" class="mobile-nav-item" data-section="boat-delivery">
+        <i class="fas fa-ship"></i>
+        <span>Boat</span>
+    </a>
+    <a href="#" class="mobile-nav-item" data-section="greater-male-delivery">
+        <i class="fas fa-city"></i>
+        <span>Greater Male</span>
+    </a>
+    <a href="#" class="mobile-nav-item" data-section="track-delivery">
+        <i class="fas fa-search"></i>
+        <span>Track</span>
+    </a>
+</div>
     <!-- Audio element for notification sound -->
     <audio id="notificationSound" preload="auto" style="display: none;">
         <source src="new-notification-09-352705.mp3" type="audio/mpeg">
@@ -10479,5 +10590,621 @@ document.addEventListener('DOMContentLoaded', function() {
 
       
     </script>
+    <script>
+        // Show bottom navigation on mobile
+function toggleMobileNav() {
+    const mobileNav = document.querySelector('.mobile-bottom-nav');
+    if (window.innerWidth <= 768) {
+        mobileNav.style.display = 'flex';
+    } else {
+        mobileNav.style.display = 'none';
+    }
+}
+
+// Call on load and resize
+window.addEventListener('load', toggleMobileNav);
+window.addEventListener('resize', toggleMobileNav);
+
+// Mobile navigation click handlers
+document.querySelectorAll('.mobile-nav-item').forEach(item => {
+    item.addEventListener('click', function(e) {
+        e.preventDefault();
+        const section = this.getAttribute('data-section');
+        
+        // Update active state
+        document.querySelectorAll('.mobile-nav-item').forEach(nav => {
+            nav.classList.remove('active');
+        });
+        this.classList.add('active');
+        
+        // Trigger the same navigation as sidebar
+        const sidebarLink = document.querySelector(`.nav-link[data-section="${section}"]`);
+        if (sidebarLink) {
+            sidebarLink.click();
+        }
+    });
+});
+    </script>
+    <script>
+        
+
+// Function to show mobile navigation when signed in on mobile
+function setupMobileNavigation() {
+    const mobileNav = document.getElementById('mobileBottomNav');
+    const isMobile = window.innerWidth <= 768;
+    
+    if (currentUser && isMobile) {
+        mobileNav.style.display = 'flex';
+        mobileNav.classList.add('show');
+    } else {
+        mobileNav.style.display = 'none';
+        mobileNav.classList.remove('show');
+    }
+}
+
+// Function to load boat weight options
+function loadBoatWeightOptions() {
+    const boatWeightOptions = document.getElementById('boatWeightOptions');
+    if (!boatWeightOptions) return;
+    
+    boatWeightOptions.innerHTML = '';
+    
+    // Make sure boatPriceRanges is defined
+    if (typeof boatPriceRanges === 'undefined') {
+        // Initialize boat price ranges if not defined
+        boatPriceRanges = [
+            { min: 0, max: 1, price: 40 },
+            { min: 2, max: 3, price: 65 },
+            { min: 4, max: 6, price: 90 },
+            { min: 7, max: 10, price: 130 }
+        ];
+    }
+    
+    boatPriceRanges.forEach(range => {
+        const option = document.createElement('div');
+        option.className = 'weight-option';
+        option.innerHTML = `
+            <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
+                ${range.min}-${range.max} kg
+            </button>
+        `;
+        boatWeightOptions.appendChild(option);
+    });
+    
+    // Add event listeners to boat weight buttons
+    document.querySelectorAll('#boatWeightOptions .weight-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active class from all buttons in boat weight options
+            document.querySelectorAll('#boatWeightOptions .weight-btn').forEach(b => {
+                b.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Update boat price display
+            const price = this.getAttribute('data-price');
+            const boatDeliveryPrice = document.getElementById('boatDeliveryPrice');
+            if (boatDeliveryPrice) {
+                boatDeliveryPrice.textContent = price;
+            }
+        });
+    });
+    
+    // Reset boat price display
+    const boatDeliveryPrice = document.getElementById('boatDeliveryPrice');
+    if (boatDeliveryPrice) {
+        boatDeliveryPrice.textContent = '0';
+    }
+}
+
+// Override the loadWeightOptions function to ensure boat options are loaded
+const originalLoadWeightOptions = window.loadWeightOptions || function() {};
+window.loadWeightOptions = function() {
+    originalLoadWeightOptions();
+    loadBoatWeightOptions();
+};
+
+// Add window resize listener for mobile navigation
+window.addEventListener('resize', function() {
+    setupMobileNavigation();
+});
+
+// Override the setupDashboard function to include mobile navigation setup
+const originalSetupDashboard = window.setupDashboard || function() {};
+window.setupDashboard = function() {
+    originalSetupDashboard();
+    setupMobileNavigation();
+    
+    // Load boat weight options when boat delivery section becomes active
+    const boatSection = document.getElementById('boat-delivery');
+    if (boatSection) {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    if (boatSection.classList.contains('active')) {
+                        setTimeout(loadBoatWeightOptions, 100);
+                    }
+                }
+            });
+        });
+        observer.observe(boatSection, { attributes: true });
+    }
+};
+
+// Override the continue button click handler
+const originalContinueClick = continueBtn.onclick;
+continueBtn.onclick = function() {
+    if (originalContinueClick) {
+        originalContinueClick.call(this);
+    }
+    setupMobileNavigation();
+};
+
+// Ensure boatPriceRanges is defined globally
+if (typeof boatPriceRanges === 'undefined') {
+    window.boatPriceRanges = [
+        { min: 0, max: 1, price: 40 },
+        { min: 2, max: 3, price: 65 },
+        { min: 4, max: 6, price: 90 },
+        { min: 7, max: 10, price: 130 }
+    ];
+}
+
+// Also add this to the login success handler
+const originalLoginSuccess = function() {
+    // This will be called after successful login
+    setTimeout(function() {
+        setupMobileNavigation();
+        loadBoatWeightOptions();
+    }, 500);
+};
+
+// Call setupMobileNavigation whenever user logs in
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Your existing login code...
+    // After successful login, add:
+    setTimeout(function() {
+        if (currentUser) {
+            setupMobileNavigation();
+            loadBoatWeightOptions();
+        }
+    }, 2000);
+});
+    </script>
+    <script>
+        // Function to load boat weight options
+function loadBoatWeightOptions() {
+    const boatWeightOptions = document.getElementById('boatWeightOptions');
+    if (!boatWeightOptions) return;
+    
+    boatWeightOptions.innerHTML = '';
+    
+    // Make sure boatPriceRanges is defined
+    if (typeof boatPriceRanges === 'undefined' || !boatPriceRanges || boatPriceRanges.length === 0) {
+        // Initialize boat price ranges if not defined
+        window.boatPriceRanges = [
+            { min: 0, max: 1, price: 40 },
+            { min: 2, max: 3, price: 65 },
+            { min: 4, max: 6, price: 90 },
+            { min: 7, max: 10, price: 130 }
+        ];
+    }
+    
+    boatPriceRanges.forEach(range => {
+        const option = document.createElement('div');
+        option.className = 'weight-option';
+        option.innerHTML = `
+            <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
+                ${range.min}-${range.max} kg
+            </button>
+        `;
+        boatWeightOptions.appendChild(option);
+    });
+    
+    // Add event listeners to boat weight buttons
+    document.querySelectorAll('#boatWeightOptions .weight-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active class from all buttons in boat weight options
+            document.querySelectorAll('#boatWeightOptions .weight-btn').forEach(b => {
+                b.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Update boat price display
+            const price = this.getAttribute('data-price');
+            const boatDeliveryPrice = document.getElementById('boatDeliveryPrice');
+            if (boatDeliveryPrice) {
+                boatDeliveryPrice.textContent = price;
+            }
+        });
+    });
+    
+    // Reset boat price display
+    const boatDeliveryPrice = document.getElementById('boatDeliveryPrice');
+    if (boatDeliveryPrice) {
+        boatDeliveryPrice.textContent = '0';
+    }
+}
+
+// Load weight options for both cargo and boat
+function loadWeightOptions() {
+    // Load cargo weight options
+    const weightOptions = document.getElementById('weightOptions');
+    if (weightOptions) {
+        weightOptions.innerHTML = '';
+        
+        // Make sure cargoPriceRanges is defined
+        if (typeof cargoPriceRanges === 'undefined' || !cargoPriceRanges || cargoPriceRanges.length === 0) {
+            window.cargoPriceRanges = [
+                { min: 0, max: 1, price: 50 },
+                { min: 2, max: 3, price: 75 },
+                { min: 4, max: 6, price: 100 },
+                { min: 7, max: 10, price: 150 }
+            ];
+        }
+        
+        cargoPriceRanges.forEach(range => {
+            const option = document.createElement('div');
+            option.className = 'weight-option';
+            option.innerHTML = `
+                <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
+                    ${range.min}-${range.max} kg
+                </button>
+            `;
+            weightOptions.appendChild(option);
+        });
+        
+        // Add event listeners to cargo weight buttons
+        document.querySelectorAll('#weightOptions .weight-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('#weightOptions .weight-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                this.classList.add('active');
+                const price = this.getAttribute('data-price');
+                const deliveryPrice = document.getElementById('deliveryPrice');
+                if (deliveryPrice) {
+                    deliveryPrice.textContent = price;
+                }
+            });
+        });
+        
+        // Reset cargo price display
+        const deliveryPrice = document.getElementById('deliveryPrice');
+        if (deliveryPrice) {
+            deliveryPrice.textContent = '0';
+        }
+    }
+    
+    // Load boat weight options
+    loadBoatWeightOptions();
+}
+
+// Make sure boatPriceRanges is defined globally
+if (typeof boatPriceRanges === 'undefined') {
+    window.boatPriceRanges = [
+        { min: 0, max: 1, price: 40 },
+        { min: 2, max: 3, price: 65 },
+        { min: 4, max: 6, price: 90 },
+        { min: 7, max: 10, price: 130 }
+    ];
+}
+
+// Make sure cargoPriceRanges is defined globally
+if (typeof cargoPriceRanges === 'undefined') {
+    window.cargoPriceRanges = [
+        { min: 0, max: 1, price: 50 },
+        { min: 2, max: 3, price: 75 },
+        { min: 4, max: 6, price: 100 },
+        { min: 7, max: 10, price: 150 }
+    ];
+}
+
+// Call loadWeightOptions when boat delivery section becomes active
+document.addEventListener('DOMContentLoaded', function() {
+    // Initial load of weight options
+    setTimeout(loadWeightOptions, 500);
+    
+    // Watch for section changes to load boat weight options when boat section is active
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                const target = mutation.target;
+                if (target.id === 'boat-delivery' && target.classList.contains('active')) {
+                    // Boat delivery section is now active, load boat weight options
+                    setTimeout(loadBoatWeightOptions, 100);
+                }
+                if (target.id === 'cargo-delivery' && target.classList.contains('active')) {
+                    // Cargo delivery section is now active, load cargo weight options
+                    setTimeout(loadWeightOptions, 100);
+                }
+            }
+        });
+    });
+    
+    const boatSection = document.getElementById('boat-delivery');
+    const cargoSection = document.getElementById('cargo-delivery');
+    
+    if (boatSection) {
+        observer.observe(boatSection, { attributes: true });
+    }
+    if (cargoSection) {
+        observer.observe(cargoSection, { attributes: true });
+    }
+});
+
+// Override the continue button click handler to ensure weight options are loaded
+const continueBtn = document.getElementById('continueBtn');
+if (continueBtn) {
+    continueBtn.addEventListener('click', function() {
+        setTimeout(function() {
+            loadWeightOptions();
+        }, 500);
+    });
+}
+
+// Also load weight options when login is successful
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            setTimeout(function() {
+                loadWeightOptions();
+            }, 2000);
+        });
+    }
+});
+    </script>
+    <script>
+        // ============================================
+// BOAT DELIVERY PRICE RANGE FIX - CLEAN VERSION
+// ============================================
+
+// Define boat price ranges globally if not already defined
+if (typeof boatPriceRanges === 'undefined') {
+    window.boatPriceRanges = [
+        { min: 0, max: 1, price: 40 },
+        { min: 2, max: 3, price: 65 },
+        { min: 4, max: 6, price: 90 },
+        { min: 7, max: 10, price: 130 }
+    ];
+}
+
+// Simple function to display boat weight options
+function showBoatWeightOptions() {
+    const boatWeightOptions = document.getElementById('boatWeightOptions');
+    if (!boatWeightOptions) {
+        console.log('Boat weight options element not found');
+        return;
+    }
+    
+    console.log('Showing boat weight options');
+    
+    // Clear existing options
+    boatWeightOptions.innerHTML = '';
+    
+    // Create buttons for each price range
+    for (let i = 0; i < window.boatPriceRanges.length; i++) {
+        const range = window.boatPriceRanges[i];
+        
+        // Create option div
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'weight-option';
+        
+        // Create button
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'weight-btn';
+        button.setAttribute('data-min', range.min);
+        button.setAttribute('data-max', range.max);
+        button.setAttribute('data-price', range.price);
+        button.textContent = range.min + '-' + range.max + ' kg';
+        
+        // Add click event
+        button.onclick = function() {
+            // Remove active class from all buttons
+            const allButtons = document.querySelectorAll('#boatWeightOptions .weight-btn');
+            for (let j = 0; j < allButtons.length; j++) {
+                allButtons[j].classList.remove('active');
+            }
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Update price display
+            const boatDeliveryPrice = document.getElementById('boatDeliveryPrice');
+            if (boatDeliveryPrice) {
+                boatDeliveryPrice.textContent = this.getAttribute('data-price');
+            }
+        };
+        
+        optionDiv.appendChild(button);
+        boatWeightOptions.appendChild(optionDiv);
+    }
+    
+    // Reset price display
+    const boatDeliveryPrice = document.getElementById('boatDeliveryPrice');
+    if (boatDeliveryPrice) {
+        boatDeliveryPrice.textContent = '0';
+    }
+}
+
+// Load boat price list in admin panel
+function loadBoatPriceList() {
+    const boatPriceList = document.getElementById('boatPriceList');
+    if (!boatPriceList) return;
+    
+    boatPriceList.innerHTML = '';
+    
+    if (window.boatPriceRanges.length === 0) {
+        boatPriceList.innerHTML = '<div class="empty-message">No boat price ranges defined</div>';
+        return;
+    }
+    
+    // Sort by min weight
+    window.boatPriceRanges.sort(function(a, b) {
+        return a.min - b.min;
+    });
+    
+    for (let i = 0; i < window.boatPriceRanges.length; i++) {
+        const range = window.boatPriceRanges[i];
+        
+        const item = document.createElement('div');
+        item.className = 'price-item';
+        item.innerHTML = 
+            '<div class="price-range">' + range.min + '-' + range.max + ' kg</div>' +
+            '<div class="price-amount">' + range.price + ' MVR</div>' +
+            '<div class="price-actions">' +
+                '<button class="edit-price-btn" onclick="editBoatPrice(' + i + ')">Edit</button>' +
+                '<button class="remove-price-btn" onclick="removeBoatPrice(' + i + ')">Remove</button>' +
+            '</div>';
+        
+        boatPriceList.appendChild(item);
+    }
+}
+
+// Edit boat price
+window.editBoatPrice = function(index) {
+    const range = window.boatPriceRanges[index];
+    document.getElementById('boatMinWeight').value = range.min;
+    document.getElementById('boatMaxWeight').value = range.max;
+    document.getElementById('boatPriceValue').value = range.price;
+    
+    // Remove old range
+    window.boatPriceRanges.splice(index, 1);
+    saveBoatPrices();
+    loadBoatPriceList();
+    showBoatWeightOptions();
+};
+
+// Remove boat price
+window.removeBoatPrice = function(index) {
+    if (confirm('Are you sure you want to remove this price range?')) {
+        window.boatPriceRanges.splice(index, 1);
+        saveBoatPrices();
+        loadBoatPriceList();
+        showBoatWeightOptions();
+        showNotification('Boat price range removed successfully');
+    }
+};
+
+// Save boat prices
+function saveBoatPrices() {
+    // Try Firebase first
+    if (typeof boatPriceRangesRef !== 'undefined' && boatPriceRangesRef) {
+        boatPriceRangesRef.set(window.boatPriceRanges)
+            .catch(function(error) {
+                console.log('Error saving to Firebase, using localStorage');
+                localStorage.setItem('boatPriceRanges', JSON.stringify(window.boatPriceRanges));
+            });
+    } else {
+        localStorage.setItem('boatPriceRanges', JSON.stringify(window.boatPriceRanges));
+    }
+}
+
+// Load boat prices
+function loadBoatPrices() {
+    // Try Firebase first
+    if (typeof boatPriceRangesRef !== 'undefined' && boatPriceRangesRef) {
+        boatPriceRangesRef.once('value')
+            .then(function(snapshot) {
+                const data = snapshot.val();
+                if (data) {
+                    window.boatPriceRanges = data;
+                }
+                showBoatWeightOptions();
+                loadBoatPriceList();
+            })
+            .catch(function(error) {
+                console.log('Error loading from Firebase, trying localStorage');
+                const saved = localStorage.getItem('boatPriceRanges');
+                if (saved) {
+                    window.boatPriceRanges = JSON.parse(saved);
+                }
+                showBoatWeightOptions();
+                loadBoatPriceList();
+            });
+    } else {
+        const saved = localStorage.getItem('boatPriceRanges');
+        if (saved) {
+            window.boatPriceRanges = JSON.parse(saved);
+        }
+        showBoatWeightOptions();
+        loadBoatPriceList();
+    }
+}
+
+// Add boat price button handler
+document.addEventListener('DOMContentLoaded', function() {
+    const addBtn = document.getElementById('addBoatPriceBtn');
+    if (addBtn) {
+        addBtn.addEventListener('click', function() {
+            const minWeight = parseFloat(document.getElementById('boatMinWeight').value);
+            const maxWeight = parseFloat(document.getElementById('boatMaxWeight').value);
+            const price = parseFloat(document.getElementById('boatPriceValue').value);
+            
+            if (isNaN(minWeight) || isNaN(maxWeight) || isNaN(price)) {
+                showNotification('Please enter valid values for all fields');
+                return;
+            }
+            
+            if (minWeight >= maxWeight) {
+                showNotification('Minimum weight must be less than maximum weight');
+                return;
+            }
+            
+            // Check for overlaps
+            for (let i = 0; i < window.boatPriceRanges.length; i++) {
+                const range = window.boatPriceRanges[i];
+                if ((minWeight >= range.min && minWeight <= range.max) || 
+                    (maxWeight >= range.min && maxWeight <= range.max) ||
+                    (minWeight <= range.min && maxWeight >= range.max)) {
+                    showNotification('Weight range overlaps with existing range');
+                    return;
+                }
+            }
+            
+            // Add new range
+            window.boatPriceRanges.push({ 
+                min: minWeight, 
+                max: maxWeight, 
+                price: price 
+            });
+            
+            saveBoatPrices();
+            loadBoatPriceList();
+            showBoatWeightOptions();
+            
+            // Reset form
+            document.getElementById('boatMinWeight').value = '';
+            document.getElementById('boatMaxWeight').value = '';
+            document.getElementById('boatPriceValue').value = '';
+            
+            showNotification('Boat price range added successfully');
+        });
+    }
+    
+    // Check boat section when it becomes active
+    const boatSection = document.getElementById('boat-delivery');
+    if (boatSection) {
+        // Check every second if boat section is active
+        setInterval(function() {
+            if (boatSection.classList.contains('active')) {
+                showBoatWeightOptions();
+            }
+        }, 1000);
+    }
+    
+    // Load prices when page loads
+    loadBoatPrices();
+});
+
+
+    </script>
+
 </body>
 </html>
