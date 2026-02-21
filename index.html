@@ -10586,11 +10586,1393 @@ document.addEventListener('DOMContentLoaded', function() {
       
     </script>
 <script>
+    // Function to load boat price ranges from Firebase
+function loadBoatPriceRanges() {
+    if (boatPriceRangesRef) {
+        boatPriceRangesRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                boatPriceRanges = data;
+                loadBoatPriceList();
+                loadBoatWeightOptions();
+            }
+        });
+    } else {
+        // Fallback to localStorage
+        const savedBoatPrices = localStorage.getItem('boatPriceRanges');
+        if (savedBoatPrices) {
+            boatPriceRanges = JSON.parse(savedBoatPrices);
+            loadBoatPriceList();
+            loadBoatWeightOptions();
+        }
+    }
+}
+
+// Function to load boat weight options
+function loadBoatWeightOptions() {
+    const boatWeightOptions = document.getElementById('boatWeightOptions');
+    if (!boatWeightOptions) return;
     
+    boatWeightOptions.innerHTML = '';
+    
+    // Sort price ranges by min weight
+    const sortedRanges = [...boatPriceRanges].sort((a, b) => a.min - b.min);
+    
+    sortedRanges.forEach(range => {
+        const option = document.createElement('div');
+        option.className = 'weight-option';
+        option.innerHTML = `
+            <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
+                ${range.min}-${range.max} kg
+            </button>
+        `;
+        boatWeightOptions.appendChild(option);
+    });
+    
+    // Add event listeners to boat weight buttons
+    document.querySelectorAll('#boatWeightOptions .weight-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active class from all buttons
+            document.querySelectorAll('#boatWeightOptions .weight-btn').forEach(b => {
+                b.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Update boat price display
+            const price = this.getAttribute('data-price');
+            const boatDeliveryPrice = document.getElementById('boatDeliveryPrice');
+            if (boatDeliveryPrice) {
+                boatDeliveryPrice.textContent = price;
+            }
+        });
+    });
+}
+
+// Function to load boat price list in price management
+function loadBoatPriceList() {
+    const boatPriceList = document.getElementById('boatPriceList');
+    if (!boatPriceList) return;
+    
+    boatPriceList.innerHTML = '';
+    
+    if (!boatPriceRanges || boatPriceRanges.length === 0) {
+        boatPriceList.innerHTML = '<div class="empty-message">No boat price ranges defined</div>';
+        return;
+    }
+    
+    // Sort price ranges by min weight
+    const sortedRanges = [...boatPriceRanges].sort((a, b) => a.min - b.min);
+    
+    sortedRanges.forEach((range, index) => {
+        const item = document.createElement('div');
+        item.className = 'price-item';
+        item.innerHTML = `
+            <div class="price-range">${range.min}-${range.max} kg</div>
+            <div class="price-amount">${range.price} MVR</div>
+            <div class="price-actions">
+                <button class="edit-price-btn" onclick="editBoatPriceRange(${index})">Edit</button>
+                <button class="remove-price-btn" onclick="removeBoatPriceRange(${index})">Remove</button>
+            </div>
+        `;
+        boatPriceList.appendChild(item);
+    });
+}
+
+// Function to save boat price ranges to Firebase
+function saveBoatPriceRanges() {
+    if (boatPriceRangesRef) {
+        boatPriceRangesRef.set(boatPriceRanges)
+            .then(() => console.log('Boat price ranges saved to Firebase'))
+            .catch(error => console.error('Error saving boat price ranges:', error));
+    } else {
+        localStorage.setItem('boatPriceRanges', JSON.stringify(boatPriceRanges));
+    }
+}
+
+// Function to edit boat price range
+function editBoatPriceRange(index) {
+    const boatMinWeight = document.getElementById('boatMinWeight');
+    const boatMaxWeight = document.getElementById('boatMaxWeight');
+    const boatPriceValue = document.getElementById('boatPriceValue');
+    
+    if (!boatMinWeight || !boatMaxWeight || !boatPriceValue) return;
+    
+    const range = boatPriceRanges[index];
+    boatMinWeight.value = range.min;
+    boatMaxWeight.value = range.max;
+    boatPriceValue.value = range.price;
+    
+    // Remove the range being edited
+    boatPriceRanges.splice(index, 1);
+    saveBoatPriceRanges();
+    loadBoatPriceList();
+    loadBoatWeightOptions();
+}
+
+// Function to remove boat price range
+function removeBoatPriceRange(index) {
+    if (confirm('Are you sure you want to remove this price range?')) {
+        boatPriceRanges.splice(index, 1);
+        saveBoatPriceRanges();
+        loadBoatPriceList();
+        loadBoatWeightOptions();
+        showNotification('Boat price range removed successfully');
+    }
+}
+
+// Update the existing loadWeightOptions function to include boat weight options
+function loadWeightOptions() {
+    const weightOptions = document.getElementById('weightOptions');
+    const boatWeightOptions = document.getElementById('boatWeightOptions');
+    
+    // Load cargo weight options
+    if (weightOptions) {
+        weightOptions.innerHTML = '';
+        
+        cargoPriceRanges.forEach(range => {
+            const option = document.createElement('div');
+            option.className = 'weight-option';
+            option.innerHTML = `
+                <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
+                    ${range.min}-${range.max} kg
+                </button>
+            `;
+            weightOptions.appendChild(option);
+        });
+    }
+    
+    // Load boat weight options
+    if (boatWeightOptions) {
+        boatWeightOptions.innerHTML = '';
+        
+        boatPriceRanges.forEach(range => {
+            const option = document.createElement('div');
+            option.className = 'weight-option';
+            option.innerHTML = `
+                <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
+                    ${range.min}-${range.max} kg
+                </button>
+            `;
+            boatWeightOptions.appendChild(option);
+        });
+    }
+    
+    // Add event listeners to weight buttons
+    document.querySelectorAll('#weightOptions .weight-btn, #boatWeightOptions .weight-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active class from all buttons in the same container
+            const container = this.closest('.weight-options');
+            container.querySelectorAll('.weight-btn').forEach(b => {
+                b.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Update price display
+            const price = this.getAttribute('data-price');
+            const formContainer = this.closest('.form-container');
+            const priceDisplay = formContainer.querySelector('.price-display .price-value span:last-child');
+            if (priceDisplay) {
+                priceDisplay.textContent = price;
+            }
+        });
+    });
+}
+
+// Update the addBoatPriceBtn event listener
+document.addEventListener('DOMContentLoaded', function() {
+    const addBoatPriceBtn = document.getElementById('addBoatPriceBtn');
+    if (addBoatPriceBtn) {
+        addBoatPriceBtn.addEventListener('click', function() {
+            const boatMinWeight = document.getElementById('boatMinWeight');
+            const boatMaxWeight = document.getElementById('boatMaxWeight');
+            const boatPriceValue = document.getElementById('boatPriceValue');
+            
+            const minWeight = parseFloat(boatMinWeight.value);
+            const maxWeight = parseFloat(boatMaxWeight.value);
+            const price = parseFloat(boatPriceValue.value);
+            
+            if (isNaN(minWeight) || isNaN(maxWeight) || isNaN(price)) {
+                showNotification('Please enter valid values for all fields');
+                return;
+            }
+            
+            if (minWeight >= maxWeight) {
+                showNotification('Minimum weight must be less than maximum weight');
+                return;
+            }
+            
+            // Check for overlapping ranges
+            for (let range of boatPriceRanges) {
+                if ((minWeight >= range.min && minWeight <= range.max) || 
+                    (maxWeight >= range.min && maxWeight <= range.max) ||
+                    (minWeight <= range.min && maxWeight >= range.max)) {
+                    showNotification('Weight range overlaps with existing range');
+                    return;
+                }
+            }
+            
+            // Add new price range
+            boatPriceRanges.push({ min: minWeight, max: maxWeight, price: price });
+            saveBoatPriceRanges();
+            loadBoatPriceList();
+            loadBoatWeightOptions();
+            
+            // Reset form
+            boatMinWeight.value = '';
+            boatMaxWeight.value = '';
+            boatPriceValue.value = '';
+            
+            showNotification('Boat price range added successfully');
+        });
+    }
+});
+
+// Initialize boat price ranges when app loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Load boat price ranges
+    loadBoatPriceRanges();
+    
+    // Load boat weight options when boat delivery section becomes active
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                const target = mutation.target;
+                if (target.id === 'boat-delivery' && target.classList.contains('active')) {
+                    // Boat delivery section is now active, update weight options
+                    setTimeout(loadBoatWeightOptions, 100);
+                }
+            }
+        });
+    });
+    
+    const boatSection = document.getElementById('boat-delivery');
+    if (boatSection) {
+        observer.observe(boatSection, { attributes: true });
+    }
+});
 </script>
-   
- 
+<script>
+    // ============= CAPACITY MANAGEMENT SYSTEM WITH FIREBASE =============
 
+// Firebase references for capacity data
+const capacitySettingsRef = database.ref('capacitySettings');
+const userDailyUsageRef = database.ref('userDailyUsage');
+
+// Capacity storage
+let dailyCapacity = {
+    cargo: 10,
+    boat: 10,
+    greaterMale: 10,
+    lastReset: new Date().toISOString().split('T')[0]
+};
+
+let userDailyUsage = {};
+
+// Initialize capacity system with Firebase
+function initCapacitySystem() {
+    // Load from Firebase first
+    loadCapacitySettingsFromFirebase();
+    loadUserDailyUsageFromFirebase();
+    
+    // Check if day has changed and reset usage if needed
+    checkAndResetDailyUsage();
+    
+    // Add capacity UI to dashboard
+    addCapacityUI();
+}
+
+// Load capacity settings from Firebase
+function loadCapacitySettingsFromFirebase() {
+    if (capacitySettingsRef) {
+        capacitySettingsRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                dailyCapacity = data;
+                console.log('Capacity settings loaded from Firebase:', dailyCapacity);
+                
+                // Update UI if capacity settings changed
+                updateCapacityUI();
+            } else {
+                // Initialize with default values if no data in Firebase
+                saveCapacitySettingsToFirebase();
+            }
+        }, (error) => {
+            console.error('Error loading capacity settings from Firebase:', error);
+            // Fallback to localStorage
+            loadCapacitySettingsFromLocal();
+        });
+    } else {
+        // Fallback to localStorage if Firebase not available
+        loadCapacitySettingsFromLocal();
+    }
+}
+
+// Load capacity settings from localStorage (fallback)
+function loadCapacitySettingsFromLocal() {
+    const savedCapacity = localStorage.getItem('dailyCapacity');
+    if (savedCapacity) {
+        dailyCapacity = JSON.parse(savedCapacity);
+    }
+}
+
+// Load user daily usage from Firebase
+function loadUserDailyUsageFromFirebase() {
+    if (userDailyUsageRef) {
+        userDailyUsageRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                userDailyUsage = data;
+                console.log('User daily usage loaded from Firebase:', userDailyUsage);
+                
+                // Update UI when usage data changes
+                updateCapacityUI();
+            }
+        }, (error) => {
+            console.error('Error loading user daily usage from Firebase:', error);
+            // Fallback to localStorage
+            loadUserDailyUsageFromLocal();
+        });
+    } else {
+        // Fallback to localStorage if Firebase not available
+        loadUserDailyUsageFromLocal();
+    }
+}
+
+// Load user daily usage from localStorage (fallback)
+function loadUserDailyUsageFromLocal() {
+    const savedUsage = localStorage.getItem('userDailyUsage');
+    if (savedUsage) {
+        userDailyUsage = JSON.parse(savedUsage);
+    }
+}
+
+// Save capacity settings to Firebase
+function saveCapacitySettingsToFirebase() {
+    if (capacitySettingsRef) {
+        capacitySettingsRef.set(dailyCapacity)
+            .then(() => {
+                console.log('Capacity settings saved to Firebase successfully');
+            })
+            .catch((error) => {
+                console.error('Error saving capacity settings to Firebase:', error);
+                // Fallback to localStorage
+                localStorage.setItem('dailyCapacity', JSON.stringify(dailyCapacity));
+            });
+    } else {
+        // Fallback to localStorage
+        localStorage.setItem('dailyCapacity', JSON.stringify(dailyCapacity));
+    }
+}
+
+// Save user daily usage to Firebase
+function saveUserDailyUsageToFirebase() {
+    if (userDailyUsageRef) {
+        userDailyUsageRef.set(userDailyUsage)
+            .then(() => {
+                console.log('User daily usage saved to Firebase successfully');
+            })
+            .catch((error) => {
+                console.error('Error saving user daily usage to Firebase:', error);
+                // Fallback to localStorage
+                localStorage.setItem('userDailyUsage', JSON.stringify(userDailyUsage));
+            });
+    } else {
+        // Fallback to localStorage
+        localStorage.setItem('userDailyUsage', JSON.stringify(userDailyUsage));
+    }
+}
+
+// Check if day has changed and reset usage if needed
+function checkAndResetDailyUsage() {
+    const today = new Date().toISOString().split('T')[0];
+    
+    if (dailyCapacity.lastReset !== today) {
+        // Reset all user usage for the new day
+        for (let userEmail in userDailyUsage) {
+            userDailyUsage[userEmail] = {
+                cargo: 0,
+                boat: 0,
+                greaterMale: 0,
+                date: today
+            };
+        }
+        
+        dailyCapacity.lastReset = today;
+        
+        // Save to Firebase
+        saveCapacitySettingsToFirebase();
+        saveUserDailyUsageToFirebase();
+        
+        showNotification('Daily capacity has been reset for the new day');
+        
+        // Update UI
+        updateCapacityUI();
+    }
+}
+
+// Track delivery usage and save to Firebase
+function trackDeliveryUsage(userEmail, type) {
+    if (!userDailyUsage[userEmail]) {
+        userDailyUsage[userEmail] = {
+            cargo: 0,
+            boat: 0,
+            greaterMale: 0,
+            date: new Date().toISOString().split('T')[0]
+        };
+    }
+    
+    // Increment the count for the delivery type
+    userDailyUsage[userEmail][type]++;
+    
+    // Save to Firebase
+    saveUserDailyUsageToFirebase();
+    
+    // Check if user has reached capacity
+    checkUserCapacity(userEmail, type);
+    
+    // Update UI
+    updateCapacityUI();
+}
+
+// Check if user has reached capacity
+function checkUserCapacity(userEmail, type) {
+    const usage = userDailyUsage[userEmail];
+    if (!usage) return false;
+    
+    const used = usage[type];
+    const limit = dailyCapacity[type];
+    const percentage = (used / limit) * 100;
+    
+    if (percentage >= 100) {
+        showNotification(`Warning: You have reached your daily ${type} delivery limit!`, 'warning');
+        return true;
+    } else if (percentage >= 80) {
+        showNotification(`Notice: You are at ${Math.round(percentage)}% of your daily ${type} delivery limit`, 'info');
+    }
+    
+    return false;
+}
+
+// Check if user can create a delivery
+function canCreateDelivery(userEmail, type) {
+    if (!currentUser) return false;
+    
+    // Admin can always create deliveries
+    if (currentUser.role === 'admin') return true;
+    
+    const usage = userDailyUsage[userEmail];
+    if (!usage) return true;
+    
+    const used = usage[type] || 0;
+    const limit = dailyCapacity[type];
+    
+    return used < limit;
+}
+
+// Get user capacity percentage
+function getUserCapacityPercentage(userEmail, type) {
+    const usage = userDailyUsage[userEmail];
+    if (!usage) return 0;
+    
+    const used = usage[type] || 0;
+    const limit = dailyCapacity[type];
+    
+    return Math.min(Math.round((used / limit) * 100), 100);
+}
+
+// Get capacity color based on percentage
+function getCapacityColor(percentage) {
+    if (percentage >= 100) return 'full';
+    if (percentage >= 80) return 'danger';
+    if (percentage >= 50) return 'warning';
+    return '';
+}
+
+// Update all capacity UI elements
+function updateCapacityUI() {
+    // Update admin capacity settings form if exists
+    updateAdminCapacityForm();
+    
+    // Update user capacity overview if exists
+    if (document.getElementById('userCapacityOverview')) {
+        refreshUserCapacity();
+    }
+    
+    // Update individual user capacity bars
+    if (currentUser && currentUser.role !== 'admin') {
+        updateMyCapacityBars();
+    }
+}
+
+// Update admin capacity form
+function updateAdminCapacityForm() {
+    const cargoInput = document.getElementById('cargoCapacity');
+    const boatInput = document.getElementById('boatCapacity');
+    const greaterMaleInput = document.getElementById('greaterMaleCapacity');
+    
+    if (cargoInput) cargoInput.value = dailyCapacity.cargo;
+    if (boatInput) boatInput.value = dailyCapacity.boat;
+    if (greaterMaleInput) greaterMaleInput.value = dailyCapacity.greaterMale;
+}
+
+// Update individual user capacity bars
+function updateMyCapacityBars() {
+    const sections = ['cargo-delivery', 'boat-delivery', 'greater-male-delivery'];
+    
+    sections.forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        if (!section) return;
+        
+        const existingBar = section.querySelector('.my-capacity-container');
+        if (existingBar) {
+            existingBar.remove();
+        }
+    });
+    
+    // Re-add updated bars
+    if (currentUser) {
+        addMyCapacityBar();
+    }
+}
+
+// Add admin capacity settings (for management section)
+function addAdminCapacitySettings() {
+    const managementSection = document.getElementById('management');
+    if (!managementSection) return;
+    
+    // Remove existing capacity settings if any
+    const existingSettings = document.querySelector('.capacity-settings');
+    if (existingSettings) {
+        existingSettings.remove();
+    }
+    
+    const capacitySettingsHTML = `
+        <div class="capacity-settings">
+            <h3 class="capacity-settings-title">
+                <i class="fas fa-chart-line"></i> Daily Capacity Settings
+            </h3>
+            
+            <div class="capacity-input-group">
+                <div class="capacity-input">
+                    <label for="cargoCapacity">Cargo Delivery Limit</label>
+                    <input type="number" id="cargoCapacity" min="1" max="1000" value="${dailyCapacity.cargo}">
+                </div>
+                <div class="capacity-input">
+                    <label for="boatCapacity">Boat Delivery Limit</label>
+                    <input type="number" id="boatCapacity" min="1" max="1000" value="${dailyCapacity.boat}">
+                </div>
+                <div class="capacity-input">
+                    <label for="greaterMaleCapacity">Greater Male Delivery Limit</label>
+                    <input type="number" id="greaterMaleCapacity" min="1" max="1000" value="${dailyCapacity.greaterMale}">
+                </div>
+            </div>
+            
+            <button class="save-capacity-btn" id="saveCapacityBtn">
+                <i class="fas fa-save"></i> Save Capacity Limits
+            </button>
+            
+            <div class="capacity-info" style="margin-top: 15px; padding: 10px; background: #f0f8ff; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                    <span><i class="fas fa-calendar-day"></i> Last Reset:</span>
+                    <span>${formatDate(dailyCapacity.lastReset)}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span><i class="fas fa-sync-alt"></i> Auto-reset:</span>
+                    <span>Daily at midnight</span>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Insert at the beginning of management section
+    managementSection.insertAdjacentHTML('afterbegin', capacitySettingsHTML);
+    
+    // Add event listener for save button
+    document.getElementById('saveCapacityBtn').addEventListener('click', function() {
+        const newCargo = parseInt(document.getElementById('cargoCapacity').value);
+        const newBoat = parseInt(document.getElementById('boatCapacity').value);
+        const newGreaterMale = parseInt(document.getElementById('greaterMaleCapacity').value);
+        
+        if (isNaN(newCargo) || isNaN(newBoat) || isNaN(newGreaterMale)) {
+            showNotification('Please enter valid numbers for all capacity limits');
+            return;
+        }
+        
+        if (newCargo < 1 || newBoat < 1 || newGreaterMale < 1) {
+            showNotification('Capacity limits must be at least 1');
+            return;
+        }
+        
+        dailyCapacity.cargo = newCargo;
+        dailyCapacity.boat = newBoat;
+        dailyCapacity.greaterMale = newGreaterMale;
+        
+        // Save to Firebase
+        saveCapacitySettingsToFirebase();
+        
+        // Refresh user capacity overview
+        if (document.getElementById('userCapacityOverview')) {
+            document.getElementById('userCapacityOverview').remove();
+        }
+        addUserCapacityOverview();
+        
+        showNotification('Daily capacity limits updated successfully');
+    });
+}
+
+// Add user capacity overview (for admin view)
+function addUserCapacityOverview() {
+    const recordsManagement = document.getElementById('records-management');
+    if (!recordsManagement) return;
+    
+    // Check if overview already exists
+    if (document.getElementById('userCapacityOverview')) {
+        document.getElementById('userCapacityOverview').remove();
+    }
+    
+    const userCapacityHTML = `
+        <div class="user-capacity-section" id="userCapacityOverview">
+            <div class="user-capacity-header">
+                <div class="user-capacity-title">
+                    <i class="fas fa-users"></i> User Daily Capacity Usage
+                </div>
+                <div class="user-capacity-filter">
+                    <button class="filter-btn" onclick="refreshUserCapacity()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            
+            <div id="userCapacityList">
+                ${generateUserCapacityList()}
+            </div>
+        </div>
+    `;
+    
+    recordsManagement.insertAdjacentHTML('beforeend', userCapacityHTML);
+}
+
+// Generate user capacity list HTML
+function generateUserCapacityList() {
+    let html = '';
+    
+    // Sort users by role (admin first) and then by name
+    const sortedUsers = [...users].sort((a, b) => {
+        if (a.role === 'admin' && b.role !== 'admin') return -1;
+        if (a.role !== 'admin' && b.role === 'admin') return 1;
+        return a.username.localeCompare(b.username);
+    });
+    
+    sortedUsers.forEach(user => {
+        const usage = userDailyUsage[user.email] || {
+            cargo: 0,
+            boat: 0,
+            greaterMale: 0
+        };
+        
+        const cargoPercentage = getUserCapacityPercentage(user.email, 'cargo');
+        const boatPercentage = getUserCapacityPercentage(user.email, 'boat');
+        const greaterMalePercentage = getUserCapacityPercentage(user.email, 'greaterMale');
+        
+        html += `
+            <div class="user-capacity-card ${user.role}">
+                <div class="user-capacity-info">
+                    <div>
+                        <span class="user-capacity-name">${user.username}</span>
+                        <span class="user-capacity-email"> (${user.email})</span>
+                    </div>
+                    <span class="user-capacity-role ${user.role}">${user.role}</span>
+                </div>
+                
+                <div class="user-capacity-stats">
+                    <div class="user-capacity-stat">
+                        <div class="user-capacity-stat-label">Cargo</div>
+                        <div class="user-capacity-stat-value">${usage.cargo}/${dailyCapacity.cargo}</div>
+                    </div>
+                    <div class="user-capacity-stat">
+                        <div class="user-capacity-stat-label">Boat</div>
+                        <div class="user-capacity-stat-value">${usage.boat}/${dailyCapacity.boat}</div>
+                    </div>
+                    <div class="user-capacity-stat">
+                        <div class="user-capacity-stat-label">Greater Male</div>
+                        <div class="user-capacity-stat-value">${usage.greaterMale}/${dailyCapacity.greaterMale}</div>
+                    </div>
+                    <div class="user-capacity-stat">
+                        <div class="user-capacity-stat-label">Total</div>
+                        <div class="user-capacity-stat-value">${usage.cargo + usage.boat + usage.greaterMale}/${dailyCapacity.cargo + dailyCapacity.boat + dailyCapacity.greaterMale}</div>
+                    </div>
+                </div>
+                
+                <div class="capacity-progress-container">
+                    <div class="capacity-progress-header">
+                        <span>Cargo</span>
+                        <span>${cargoPercentage}%</span>
+                    </div>
+                    <div class="capacity-progress-bar">
+                        <div class="capacity-progress-fill ${getCapacityColor(cargoPercentage)}" style="width: ${cargoPercentage}%"></div>
+                    </div>
+                    
+                    <div class="capacity-progress-header" style="margin-top: 8px;">
+                        <span>Boat</span>
+                        <span>${boatPercentage}%</span>
+                    </div>
+                    <div class="capacity-progress-bar">
+                        <div class="capacity-progress-fill ${getCapacityColor(boatPercentage)}" style="width: ${boatPercentage}%"></div>
+                    </div>
+                    
+                    <div class="capacity-progress-header" style="margin-top: 8px;">
+                        <span>Greater Male</span>
+                        <span>${greaterMalePercentage}%</span>
+                    </div>
+                    <div class="capacity-progress-bar">
+                        <div class="capacity-progress-fill ${getCapacityColor(greaterMalePercentage)}" style="width: ${greaterMalePercentage}%"></div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 10px; text-align: right;">
+                    <button class="action-btn update-btn" onclick="resetUserCapacity('${user.email}')" style="font-size: 11px;">
+                        <i class="fas fa-undo"></i> Reset Usage
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    return html;
+}
+
+// Add individual user capacity bar (for staff view)
+function addMyCapacityBar() {
+    // Add to each delivery section (cargo, boat, greater-male)
+    const sections = ['cargo-delivery', 'boat-delivery', 'greater-male-delivery'];
+    
+    sections.forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        if (!section) return;
+        
+        const formContainer = section.querySelector('.form-container');
+        if (!formContainer) return;
+        
+        const type = sectionId.replace('-delivery', '');
+        const percentage = getUserCapacityPercentage(currentUser.email, type);
+        const usage = userDailyUsage[currentUser.email] || { [type]: 0 };
+        const used = usage[type] || 0;
+        
+        const capacityBarHTML = `
+            <div class="my-capacity-container">
+                <div class="my-capacity-title">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Your Daily Delivery Capacity
+                </div>
+                <div class="my-capacity-bars">
+                    <div class="my-capacity-bar-item">
+                        <div class="my-capacity-bar-header">
+                            <span>Today's ${type.charAt(0).toUpperCase() + type.slice(1)} Deliveries</span>
+                            <span>${used} / ${dailyCapacity[type]}</span>
+                        </div>
+                        <div class="my-capacity-bar-progress">
+                            <div class="my-capacity-bar-fill ${getCapacityColor(percentage)}" style="width: ${percentage}%"></div>
+                        </div>
+                        <div class="my-capacity-bar-header" style="margin-top: 5px;">
+                            <span>Remaining</span>
+                            <span>${dailyCapacity[type] - used}</span>
+                        </div>
+                    </div>
+                </div>
+                ${percentage >= 80 ? '<div style="margin-top: 10px; font-size: 12px; color: #ffd700;"><i class="fas fa-exclamation-triangle"></i> You are approaching your daily limit!</div>' : ''}
+                ${percentage >= 100 ? '<div style="margin-top: 10px; font-size: 12px; color: #f44336;"><i class="fas fa-ban"></i> You have reached your daily limit!</div>' : ''}
+            </div>
+        `;
+        
+        // Remove existing bar if any
+        const existingBar = section.querySelector('.my-capacity-container');
+        if (existingBar) {
+            existingBar.remove();
+        }
+        
+        formContainer.insertAdjacentHTML('beforebegin', capacityBarHTML);
+    });
+}
+
+// Reset user capacity (admin function) - updates Firebase
+function resetUserCapacity(userEmail) {
+    if (!confirm(`Are you sure you want to reset daily usage for this user?`)) return;
+    
+    if (userDailyUsage[userEmail]) {
+        userDailyUsage[userEmail] = {
+            cargo: 0,
+            boat: 0,
+            greaterMale: 0,
+            date: new Date().toISOString().split('T')[0]
+        };
+        
+        // Save to Firebase
+        saveUserDailyUsageToFirebase();
+        
+        refreshUserCapacity();
+        showNotification('User capacity has been reset');
+    }
+}
+
+// Refresh user capacity overview
+function refreshUserCapacity() {
+    const listElement = document.getElementById('userCapacityList');
+    if (listElement) {
+        listElement.innerHTML = generateUserCapacityList();
+    }
+}
+
+// Override the existing save functions to track capacity with Firebase
+function overrideDeliveryFunctions() {
+    // Store original functions
+    const originalSaveCargo = window.saveCargoDelivery || function() {};
+    const originalSaveBoat = window.saveBoatDelivery || function() {};
+    const originalSaveGreaterMale = window.saveGreaterMaleDelivery || function() {};
+    
+    // Override cargo save function
+    window.saveCargoDelivery = function(cargoData) {
+        if (currentUser && currentUser.role !== 'admin') {
+            if (!canCreateDelivery(currentUser.email, 'cargo')) {
+                showNotification('You have reached your daily cargo delivery limit!', 'warning');
+                return false;
+            }
+        }
+        
+        // Call original function
+        const result = originalSaveCargo(cargoData);
+        
+        // Track usage if save was successful
+        if (result !== false && currentUser) {
+            trackDeliveryUsage(currentUser.email, 'cargo');
+        }
+        
+        return result;
+    };
+    
+    // Override boat save function
+    window.saveBoatDelivery = function(boatData) {
+        if (currentUser && currentUser.role !== 'admin') {
+            if (!canCreateDelivery(currentUser.email, 'boat')) {
+                showNotification('You have reached your daily boat delivery limit!', 'warning');
+                return false;
+            }
+        }
+        
+        const result = originalSaveBoat(boatData);
+        
+        if (result !== false && currentUser) {
+            trackDeliveryUsage(currentUser.email, 'boat');
+        }
+        
+        return result;
+    };
+    
+    // Override Greater Male save function
+    window.saveGreaterMaleDelivery = function(greaterMaleData) {
+        if (currentUser && currentUser.role !== 'admin') {
+            if (!canCreateDelivery(currentUser.email, 'greaterMale')) {
+                showNotification('You have reached your daily Greater Male delivery limit!', 'warning');
+                return false;
+            }
+        }
+        
+        const result = originalSaveGreaterMale(greaterMaleData);
+        
+        if (result !== false && currentUser) {
+            trackDeliveryUsage(currentUser.email, 'greaterMale');
+        }
+        
+        return result;
+    };
+}
+
+// Initialize capacity system when app loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for currentUser to be set and Firebase to be ready
+    const checkUser = setInterval(function() {
+        if (currentUser && firebase) {
+            clearInterval(checkUser);
+            initCapacitySystem();
+            overrideDeliveryFunctions();
+        }
+    }, 100);
+});
+
+// Add periodic check for day change (every hour)
+setInterval(checkAndResetDailyUsage, 3600000);
+
+// Add manual reset for all users (admin function)
+function resetAllUserCapacity() {
+    if (!confirm('Are you sure you want to reset daily usage for ALL users?')) return;
+    
+    const today = new Date().toISOString().split('T')[0];
+    
+    for (let userEmail in userDailyUsage) {
+        userDailyUsage[userEmail] = {
+            cargo: 0,
+            boat: 0,
+            greaterMale: 0,
+            date: today
+        };
+    }
+    
+    dailyCapacity.lastReset = today;
+    
+    // Save to Firebase
+    saveCapacitySettingsToFirebase();
+    saveUserDailyUsageToFirebase();
+    
+    refreshUserCapacity();
+    showNotification('All user capacities have been reset');
+}
+
+// Get capacity summary for dashboard
+function getCapacitySummary() {
+    let totalDeliveriesToday = 0;
+    let totalCapacity = dailyCapacity.cargo + dailyCapacity.boat + dailyCapacity.greaterMale;
+    
+    for (let userEmail in userDailyUsage) {
+        const usage = userDailyUsage[userEmail];
+        totalDeliveriesToday += (usage.cargo + usage.boat + usage.greaterMale);
+    }
+    
+    return {
+        totalDeliveries: totalDeliveriesToday,
+        totalCapacity: totalCapacity,
+        usagePercentage: Math.min(Math.round((totalDeliveriesToday / totalCapacity) * 100), 100),
+        cargoUsed: Object.values(userDailyUsage).reduce((sum, u) => sum + (u.cargo || 0), 0),
+        boatUsed: Object.values(userDailyUsage).reduce((sum, u) => sum + (u.boat || 0), 0),
+        greaterMaleUsed: Object.values(userDailyUsage).reduce((sum, u) => sum + (u.greaterMale || 0), 0)
+    };
+}
+
+// Add capacity summary to admin dashboard
+function addCapacitySummaryToDashboard() {
+    const revenueDashboard = document.getElementById('revenue-dashboard');
+    if (!revenueDashboard || currentUser?.role !== 'admin') return;
+    
+    const summary = getCapacitySummary();
+    
+    const summaryHTML = `
+        <div class="capacity-container" style="margin-bottom: 25px;">
+            <div class="capacity-header">
+                <div class="capacity-title">
+                    <i class="fas fa-chart-pie"></i> Today's Capacity Overview
+                </div>
+                <button class="capacity-reset" onclick="resetAllUserCapacity()">
+                    <i class="fas fa-redo-alt"></i> Reset All
+                </button>
+            </div>
+            
+            <div class="capacity-stats">
+                <div class="capacity-stat-card">
+                    <div class="capacity-stat-label">Total Deliveries Today</div>
+                    <div class="capacity-stat-value">${summary.totalDeliveries}</div>
+                </div>
+                <div class="capacity-stat-card">
+                    <div class="capacity-stat-label">Total Capacity</div>
+                    <div class="capacity-stat-value">${summary.totalCapacity}</div>
+                </div>
+                <div class="capacity-stat-card">
+                    <div class="capacity-stat-label">Usage Rate</div>
+                    <div class="capacity-stat-value">${summary.usagePercentage}%</div>
+                </div>
+            </div>
+            
+            <div class="capacity-progress-container">
+                <div class="capacity-progress-header">
+                    <span>Cargo: ${summary.cargoUsed}/${dailyCapacity.cargo}</span>
+                    <span>${Math.round((summary.cargoUsed / dailyCapacity.cargo) * 100)}%</span>
+                </div>
+                <div class="capacity-progress-bar">
+                    <div class="capacity-progress-fill ${getCapacityColor((summary.cargoUsed / dailyCapacity.cargo) * 100)}" 
+                         style="width: ${(summary.cargoUsed / dailyCapacity.cargo) * 100}%"></div>
+                </div>
+                
+                <div class="capacity-progress-header" style="margin-top: 10px;">
+                    <span>Boat: ${summary.boatUsed}/${dailyCapacity.boat}</span>
+                    <span>${Math.round((summary.boatUsed / dailyCapacity.boat) * 100)}%</span>
+                </div>
+                <div class="capacity-progress-bar">
+                    <div class="capacity-progress-fill ${getCapacityColor((summary.boatUsed / dailyCapacity.boat) * 100)}" 
+                         style="width: ${(summary.boatUsed / dailyCapacity.boat) * 100}%"></div>
+                </div>
+                
+                <div class="capacity-progress-header" style="margin-top: 10px;">
+                    <span>Greater Male: ${summary.greaterMaleUsed}/${dailyCapacity.greaterMale}</span>
+                    <span>${Math.round((summary.greaterMaleUsed / dailyCapacity.greaterMale) * 100)}%</span>
+                </div>
+                <div class="capacity-progress-bar">
+                    <div class="capacity-progress-fill ${getCapacityColor((summary.greaterMaleUsed / dailyCapacity.greaterMale) * 100)}" 
+                         style="width: ${(summary.greaterMaleUsed / dailyCapacity.greaterMale) * 100}%"></div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Insert at the beginning of revenue dashboard
+    revenueDashboard.insertAdjacentHTML('afterbegin', summaryHTML);
+}
+
+// Call this when loading revenue dashboard
+const originalLoadRevenueData = window.loadRevenueData;
+window.loadRevenueData = function() {
+    if (originalLoadRevenueData) {
+        originalLoadRevenueData();
+    }
+    if (currentUser?.role === 'admin') {
+        addCapacitySummaryToDashboard();
+    }
+};
+</script>
+<style>
+    <!-- Add this CSS at the end of your style section -->
+<style>
+    /* Capacity Management Styles */
+    .capacity-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+        color: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .capacity-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .capacity-title {
+        font-size: 18px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .capacity-reset {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 14px;
+    }
+
+    .capacity-reset:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .capacity-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .capacity-stat-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 15px;
+        backdrop-filter: blur(10px);
+    }
+
+    .capacity-stat-label {
+        font-size: 14px;
+        opacity: 0.9;
+        margin-bottom: 5px;
+    }
+
+    .capacity-stat-value {
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .capacity-progress-container {
+        margin-top: 15px;
+    }
+
+    .capacity-progress-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+
+    .capacity-progress-bar {
+        width: 100%;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+        overflow: hidden;
+        margin-bottom: 5px;
+    }
+
+    .capacity-progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        border-radius: 5px;
+        transition: width 0.3s ease;
+        position: relative;
+    }
+
+    .capacity-progress-fill.warning {
+        background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .capacity-progress-fill.danger {
+        background: linear-gradient(90deg, #ff6b6b 0%, #ee5a24 100%);
+    }
+
+    .capacity-progress-fill.full {
+        background: linear-gradient(90deg, #fc466b 0%, #3f5efb 100%);
+    }
+
+    .capacity-progress-text {
+        font-size: 12px;
+        opacity: 0.9;
+    }
+
+    /* User Capacity Section */
+    .user-capacity-section {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 25px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .user-capacity-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .user-capacity-title {
+        font-size: 18px;
+        color: #1a2a6c;
+        font-weight: 600;
+    }
+
+    .user-capacity-filter {
+        display: flex;
+        gap: 10px;
+    }
+
+    .user-capacity-card {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-left: 4px solid #4cc9f0;
+        transition: all 0.3s;
+    }
+
+    .user-capacity-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .user-capacity-card.admin {
+        border-left-color: #ff9800;
+    }
+
+    .user-capacity-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .user-capacity-name {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .user-capacity-email {
+        font-size: 12px;
+        color: #666;
+    }
+
+    .user-capacity-role {
+        font-size: 11px;
+        padding: 3px 8px;
+        border-radius: 10px;
+        background: #4cc9f0;
+        color: white;
+    }
+
+    .user-capacity-role.admin {
+        background: #ff9800;
+    }
+
+    .user-capacity-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin: 15px 0;
+    }
+
+    .user-capacity-stat {
+        text-align: center;
+    }
+
+    .user-capacity-stat-label {
+        font-size: 11px;
+        color: #666;
+        margin-bottom: 3px;
+    }
+
+    .user-capacity-stat-value {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    /* Admin Capacity Settings */
+    .capacity-settings {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .capacity-settings-title {
+        font-size: 18px;
+        color: #1a2a6c;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .capacity-input-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .capacity-input {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .capacity-input label {
+        font-weight: 500;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .capacity-input input {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .capacity-input input:focus {
+        border-color: #4cc9f0;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(76, 201, 240, 0.2);
+    }
+
+    .save-capacity-btn {
+        padding: 12px 25px;
+        background: linear-gradient(135deg, #1a2a6c, #4cc9f0);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+    }
+
+    .save-capacity-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Individual User Capacity Bar (for staff view) */
+    .my-capacity-container {
+        background: linear-gradient(135deg, #1a2a6c, #4cc9f0);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+        color: white;
+    }
+
+    .my-capacity-title {
+        font-size: 16px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .my-capacity-bars {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .my-capacity-bar-item {
+        width: 100%;
+    }
+
+    .my-capacity-bar-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        font-size: 13px;
+    }
+
+    .my-capacity-bar-progress {
+        width: 100%;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .my-capacity-bar-fill {
+        height: 100%;
+        background: #ffd700;
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+
+    .my-capacity-bar-fill.warning {
+        background: #ff9800;
+    }
+
+    .my-capacity-bar-fill.danger {
+        background: #f44336;
+    }
+
+    .my-capacity-bar-fill.full {
+        background: linear-gradient(90deg, #f44336, #ff9800);
+        animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+</style>
+</style>
 </body>
-
 </html>
