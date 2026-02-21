@@ -11754,5 +11754,236 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+<script>
+    // Add this flag to prevent duplicate submissions
+let isProcessingPayment = false;
+
+// Update the confirmPayment event listener
+confirmPayment.addEventListener('click', function() {
+    // Check if already processing
+    if (isProcessingPayment) {
+        showNotification('Payment is already being processed...');
+        return;
+    }
+    
+    if (!paymentSlip.files[0]) {
+        showNotification('Please upload payment slip');
+        return;
+    }
+    
+    const deliveryData = window.tempDeliveryData;
+    if (!deliveryData) return;
+    
+    // Set processing flag
+    isProcessingPayment = true;
+    
+    // Disable the confirm button to prevent double clicks
+    this.disabled = true;
+    this.textContent = 'Processing...';
+    
+    // Read payment slip
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        deliveryData.paymentSlip = e.target.result;
+        deliveryData.paymentStatus = 'under_review';
+        deliveryData.paidAt = new Date().toISOString();
+        
+        // Check if delivery already exists to prevent duplicates
+        let deliveryExists = false;
+        
+        if (deliveryData.type === 'cargo') {
+            deliveryExists = cargoDeliveries.some(d => d.referenceNumber === deliveryData.referenceNumber);
+            if (!deliveryExists) {
+                saveCargoDelivery(deliveryData);
+            }
+        } else if (deliveryData.type === 'boat') {
+            deliveryExists = boatDeliveries.some(d => d.referenceNumber === deliveryData.referenceNumber);
+            if (!deliveryExists) {
+                saveBoatDelivery(deliveryData);
+            }
+        } else if (deliveryData.type === 'greater-male') {
+            deliveryExists = greaterMaleDeliveries.some(d => d.referenceNumber === deliveryData.referenceNumber);
+            if (!deliveryExists) {
+                saveGreaterMaleDelivery(deliveryData);
+            }
+        }
+        
+        if (deliveryExists) {
+            showNotification('This delivery has already been saved!');
+        }
+        
+        // Reset and close modal
+        paymentModal.classList.remove('active');
+        paymentSlip.value = '';
+        window.tempDeliveryData = null;
+        
+        // Reset button state
+        confirmPayment.disabled = false;
+        confirmPayment.textContent = 'Confirm Payment';
+        isProcessingPayment = false;
+    };
+    
+    reader.onerror = function() {
+        showNotification('Error reading payment slip');
+        confirmPayment.disabled = false;
+        confirmPayment.textContent = 'Confirm Payment';
+        isProcessingPayment = false;
+    };
+    
+    reader.readAsDataURL(paymentSlip.files[0]);
+});
+
+// Also update the save functions to prevent duplicates
+function saveCargoDelivery(cargoData) {
+    // Check if delivery already exists
+    const exists = cargoDeliveries.some(d => d.referenceNumber === cargoData.referenceNumber);
+    if (exists) {
+        console.log('Delivery already exists, skipping save');
+        return;
+    }
+    
+    // Check capacity
+    if (!canCreateDelivery('cargo')) {
+        showNotification('Cargo capacity is full for today!');
+        return;
+    }
+    
+    incrementCapacityUsage('cargo');
+    cargoDeliveries.push(cargoData);
+    saveCargoData();
+    loadCargoData();
+    loadUserReferences();
+    cargoForm.reset();
+    resetWeightSelection();
+    
+    // Auto-fill user info again after form reset
+    autoFillUserInfo();
+    
+    // Add notification
+    addNotification(
+        'New Cargo Delivery Created',
+        `Cargo delivery for ${cargoData.customerName} has been created and is awaiting payment approval. Reference: ${cargoData.referenceNumber}`,
+        currentUser.email
+    );
+    
+    showNotification('Cargo delivery saved successfully! Payment is under review.');
+}
+
+function saveBoatDelivery(boatData) {
+    // Check if delivery already exists
+    const exists = boatDeliveries.some(d => d.referenceNumber === boatData.referenceNumber);
+    if (exists) {
+        console.log('Delivery already exists, skipping save');
+        return;
+    }
+    
+    // Check capacity
+    if (!canCreateDelivery('boat')) {
+        showNotification('Boat capacity is full for today!');
+        return;
+    }
+    
+    incrementCapacityUsage('boat');
+    boatDeliveries.push(boatData);
+    saveBoatData();
+    loadBoatData();
+    loadUserReferences();
+    boatForm.reset();
+    resetWeightSelection();
+    
+    // Auto-fill user info again after form reset
+    autoFillUserInfo();
+    
+    // Add notification
+    addNotification(
+        'New Boat Delivery Created',
+        `Boat delivery for ${boatData.customerName} has been created and is awaiting payment approval. Reference: ${boatData.referenceNumber}`,
+        currentUser.email
+    );
+    
+    showNotification('Boat delivery saved successfully! Payment is under review.');
+}
+
+function saveGreaterMaleDelivery(greaterMaleData) {
+    // Check if delivery already exists
+    const exists = greaterMaleDeliveries.some(d => d.referenceNumber === greaterMaleData.referenceNumber);
+    if (exists) {
+        console.log('Delivery already exists, skipping save');
+        return;
+    }
+    
+    // Check capacity
+    if (!canCreateDelivery('greaterMale')) {
+        showNotification('Greater Male capacity is full for today!');
+        return;
+    }
+    
+    incrementCapacityUsage('greaterMale');
+    greaterMaleDeliveries.push(greaterMaleData);
+    saveGreaterMaleData();
+    loadGreaterMaleData();
+    loadUserReferences();
+    greaterMaleForm.reset();
+    resetGreaterMaleForm();
+    
+    // Auto-fill user info again after form reset
+    autoFillUserInfo();
+    
+    // Add notification
+    addNotification(
+        'New Greater Male City Delivery Created',
+        `Greater Male City delivery for ${greaterMaleData.customerName} has been created and is awaiting payment approval. Reference: ${greaterMaleData.referenceNumber}`,
+        currentUser.email
+    );
+    
+    showNotification('Greater Male City delivery saved successfully! Payment is under review.');
+}
+
+// Also add this to prevent double form submissions
+const forms = [cargoForm, boatForm, greaterMaleForm];
+forms.forEach(form => {
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Check if form is already submitting
+            if (form.dataset.submitting === 'true') {
+                e.preventDefault();
+                showNotification('Form is already being submitted...');
+                return;
+            }
+            
+            // Set submitting flag
+            form.dataset.submitting = 'true';
+            
+            // Reset flag after 5 seconds (in case something goes wrong)
+            setTimeout(() => {
+                form.dataset.submitting = 'false';
+            }, 5000);
+        });
+    }
+});
+
+// Add this to ensure the payment modal close button also resets the processing flag
+cancelPayment.addEventListener('click', function() {
+    paymentModal.classList.remove('active');
+    paymentSlip.value = '';
+    window.tempDeliveryData = null;
+    confirmPayment.disabled = false;
+    confirmPayment.textContent = 'Confirm Payment';
+    isProcessingPayment = false;
+});
+
+// Also handle modal close via overlay click
+paymentModal.addEventListener('click', function(e) {
+    if (e.target === paymentModal) {
+        paymentModal.classList.remove('active');
+        paymentSlip.value = '';
+        window.tempDeliveryData = null;
+        confirmPayment.disabled = false;
+        confirmPayment.textContent = 'Confirm Payment';
+        isProcessingPayment = false;
+    }
+});
+</script>
+
 </body>
 </html>
