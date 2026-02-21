@@ -11443,5 +11443,316 @@ document.addEventListener('DOMContentLoaded', function() {
     color: #333;
 }
 </style>
+<script>
+    // Add this to your JavaScript section, replacing the existing boat form submission handler
+
+// Boat form submission
+boatForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const selectedWeight = boatWeightOptions.querySelector('.weight-btn.active');
+    if (!selectedWeight) {
+        showNotification('Please select a weight range');
+        return;
+    }
+    
+    // Check if capacity is available
+    if (!canCreateDelivery('boat')) {
+        showNotification('Boat capacity is full for today!');
+        return;
+    }
+    
+    const referenceNumber = generateReferenceNumber('BOAT');
+    
+    const boatData = {
+        customerName: document.getElementById('boatCustomerName').value,
+        customerContact: document.getElementById('boatCustomerContact').value,
+        pickupMessage: document.getElementById('pickupMessage').value,
+        boatName: document.getElementById('boatName').value,
+        island: document.getElementById('island').value,
+        packageLabel: document.getElementById('packageLabel').value,
+        packageWeight: `${selectedWeight.getAttribute('data-min')}-${selectedWeight.getAttribute('data-max')} kg`,
+        weightMin: parseInt(selectedWeight.getAttribute('data-min')),
+        weightMax: parseInt(selectedWeight.getAttribute('data-max')),
+        deliveryPrice: parseInt(selectedWeight.getAttribute('data-price')),
+        deliveryDate: document.getElementById('boatDeliveryDate').value,
+        status: 'Order Placed',
+        progress: 1,
+        id: Date.now(),
+        referenceNumber: referenceNumber,
+        type: 'boat',
+        createdAt: new Date().toISOString(),
+        paymentStatus: 'under_review',
+        createdBy: currentUser.email
+    };
+    
+    // Show payment modal
+    showPaymentModal(boatData);
+});
+
+// Update the showPaymentModal function to handle boat deliveries
+function showPaymentModal(deliveryData) {
+    paymentAmount.textContent = deliveryData.deliveryPrice || deliveryData.totalPrice;
+    paymentModal.classList.add('active');
+    
+    // Store delivery data temporarily
+    window.tempDeliveryData = deliveryData;
+}
+
+// Update the confirmPayment function to properly handle boat deliveries
+confirmPayment.addEventListener('click', function() {
+    if (!paymentSlip.files[0]) {
+        showNotification('Please upload payment slip');
+        return;
+    }
+    
+    const deliveryData = window.tempDeliveryData;
+    if (!deliveryData) return;
+    
+    // Read payment slip
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        deliveryData.paymentSlip = e.target.result;
+        deliveryData.paymentStatus = 'under_review';
+        deliveryData.paidAt = new Date().toISOString();
+        
+        // Save delivery based on type
+        if (deliveryData.type === 'cargo') {
+            saveCargoDelivery(deliveryData);
+        } else if (deliveryData.type === 'boat') {
+            saveBoatDelivery(deliveryData);
+        } else if (deliveryData.type === 'greater-male') {
+            saveGreaterMaleDelivery(deliveryData);
+        }
+        
+        // Reset and close modal
+        paymentModal.classList.remove('active');
+        paymentSlip.value = '';
+        window.tempDeliveryData = null;
+    };
+    reader.readAsDataURL(paymentSlip.files[0]);
+});
+
+// Make sure the saveBoatDelivery function is properly defined
+function saveBoatDelivery(boatData) {
+    // Check capacity again before saving
+    if (!canCreateDelivery('boat')) {
+        showNotification('Boat capacity is full for today!');
+        return;
+    }
+    
+    // Increment capacity usage
+    incrementCapacityUsage('boat');
+    
+    // Add to boat deliveries array
+    boatDeliveries.push(boatData);
+    
+    // Save to Firebase or localStorage
+    saveBoatData();
+    
+    // Reload data displays
+    loadBoatData();
+    loadUserReferences();
+    
+    // Reset the form
+    boatForm.reset();
+    resetWeightSelection();
+    
+    // Auto-fill user info again after form reset
+    autoFillUserInfo();
+    
+    // Add notification
+    addNotification(
+        'New Boat Delivery Created',
+        `Boat delivery for ${boatData.customerName} has been created and is awaiting payment approval. Reference: ${boatData.referenceNumber}`,
+        currentUser.email
+    );
+    
+    // Show success notification
+    showNotification('Boat delivery saved successfully! Payment is under review.');
+}
+
+// Make sure the loadBoatData function is properly defined
+function loadBoatData() {
+    boatTableBody.innerHTML = '';
+    
+    // Filter data based on user role
+    let displayBoatDeliveries = boatDeliveries;
+    if (currentUser && currentUser.role !== 'admin') {
+        displayBoatDeliveries = boatDeliveries.filter(d => d.createdBy === currentUser.email);
+    }
+    
+    if (displayBoatDeliveries.length === 0) {
+        boatEmptyMessage.style.display = 'block';
+        return;
+    }
+    
+    boatEmptyMessage.style.display = 'none';
+    
+    displayBoatDeliveries.forEach(delivery => {
+        const statusClass = getStatusClass(delivery.status);
+        const paymentClass = getPaymentStatusClass(delivery.paymentStatus);
+        const paymentText = getPaymentStatusText(delivery.paymentStatus);
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>
+                <a class="reference-link ${delivery.status === 'Delivered' ? 'reference-completed' : 'reference-pending'}" onclick="trackDeliveryByReference('${delivery.referenceNumber}')">
+                    ${delivery.referenceNumber}
+                </a>
+            </td>
+            <td>${delivery.customerName}</td>
+            <td><a href="tel:${delivery.customerContact}" class="clickable-phone">${delivery.customerContact}</a></td>
+            <td>${delivery.boatName}</td>
+            <td>${delivery.island}</td>
+            <td>${delivery.packageLabel}</td>
+            <td>${delivery.packageWeight}</td>
+            <td>${delivery.deliveryPrice} MVR</td>
+            <td>${formatDate(delivery.deliveryDate)}</td>
+            <td>
+                <div class="countdown-timer" id="countdown-${delivery.id}">
+                    <div class="countdown-label">Time Remaining</div>
+                    <div class="countdown-display">
+                        <div class="countdown-unit">
+                            <span class="countdown-value" id="days-${delivery.id}">00</span>
+                            <span class="countdown-label-small">Days</span>
+                        </div>
+                        <div class="countdown-unit">
+                            <span class="countdown-value" id="hours-${delivery.id}">00</span>
+                            <span class="countdown-label-small">Hours</span>
+                        </div>
+                        <div class="countdown-unit">
+                            <span class="countdown-value" id="minutes-${delivery.id}">00</span>
+                            <span class="countdown-label-small">Minutes</span>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <span class="status-badge ${statusClass}">${delivery.status}</span>
+            </td>
+            <td>
+                <span class="status-badge ${paymentClass}">${paymentText}</span>
+                ${delivery.paymentSlip ? `<br><button class="action-btn view-btn" onclick="viewPaymentSlip('${delivery.paymentSlip}')">View Slip</button>` : ''}
+            </td>
+            <td>
+                <div class="action-buttons">
+                    <button class="action-btn update-btn" onclick="openStatusModal('boat', ${delivery.id})">Update</button>
+                    ${currentUser && currentUser.role === 'admin' && delivery.paymentStatus === 'under_review' ? 
+                        `<button class="action-btn review-btn" onclick="approvePayment('boat', ${delivery.id})">Approve</button>` : ''}
+                    <button class="action-btn delete-btn" onclick="deleteDelivery('boat', ${delivery.id})">Delete</button>
+                </div>
+            </td>
+        `;
+        boatTableBody.appendChild(row);
+        
+        // Start countdown timer for this delivery
+        if (delivery.deliveryDate) {
+            startCountdownTimer(delivery.id, delivery.deliveryDate);
+        }
+    });
+}
+
+// Make sure boat price ranges are properly loaded
+function loadBoatPriceRanges() {
+    if (boatPriceRangesRef) {
+        boatPriceRangesRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                boatPriceRanges = data;
+                loadBoatPriceList();
+                loadBoatWeightOptions();
+            }
+        });
+    } else {
+        // Fallback to localStorage
+        const savedBoatPrices = localStorage.getItem('boatPriceRanges');
+        if (savedBoatPrices) {
+            boatPriceRanges = JSON.parse(savedBoatPrices);
+        } else {
+            // Default boat price ranges if none exist
+            boatPriceRanges = [
+                { min: 0, max: 1, price: 60 },
+                { min: 2, max: 3, price: 85 },
+                { min: 4, max: 6, price: 110 },
+                { min: 7, max: 10, price: 160 }
+            ];
+        }
+        loadBoatPriceList();
+        loadBoatWeightOptions();
+    }
+}
+
+// Load boat weight options
+function loadBoatWeightOptions() {
+    if (!boatWeightOptions) return;
+    
+    boatWeightOptions.innerHTML = '';
+    
+    if (!boatPriceRanges || boatPriceRanges.length === 0) {
+        boatWeightOptions.innerHTML = '<div class="empty-message">No weight options available</div>';
+        return;
+    }
+    
+    // Sort price ranges by min weight
+    const sortedRanges = [...boatPriceRanges].sort((a, b) => a.min - b.min);
+    
+    sortedRanges.forEach(range => {
+        const option = document.createElement('div');
+        option.className = 'weight-option';
+        option.innerHTML = `
+            <button type="button" class="weight-btn" data-min="${range.min}" data-max="${range.max}" data-price="${range.price}">
+                ${range.min}-${range.max} kg
+            </button>
+        `;
+        boatWeightOptions.appendChild(option);
+    });
+    
+    // Add event listeners to boat weight buttons
+    document.querySelectorAll('#boatWeightOptions .weight-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active class from all buttons
+            document.querySelectorAll('#boatWeightOptions .weight-btn').forEach(b => {
+                b.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Update boat price display
+            const price = this.getAttribute('data-price');
+            if (boatDeliveryPrice) {
+                boatDeliveryPrice.textContent = price;
+            }
+        });
+    });
+}
+
+// Initialize boat price ranges when app loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Load boat price ranges
+    setTimeout(() => {
+        loadBoatPriceRanges();
+    }, 500);
+    
+    // Load boat weight options when boat delivery section becomes active
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                const target = mutation.target;
+                if (target.id === 'boat-delivery' && target.classList.contains('active')) {
+                    // Boat delivery section is now active, update weight options
+                    setTimeout(loadBoatWeightOptions, 100);
+                }
+            }
+        });
+    });
+    
+    const boatSection = document.getElementById('boat-delivery');
+    if (boatSection) {
+        observer.observe(boatSection, { attributes: true });
+    }
+});
+</script>
 </body>
 </html>
