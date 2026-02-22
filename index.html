@@ -13,7 +13,11 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <!-- Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_huqokZn3o6D1a5XenNO0FQmQuOKF8pw&libraries=places,drawing,geometry&callback=initApp" async defer></script>
+   <!-- Google Maps API - Replace this line in your head section -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYnCRTkVzXkQo_T7STfiJdyD1HwCMW20A&libraries=places,drawing,geometry&callback=initApp" async defer></script>
+     <script src="https://www.google.com/recaptcha/enterprise.js?render=6Lf1h3MsAAAAAOlT9daVFJRG4HnKabJ_Xi43ejrb"></script>
+    <!-- Add this to the head section after other Firebase scripts -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <style>
        /* Mobile Bottom Navigation - Hidden by default */
 .mobile-bottom-nav {
@@ -3720,6 +3724,54 @@
     </style>
 </head>
 <body>
+    <!-- Add this modal for password reset right before the closing body tag or with other modals -->
+<div class="modal-overlay" id="resetPasswordModal">
+    <div class="modal">
+        <h3 class="modal-title">Reset Password</h3>
+        
+        <!-- Step 1: Enter Phone Number -->
+        <div id="resetStep1">
+            <div class="form-field">
+                <label for="resetPhone">Phone Number (Maldivian)</label>
+                <input type="tel" id="resetPhone" placeholder="Enter 7-digit number (e.g., 7XXXXXX)" maxlength="7" pattern="[7][0-9]{6}">
+                <small style="color: #666; display: block; margin-top: 5px;">Enter 7-digit number starting with 7</small>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeResetModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="sendResetOTP()">Send OTP</button>
+            </div>
+        </div>
+        
+        <!-- Step 2: Enter OTP -->
+        <div id="resetStep2" style="display: none;">
+            <div class="form-field">
+                <label for="resetOTP">Enter OTP</label>
+                <input type="text" id="resetOTP" placeholder="Enter 6-digit OTP" maxlength="6" pattern="[0-9]{6}">
+                <div id="otpTimer" style="text-align: center; margin-top: 10px; color: #4cc9f0;"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="goBackToStep1()">Back</button>
+                <button class="modal-btn confirm" onclick="verifyResetOTP()">Verify OTP</button>
+            </div>
+        </div>
+        
+        <!-- Step 3: Create New Password -->
+        <div id="resetStep3" style="display: none;">
+            <div class="form-field">
+                <label for="newPassword">New Password</label>
+                <input type="password" id="newPassword" placeholder="Enter new password">
+            </div>
+            <div class="form-field">
+                <label for="confirmNewPassword">Confirm New Password</label>
+                <input type="password" id="confirmNewPassword" placeholder="Confirm new password">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeResetModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="updatePassword()">Update Password</button>
+            </div>
+        </div>
+    </div>
+</div>
     <!-- Mobile Bottom Navigation -->
 <div class="mobile-bottom-nav" style="display: none;">
     <a href="#" class="mobile-nav-item active" data-section="cargo-delivery">
@@ -11985,360 +12037,9 @@ paymentModal.addEventListener('click', function(e) {
 });
 </script>
 <script>
-    // SIMPLIFIED TRACK DELIVERY - Track only the clicked reference number
-function trackDeliveryByReference(referenceNumber) {
-    // Search for the specific delivery in all delivery types
-    let delivery = null;
     
-    // Search in cargo deliveries
-    if (typeof cargoDeliveries !== 'undefined' && cargoDeliveries) {
-        delivery = cargoDeliveries.find(d => d.referenceNumber === referenceNumber);
-    }
-    
-    // If not found, search in boat deliveries
-    if (!delivery && typeof boatDeliveries !== 'undefined' && boatDeliveries) {
-        delivery = boatDeliveries.find(d => d.referenceNumber === referenceNumber);
-    }
-    
-    // If not found, search in Greater Male deliveries
-    if (!delivery && typeof greaterMaleDeliveries !== 'undefined' && greaterMaleDeliveries) {
-        delivery = greaterMaleDeliveries.find(d => d.referenceNumber === referenceNumber);
-    }
-    
-    if (!delivery) {
-        showNotification('Delivery not found with this reference number');
-        return;
-    }
-    
-    // Switch to track delivery section
-    const trackDeliverySection = document.getElementById('track-delivery');
-    if (trackDeliverySection) {
-        // Hide all sections
-        document.querySelectorAll('.dashboard-section').forEach(section => {
-            section.classList.remove('active');
-        });
-        
-        // Show track delivery section
-        trackDeliverySection.classList.add('active');
-        
-        // Update active nav link if exists
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('data-section') === 'track-delivery') {
-                link.classList.add('active');
-            }
-        });
-        
-        // Clear the search input
-        const searchContact = document.getElementById('searchContact');
-        if (searchContact) {
-            searchContact.value = '';
-        }
-        
-        // Hide customer references if visible
-        const customerReferences = document.getElementById('customerReferences');
-        if (customerReferences) {
-            customerReferences.classList.remove('active');
-        }
-        
-        // Display ONLY this delivery's progress
-        displaySingleDeliveryProgress(delivery);
-    }
-}
-
-// Display progress for a SINGLE delivery only
-function displaySingleDeliveryProgress(delivery) {
-    if (!delivery) return;
-    
-    // Get the customer details container
-    const customerDetails = document.getElementById('customerDetails');
-    const customerInfo = document.getElementById('customerInfo');
-    const deliveryPreview = document.getElementById('deliveryPreview');
-    const noImageMessage = document.getElementById('noImageMessage');
-    const progressSteps = document.querySelectorAll('.progress-step');
-    const progressBar = document.getElementById('progressBar');
-    
-    if (!customerDetails || !customerInfo) return;
-    
-    // Show customer details
-    customerDetails.classList.add('active');
-    
-    // Build delivery information HTML for this specific delivery
-    let detailsHTML = '';
-    
-    // Delivery type icon and reference header
-    let typeIcon = '';
-    if (delivery.type === 'cargo') typeIcon = 'fa-truck';
-    else if (delivery.type === 'boat') typeIcon = 'fa-ship';
-    else if (delivery.type === 'greater-male') typeIcon = 'fa-city';
-    
-    detailsHTML = `
-        <div style="background: linear-gradient(135deg, #1a2a6c, #4cc9f0); color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
-            <i class="fas ${typeIcon}" style="font-size: 32px; margin-bottom: 10px;"></i>
-            <h3 style="margin: 0; font-size: 20px;">${delivery.referenceNumber}</h3>
-            <p style="margin: 5px 0 0; opacity: 0.9;">${delivery.type.charAt(0).toUpperCase() + delivery.type.slice(1)} Delivery</p>
-        </div>
-    `;
-    
-    // Customer Information
-    detailsHTML += `
-        <h4 style="color: #1a2a6c; margin-bottom: 15px; padding-bottom: 5px; border-bottom: 2px solid #4cc9f0;">
-            <i class="fas fa-user"></i> Customer Information
-        </h4>
-        <div class="info-item">
-            <div class="info-label">Customer Name</div>
-            <div class="info-value">${delivery.customerName || 'N/A'}</div>
-        </div>
-        <div class="info-item">
-            <div class="info-label">Contact Number</div>
-            <div class="info-value">${delivery.customerContact || 'N/A'}</div>
-        </div>
-    `;
-    
-    // Delivery Details based on type
-    detailsHTML += `<h4 style="color: #1a2a6c; margin: 20px 0 15px; padding-bottom: 5px; border-bottom: 2px solid #4cc9f0;">
-        <i class="fas fa-info-circle"></i> Delivery Details
-    </h4>`;
-    
-    if (delivery.type === 'cargo') {
-        detailsHTML += `
-            <div class="info-item">
-                <div class="info-label">Pickup Location</div>
-                <div class="info-value">${delivery.pickupLocation || 'N/A'}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Delivery Location</div>
-                <div class="info-value">${delivery.deliveryLocation || 'N/A'}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Package Weight</div>
-                <div class="info-value">${delivery.packageWeight || 'N/A'}</div>
-            </div>
-        `;
-    } 
-    else if (delivery.type === 'boat') {
-        detailsHTML += `
-            <div class="info-item">
-                <div class="info-label">Boat Name</div>
-                <div class="info-value">${delivery.boatName || 'N/A'}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Island</div>
-                <div class="info-value">${delivery.island || 'N/A'}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Package</div>
-                <div class="info-value">${delivery.packageLabel || 'N/A'}</div>
-            </div>
-        `;
-    } 
-    else if (delivery.type === 'greater-male') {
-        detailsHTML += `
-            <div class="info-item">
-                <div class="info-label">Pickup Location</div>
-                <div class="info-value">${delivery.pickupLocation || 'N/A'}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Destination</div>
-                <div class="info-value">${delivery.destination || 'N/A'}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Item Size</div>
-                <div class="info-value">${delivery.itemSizeDisplay || delivery.itemSize || 'N/A'}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Quantity</div>
-                <div class="info-value">${delivery.quantity || '1'}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Vehicle</div>
-                <div class="info-value">${delivery.vehicleDisplay || delivery.vehicle || 'N/A'}</div>
-            </div>
-        `;
-    }
-    
-    // Status Information
-    detailsHTML += `
-        <h4 style="color: #1a2a6c; margin: 20px 0 15px; padding-bottom: 5px; border-bottom: 2px solid #4cc9f0;">
-            <i class="fas fa-chart-line"></i> Status Information
-        </h4>
-        <div class="info-item">
-            <div class="info-label">Current Status</div>
-            <div class="info-value"><span class="status-badge ${getStatusClass(delivery.status)}">${delivery.status || 'Order Placed'}</span></div>
-        </div>
-        <div class="info-item">
-            <div class="info-label">Payment Status</div>
-            <div class="info-value"><span class="status-badge ${getPaymentStatusClass(delivery.paymentStatus)}">${getPaymentStatusText(delivery.paymentStatus)}</span></div>
-        </div>
-    `;
-    
-    // Price Information
-    detailsHTML += `
-        <h4 style="color: #1a2a6c; margin: 20px 0 15px; padding-bottom: 5px; border-bottom: 2px solid #4cc9f0;">
-            <i class="fas fa-money-bill-wave"></i> Price Information
-        </h4>
-        <div class="info-item">
-            <div class="info-label">Total Price</div>
-            <div class="info-value" style="font-size: 18px; font-weight: bold; color: #1a2a6c;">${delivery.deliveryPrice || delivery.totalPrice || '0'} MVR</div>
-        </div>
-    `;
-    
-    // Dates
-    detailsHTML += `
-        <h4 style="color: #1a2a6c; margin: 20px 0 15px; padding-bottom: 5px; border-bottom: 2px solid #4cc9f0;">
-            <i class="fas fa-calendar"></i> Dates
-        </h4>
-        <div class="info-item">
-            <div class="info-label">Expected Delivery</div>
-            <div class="info-value">${formatDate(delivery.deliveryDate) || 'N/A'}</div>
-        </div>
-        <div class="info-item">
-            <div class="info-label">Created On</div>
-            <div class="info-value">${formatDate(delivery.createdAt) || 'N/A'}</div>
-        </div>
-    `;
-    
-    // If delivered, show completion date
-    if (delivery.status === 'Delivered' && delivery.completedAt) {
-        detailsHTML += `
-            <div class="info-item">
-                <div class="info-label">Delivered On</div>
-                <div class="info-value">${formatDate(delivery.completedAt)}</div>
-            </div>
-        `;
-    }
-    
-    customerInfo.innerHTML = detailsHTML;
-    
-    // Update progress tracker for this specific delivery
-    if (progressSteps && progressSteps.length) {
-        updateSingleProgressTracker(delivery.progress || 1);
-    }
-    
-    // Show delivery image if exists
-    if (delivery.deliveryImage) {
-        if (deliveryPreview) {
-            deliveryPreview.src = delivery.deliveryImage;
-            deliveryPreview.classList.add('active');
-        }
-        if (noImageMessage) {
-            noImageMessage.style.display = 'none';
-        }
-    } else {
-        if (deliveryPreview) {
-            deliveryPreview.classList.remove('active');
-        }
-        if (noImageMessage) {
-            noImageMessage.style.display = 'block';
-            noImageMessage.textContent = 'No delivery proof image available';
-        }
-    }
-}
-
-// Update progress tracker for single delivery
-function updateSingleProgressTracker(progress) {
-    const progressSteps = document.querySelectorAll('.progress-step');
-    const progressBar = document.getElementById('progressBar');
-    
-    if (!progressSteps.length || !progressBar) return;
-    
-    // Reset all steps
-    progressSteps.forEach(step => {
-        step.classList.remove('active', 'completed');
-    });
-    
-    // Set active and completed steps
-    for (let i = 0; i < progress; i++) {
-        if (i < progress - 1) {
-            progressSteps[i].classList.add('completed');
-        } else {
-            progressSteps[i].classList.add('active');
-        }
-    }
-    
-    // Update progress bar
-    const progressPercentage = ((progress - 1) / (progressSteps.length - 1)) * 100;
-    progressBar.style.width = `${progressPercentage}%`;
-}
-
-// Helper function to get status class
-function getStatusClass(status) {
-    switch(status) {
-        case 'Order Placed': return 'status-placed';
-        case 'Processing': return 'status-processing';
-        case 'In Transit': return 'status-transit';
-        case 'Out for Delivery': return 'status-out';
-        case 'Delivered': return 'status-delivered';
-        default: return 'status-placed';
-    }
-}
-
-// Helper function to get payment status class
-function getPaymentStatusClass(paymentStatus) {
-    switch(paymentStatus) {
-        case 'pending': return 'status-pending';
-        case 'under_review': return 'status-under-review';
-        case 'paid': return 'status-paid';
-        default: return 'status-pending';
-    }
-}
-
-// Helper function to get payment status text
-function getPaymentStatusText(paymentStatus) {
-    switch(paymentStatus) {
-        case 'pending': return 'Pending';
-        case 'under_review': return 'Under Review';
-        case 'paid': return 'Paid';
-        default: return 'Pending';
-    }
-}
-
-// Helper function to format date
-function formatDate(dateString) {
-    if (!dateString) return 'N/A';
-    try {
-        const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString(undefined, options);
-    } catch (e) {
-        return 'Invalid Date';
-    }
-}
-
-// Simple notification function
-function showNotification(message) {
-    // Check if notification function already exists
-    if (typeof window.showNotification === 'function') {
-        window.showNotification(message);
-        return;
-    }
-    
-    // Simple notification
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #1a2a6c;
-        color: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        z-index: 1000;
-        animation: slideIn 0.3s ease;
-    `;
-    notification.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => {
-            if (notification.parentNode) {
-                document.body.removeChild(notification);
-            }
-        }, 300);
-    }, 3000);
-}
 </script>
 </body>
 </html>
+
+
